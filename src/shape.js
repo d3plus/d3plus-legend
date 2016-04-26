@@ -54,7 +54,7 @@ export default function(data = []) {
   */
   function shapeX(d, i) {
     const s = size(d, i);
-    return orient === "vertical" ? s / 2 : i * s + s / 2 + padding * i;
+    return padding + (orient === "vertical" ? s / 2 : i * s + s / 2 + padding * i);
   }
 
   /**
@@ -63,7 +63,7 @@ export default function(data = []) {
   */
   function shapeY(d, i) {
     const s = size(d, i);
-    return orient === "horizontal" ? s / 2 : i * s + s / 2 + padding * i;
+    return padding + (orient === "horizontal" ? s / 2 : i * s + s / 2 + padding * i);
   }
 
   let backgroundColor = "transparent",
