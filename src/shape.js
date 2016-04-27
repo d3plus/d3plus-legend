@@ -48,7 +48,7 @@ export default function(data = []) {
   */
   function shapeLabelBounds(s, i) {
     const d = lineData[i];
-    return {"width": d.width, "height": d.height, "x": s.width / 2 + padding, "y": (s.height - d.height) / 2 + 1};
+    return {"width": d.width, "height": d.height, "x": s.width / 2 + padding, "y": 1 - d.height / 2};
   }
 
   /**
@@ -57,9 +57,9 @@ export default function(data = []) {
   */
   function shapeX(d, i) {
     if (orient === "vertical") return padding + size(d, i) / 2;
-    else return sum(data.slice(0, i + 1).map((b, i) => size(b, i))) +
+    else return padding + sum(data.slice(0, i).map((b, i) => size(b, i))) +
                 sum(lineData.slice(0, i).map((l) => l.width - fontSize(d, i))) +
-                padding * 3 * i;
+                size(d, i) / 2 + padding * 3 * i;
   }
 
   /**
@@ -68,7 +68,12 @@ export default function(data = []) {
   */
   function shapeY(d, i) {
     if (orient === "horizontal") return padding + max(lineData.map((l) => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
-    else return padding + sum(lineData.slice(0, i).map((l) => l.height)) + lineData[i].height / 2 + padding * i;
+    else {
+      const s = size(d, i);
+      const pad = lineData[i].height > s ? lineData[i].height / 2 : s / 2,
+            prev = sum(lineData.slice(0, i), (l, x) => max([l.height, size(l.data, x)]));
+      return padding + prev + pad + padding * i;
+    }
   }
 
   let backgroundColor = "transparent",
@@ -119,7 +124,7 @@ export default function(data = []) {
       const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(label(d, i));
       res.words = split(res.sentence);
       res.width = Math.ceil(max(res.lines.map((t) => measureText(t, {"font-family": f, "font-size": s})))) + s;
-      res.height = res.lines.length * (lh + 1);
+      res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {
         "height": res.height,
         "width": res.width
@@ -199,7 +204,7 @@ export default function(data = []) {
       .labelPadding(0)
       .lineHeight(lineHeight)
       .select(shapeGroup.node())
-      .verticalAlign("middle")
+      .verticalAlign("top")
       .width(size)
       .x(x)
       .y(y)
