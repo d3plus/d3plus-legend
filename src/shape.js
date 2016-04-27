@@ -92,6 +92,7 @@ export default function(data = []) {
       orient = "horizontal",
       padding = 5,
       select,
+      shapeImage = constant(false),
       size = constant(10),
       verticalAlign = "middle",
       width = 400,
@@ -204,6 +205,7 @@ export default function(data = []) {
 
     // Legend Shapes
     d3plusShape.rect()
+      .backgroundImage(shapeImage)
       .data(data)
       .fill(color)
       .fontColor(fontColor)
@@ -271,7 +273,7 @@ function value(d) {
 
   /**
       @memberof shape
-      @desc If *value* is specified, sets the font-color accessor to the specified function or string and returns this rectangle generator. If *value* is not specified, returns the current font-color accessor, which by default returns a color that contrasts the fill color.
+      @desc If *value* is specified, sets the font-color accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-color accessor, which by default returns a color that contrasts the fill color.
       @param {Function|String} [*value*]
   */
   shape.fontColor = function(_) {
@@ -280,7 +282,7 @@ function value(d) {
 
   /**
       @memberof shape
-      @desc If *value* is specified, sets the font-family accessor to the specified function or string and returns this rectangle generator. If *value* is not specified, returns the current font-family accessor.
+      @desc If *value* is specified, sets the font-family accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-family accessor.
       @param {Function|String} [*value*]
   */
   shape.fontFamily = function(_) {
@@ -289,7 +291,7 @@ function value(d) {
 
   /**
       @memberof shape
-      @desc If *value* is specified, sets the font resizing accessor to the specified function or boolean and returns this rectangle generator. If *value* is not specified, returns the current font resizing accessor. When font resizing is enabled, the font-size of the value returned by [label](#shape.label) will be resized the best fit the rectangle.
+      @desc If *value* is specified, sets the font resizing accessor to the specified function or boolean and returns this generator. If *value* is not specified, returns the current font resizing accessor. When font resizing is enabled, the font-size of the value returned by [label](#shape.label) will be resized the best fit the rectangle.
       @param {Function|Boolean} [*value*]
   */
   shape.fontResize = function(_) {
@@ -298,7 +300,7 @@ function value(d) {
 
   /**
       @memberof shape
-      @desc If *value* is specified, sets the font-size accessor to the specified function or string and returns this rectangle generator. If *value* is not specified, returns the current font-size accessor.
+      @desc If *value* is specified, sets the font-size accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-size accessor.
       @param {Function|String} [*value*]
   */
   shape.fontSize = function(_) {
@@ -379,6 +381,15 @@ function(w, h) {
   */
   shape.select = function(_) {
     return arguments.length ? (select = d3Select(_), shape) : select;
+  };
+
+  /**
+      @memberof shape
+      @desc If *value* is specified, sets the shape background image accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current shape background image accessor, which by default returns a color that contrasts the fill color.
+      @param {Function|String} [*value*]
+  */
+  shape.shapeImage = function(_) {
+    return arguments.length ? (shapeImage = typeof _ === "function" ? _ : constant(_), shape) : shapeImage;
   };
 
   /**
