@@ -1,7 +1,7 @@
 {
   "name": "d3plus-legend",
   "version": "0.1.0",
-  "description": "A starter environment for D3plus modules.",
+  "description": "A collection of chart legends/keys",
   "main": "build/d3plus-legend.js",
   "jsnext:main": "index",
   "license": "MIT",
@@ -23,8 +23,10 @@
     "url": "http://www.dave-landry.com"
   },
   "dependencies": {
+    "d3-array": "^0.7.1",
     "d3-selection": "^0.7.0",
-    "d3plus-shape": "^0.4.0"
+    "d3plus-shape": "^0.4.1",
+    "d3plus-text": "^0.4.4"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.6.0",

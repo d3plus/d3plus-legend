@@ -1,6 +1,8 @@
 import {default as constant} from "./constant";
+import {max, sum} from "d3-array";
 import {select as d3Select} from "d3-selection";
 import * as d3plusShape from "d3plus-shape";
+import {split, width as measureText, wrap} from "d3plus-text";
 
 /**
     The default id accessor function.
@@ -44,8 +46,9 @@ export default function(data = []) {
       The default y accessor function.
       @private
   */
-  function shapeLabelBounds(w, h) {
-    return {"width": 100, "height": 20, "x": w / 2 + padding, "y": -h / 2};
+  function shapeLabelBounds(s, i) {
+    const d = lineData[i];
+    return {"width": d.width, "height": d.height, "x": s.width / 2 + padding, "y": (s.height - d.height) / 2 + 1};
   }
 
   /**
@@ -53,8 +56,10 @@ export default function(data = []) {
       @private
   */
   function shapeX(d, i) {
-    const s = size(d, i);
-    return padding + (orient === "vertical" ? s / 2 : i * s + s / 2 + padding * i);
+    if (orient === "vertical") return padding + size(d, i) / 2;
+    else return sum(data.slice(0, i + 1).map((b, i) => size(b, i))) +
+                sum(lineData.slice(0, i).map((l) => l.width - fontSize(d, i))) +
+                padding * 3 * i;
   }
 
   /**
@@ -62,24 +67,26 @@ export default function(data = []) {
       @private
   */
   function shapeY(d, i) {
-    const s = size(d, i);
-    return padding + (orient === "horizontal" ? s / 2 : i * s + s / 2 + padding * i);
+    if (orient === "horizontal") return padding + max(lineData.map((l) => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
+    else return padding + sum(lineData.slice(0, i).map((l) => l.height)) + lineData[i].height / 2 + padding * i;
   }
 
   let backgroundColor = "transparent",
       color = shapeColor,
-      fontColor,
-      fontFamily,
+      fontColor = constant("#444"),
+      fontFamily = constant("sans-serif"),
       fontResize = constant(false),
       fontSize = constant(10),
       height = 200,
       id = shapeId,
       label = shapeId,
       labelBounds = shapeLabelBounds,
+      lineData = [],
+      lineHeight,
       orient = "vertical",
       padding = 5,
       select,
-      size = constant(20),
+      size = constant(10),
       width = 200,
       x = shapeX,
       y = shapeY;
@@ -91,6 +98,7 @@ export default function(data = []) {
   function shape(callback) {
 
     if (select === void 0) shape.select(d3Select("body").append("svg").attr("width", `${width}px`).attr("height", `${height}px`).node());
+    if (lineHeight === void 0) lineHeight = (d, i) => fontSize(d, i) * 1.1;
 
     // Background Rectangle
     d3plusShape.rect()
@@ -103,6 +111,72 @@ export default function(data = []) {
       .y(height / 2)
       ();
 
+    // Calculate Text Sizes
+    lineData = data.map((d, i) => {
+      const f = fontFamily(d, i), lh = lineHeight(d, i), s = fontSize(d, i);
+      const h = orient === "horizontal" ? height - (data.length + 1) * padding : height,
+            w = orient === "vertical" ? width - padding * 3 - size(d, i) : width;
+      const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(label(d, i));
+      res.words = split(res.sentence);
+      res.width = Math.ceil(max(res.lines.map((t) => measureText(t, {"font-family": f, "font-size": s})))) + s;
+      res.height = res.lines.length * (lh + 1);
+      res.og = {
+        "height": res.height,
+        "width": res.width
+      };
+      res.data = d;
+      res.f = f;
+      res.s = s;
+      res.lh = lh;
+      return res;
+    });
+
+    let availableSpace, textSpace, visibleLabels = true;
+
+    if (orient === "horizontal") {
+      availableSpace = width - sum(data.map((d, i) => size(d, i) + padding * 3)) - padding * 2;
+      textSpace = sum(lineData.map((d, i) => d.width - fontSize(d, i)));
+      if (textSpace > availableSpace) {
+        const wrappable = lineData
+          .filter((d) => d.words.length > 1)
+          .sort((a, b) => b.sentence.length - a.sentence.length);
+
+        if (wrappable.length && height > wrappable[0].height * 2) {
+
+          let line = 2;
+          while (line <= 5) {
+            const labels = wrappable.filter((d) => d.words.length >= line);
+            if (!labels.length) break;
+            for (let x = 0; x < wrappable.length; x++) {
+              const label = wrappable[x];
+              const h = label.og.height * line, w = label.og.width * (1.5 * (1 / line));
+              const res = wrap().fontFamily(label.f).fontSize(label.s).lineHeight(label.lh).width(w).height(h)(label.sentence);
+              if (!res.truncated) {
+                textSpace -= label.width;
+                label.width = Math.ceil(max(res.lines.map((t) => measureText(t, {"font-family": label.f, "font-size": label.s})))) + label.s;
+                label.height = res.lines.length * (label.lh + 1);
+                textSpace += label.width;
+                if (textSpace <= availableSpace) break;
+              }
+            }
+            if (textSpace <= availableSpace) break;
+            line++;
+
+          }
+
+        }
+        else visibleLabels = false;
+      }
+    }
+    if (textSpace > availableSpace) visibleLabels = false;
+
+    if (!visibleLabels)
+      for (let i = 0; i < lineData.length; i++) {
+        lineData[i].width = 0;
+        lineData[i].height = 0;
+      }
+
+    // Shape <g> Group
     let shapeGroup = select.selectAll("g.d3plus-legend-shape-group")
       .data([0]);
 
@@ -121,8 +195,9 @@ export default function(data = []) {
       .height(size)
       .id(id)
       .innerBounds(labelBounds)
-      .label(label)
+      .label(visibleLabels ? label : false)
       .labelPadding(0)
+      .lineHeight(lineHeight)
       .select(shapeGroup.node())
       .verticalAlign("middle")
       .width(size)
