@@ -56,8 +56,8 @@ export default function(data = []) {
       @private
   */
   function shapeX(d, i) {
-    if (orient === "vertical") return padding + size(d, i) / 2;
-    else return padding + sum(data.slice(0, i).map((b, i) => size(b, i))) +
+    if (orient === "vertical") return xOffset + size(d, i) / 2;
+    else return xOffset + sum(data.slice(0, i).map((b, i) => size(b, i))) +
                 sum(lineData.slice(0, i).map((l) => l.width - fontSize(d, i))) +
                 size(d, i) / 2 + padding * 3 * i;
   }
@@ -67,34 +67,38 @@ export default function(data = []) {
       @private
   */
   function shapeY(d, i) {
-    if (orient === "horizontal") return padding + max(lineData.map((l) => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
+    if (orient === "horizontal") return yOffset + max(lineData.map((l) => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
     else {
       const s = size(d, i);
       const pad = lineData[i].height > s ? lineData[i].height / 2 : s / 2,
             prev = sum(lineData.slice(0, i), (l, x) => max([l.height, size(l.data, x)]));
-      return padding + prev + pad + padding * i;
+      return yOffset + prev + pad + padding * i;
     }
   }
 
-  let backgroundColor = "transparent",
+  let align = "center",
+      backgroundColor = "transparent",
       color = shapeColor,
       fontColor = constant("#444"),
       fontFamily = constant("sans-serif"),
       fontResize = constant(false),
       fontSize = constant(10),
-      height = 200,
+      height = 100,
       id = shapeId,
       label = shapeId,
       labelBounds = shapeLabelBounds,
       lineData = [],
       lineHeight,
-      orient = "vertical",
+      orient = "horizontal",
       padding = 5,
       select,
       size = constant(10),
-      width = 200,
+      verticalAlign = "middle",
+      width = 400,
       x = shapeX,
-      y = shapeY;
+      xOffset,
+      y = shapeY,
+      yOffset;
 
   /**
     The inner return object and draw function that gets assigned the public methods.
@@ -181,6 +185,15 @@ export default function(data = []) {
         lineData[i].height = 0;
       }
 
+    xOffset = padding;
+    yOffset = padding;
+    const innerHeight = max(lineData, (d, i) => max([d.height, size(d.data, i)])),
+          innerWidth = textSpace + sum(data, (d, i) => size(d, i)) + padding * (data.length * 3 - 2);
+    if (align === "center") xOffset = (width - padding * 2 - innerWidth) / 2;
+    else if (align === "right") xOffset = width - padding * 2 - innerWidth;
+    if (verticalAlign === "middle") yOffset = (height - padding * 2 - innerHeight) / 2;
+    else if (verticalAlign === "bottom") yOffset = height - padding * 2 - innerHeight;
+
     // Shape <g> Group
     let shapeGroup = select.selectAll("g.d3plus-legend-shape-group")
       .data([0]);
@@ -215,6 +228,15 @@ export default function(data = []) {
     return shape;
 
   }
+
+  /**
+      @memberof shape
+      @desc If *value* is specified, sets the horizontal alignment to the specified value and returns this generator. If *value* is not specified, returns the current horizontal alignment.
+      @param {String} [*value* = "center"] Supports `"left"` and `"center"` and `"right"`.
+  */
+  shape.align = function(_) {
+    return arguments.length ? (align = _, shape) : align;
+  };
 
   /**
       @memberof shape
@@ -286,7 +308,7 @@ function value(d) {
   /**
       @memberof shape
       @desc If *value* is specified, sets the overall height of the legend and returns this generator. If *value* is not specified, returns the current height value.
-      @param {Number} [*value* = 200]
+      @param {Number} [*value* = 100]
   */
   shape.height = function(_) {
     return arguments.length ? (height = _, shape) : height;
@@ -335,7 +357,7 @@ function(w, h) {
   /**
       @memberof shape
       @desc If *orient* is specified, sets the orientation of the shape and returns this generator. If *orient* is not specified, returns the current orientation.
-      @param {String} [*orient* = "vertical"] Supports `"horizontal"` and `"vertical"` orientations.
+      @param {String} [*orient* = "horizontal"] Supports `"horizontal"` and `"vertical"` orientations.
   */
   shape.orient = function(_) {
     return arguments.length ? (orient = _, shape) : orient;
@@ -370,8 +392,17 @@ function(w, h) {
 
   /**
       @memberof shape
+      @desc If *value* is specified, sets the vertical alignment to the specified value and returns this generator. If *value* is not specified, returns the current vertical alignment.
+      @param {String} [*value* = "middle"] Supports `"top"` and `"middle"` and `"bottom"`.
+  */
+  shape.verticalAlign = function(_) {
+    return arguments.length ? (verticalAlign = _, shape) : verticalAlign;
+  };
+
+  /**
+      @memberof shape
       @desc If *value* is specified, sets the overall width of the legend and returns this generator. If *value* is not specified, returns the current width value.
-      @param {Number} [*value* = 200]
+      @param {Number} [*value* = 400]
   */
   shape.width = function(_) {
     return arguments.length ? (width = _, shape) : width;
