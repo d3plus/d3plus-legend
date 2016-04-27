@@ -107,7 +107,7 @@ export default function(data = []) {
   */
   function shape(callback) {
 
-    if (select === void 0) shape.select(d3Select("body").append("svg").attr("width", `${width}px`).attr("height", `${height}px`).node());
+    if (select === void 0) shape.select(d3Select("body").append("svg").attr("width", `${window.innerWidth}px`).attr("height", `${window.innerHeight}px`).node());
     if (lineHeight === void 0) lineHeight = (d, i) => fontSize(d, i) * 1.1;
 
     // Background Rectangle
@@ -180,16 +180,18 @@ export default function(data = []) {
     }
     if (textSpace > availableSpace) visibleLabels = false;
 
-    if (!visibleLabels)
+    if (!visibleLabels) {
+      textSpace = 0;
       for (let i = 0; i < lineData.length; i++) {
         lineData[i].width = 0;
         lineData[i].height = 0;
       }
+    }
 
     xOffset = padding;
     yOffset = padding;
     const innerHeight = max(lineData, (d, i) => max([d.height, size(d.data, i)])),
-          innerWidth = textSpace + sum(data, (d, i) => size(d, i)) + padding * (data.length * 3 - 2);
+          innerWidth = textSpace + sum(data, (d, i) => size(d, i)) + padding * (data.length * (visibleLabels ? 3 : 1) - 2);
     if (align === "center") xOffset = (width - padding * 2 - innerWidth) / 2;
     else if (align === "right") xOffset = width - padding * 2 - innerWidth;
     if (verticalAlign === "middle") yOffset = (height - padding * 2 - innerHeight) / 2;
