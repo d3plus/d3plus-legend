@@ -56,8 +56,8 @@ export default function(data = []) {
       @private
   */
   function shapeX(d, i) {
-    if (orient === "vertical") return xOffset + size(d, i) / 2;
-    else return xOffset + sum(data.slice(0, i).map((b, i) => size(b, i))) +
+    if (orient === "vertical") return outerBounds.x + size(d, i) / 2;
+    else return outerBounds.x + sum(data.slice(0, i).map((b, i) => size(b, i))) +
                 sum(lineData.slice(0, i).map((l) => l.width - fontSize(d, i))) +
                 size(d, i) / 2 + padding * 3 * i;
   }
@@ -67,16 +67,17 @@ export default function(data = []) {
       @private
   */
   function shapeY(d, i) {
-    if (orient === "horizontal") return yOffset + max(lineData.map((l) => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
+    if (orient === "horizontal") return outerBounds.y + max(lineData.map((l) => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
     else {
       const s = size(d, i);
       const pad = lineData[i].height > s ? lineData[i].height / 2 : s / 2,
             prev = sum(lineData.slice(0, i), (l, x) => max([l.height, size(l.data, x)]));
-      return yOffset + prev + pad + padding * i;
+      return outerBounds.y + prev + pad + padding * i;
     }
   }
 
-  const on = {};
+  const on = {},
+        outerBounds = {"width": 0, "height": 0, "x": 0, "y": 0};
 
   let align = "center",
       backgroundColor = "transparent",
@@ -99,9 +100,7 @@ export default function(data = []) {
       verticalAlign = "middle",
       width = 400,
       x = shapeX,
-      xOffset,
-      y = shapeY,
-      yOffset;
+      y = shapeY;
 
   /**
     The inner return object and draw function that gets assigned the public methods.
@@ -190,14 +189,19 @@ export default function(data = []) {
       }
     }
 
-    xOffset = padding;
-    yOffset = padding;
     const innerHeight = max(lineData, (d, i) => max([d.height, size(d.data, i)])),
           innerWidth = textSpace + sum(data, (d, i) => size(d, i)) + padding * (data.length * (visibleLabels ? 3 : 1) - 2);
+    outerBounds.width = innerWidth;
+    outerBounds.height = innerHeight;
+
+    let xOffset = padding,
+        yOffset = padding;
     if (align === "center") xOffset = (width - padding * 2 - innerWidth) / 2;
     else if (align === "right") xOffset = width - padding * 2 - innerWidth;
     if (verticalAlign === "middle") yOffset = (height - padding * 2 - innerHeight) / 2;
     else if (verticalAlign === "bottom") yOffset = height - padding * 2 - innerHeight;
+    outerBounds.x = xOffset;
+    outerBounds.y = yOffset;
 
     // Shape <g> Group
     let shapeGroup = select.selectAll("g.d3plus-legend-shape-group")
@@ -380,6 +384,16 @@ function(w, h) {
   */
   shape.orient = function(_) {
     return arguments.length ? (orient = _, shape) : orient;
+  };
+
+  /**
+      @memberof shape
+      @desc If called after the elements have been drawn to DOM, will returns the outer bounds of the legend content.
+      @example
+{"width": 180, "height": 24, "x": 10, "y": 20}
+  */
+  shape.outerBounds = function() {
+    return outerBounds;
   };
 
   /**
