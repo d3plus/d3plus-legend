@@ -44,7 +44,7 @@ The released bundle natively supports both AMD and CommonJS, and vanilla environ
 
 <a name="install.custom"></a>
 ### Custom Builds
-The source code is written using standard `import` and `export` statements. Create a custom build using [Rollup](https://github.com/rollup/rollup) or your preferred bundler. Take a look at the  [index.js](https://github.com/d3plus/d3plus-legend/blob/master/index.js) file to see the modules exported.
+The source code is written using standard `import` and `export` statements. Create a custom build using [Rollup](https://github.com/rollup/rollup) or your preferred bundler. Take a look at the [index.js](https://github.com/d3plus/d3plus-legend/blob/master/index.js) file to see the modules exported.
 
 ---
 
@@ -102,6 +102,7 @@ shape().data([data])(function() { alert("draw complete!"); })
     * [.orient([*orient*])](#shape.orient)
     * [.padding([*value*])](#shape.padding)
     * [.select([*selector*])](#shape.select)
+    * [.shapeImage([*value*])](#shape.shapeImage)
     * [.size([*value*])](#shape.size)
     * [.verticalAlign([*value*])](#shape.verticalAlign)
     * [.width([*value*])](#shape.width)
@@ -161,7 +162,7 @@ If *data* is specified, sets the data array to the specified array and returns t
 <a name="shape.fontColor"></a>
 
 ### shape.fontColor([*value*])
-If *value* is specified, sets the font-color accessor to the specified function or string and returns this rectangle generator. If *value* is not specified, returns the current font-color accessor, which by default returns a color that contrasts the fill color.
+If *value* is specified, sets the font-color accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-color accessor, which by default returns a color that contrasts the fill color.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
 
@@ -172,7 +173,7 @@ If *value* is specified, sets the font-color accessor to the specified function 
 <a name="shape.fontFamily"></a>
 
 ### shape.fontFamily([*value*])
-If *value* is specified, sets the font-family accessor to the specified function or string and returns this rectangle generator. If *value* is not specified, returns the current font-family accessor.
+If *value* is specified, sets the font-family accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-family accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
 
@@ -183,7 +184,7 @@ If *value* is specified, sets the font-family accessor to the specified function
 <a name="shape.fontResize"></a>
 
 ### shape.fontResize([*value*])
-If *value* is specified, sets the font resizing accessor to the specified function or boolean and returns this rectangle generator. If *value* is not specified, returns the current font resizing accessor. When font resizing is enabled, the font-size of the value returned by [label](#shape.label) will be resized the best fit the rectangle.
+If *value* is specified, sets the font resizing accessor to the specified function or boolean and returns this generator. If *value* is not specified, returns the current font resizing accessor. When font resizing is enabled, the font-size of the value returned by [label](#shape.label) will be resized the best fit the rectangle.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
 
@@ -194,7 +195,7 @@ If *value* is specified, sets the font resizing accessor to the specified functi
 <a name="shape.fontSize"></a>
 
 ### shape.fontSize([*value*])
-If *value* is specified, sets the font-size accessor to the specified function or string and returns this rectangle generator. If *value* is not specified, returns the current font-size accessor.
+If *value* is specified, sets the font-size accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-size accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
 
@@ -296,6 +297,17 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 | Param | Type | Default |
 | --- | --- | --- |
 | [*selector*] | <code>String</code> &#124; <code>HTMLElement</code> | <code>d3Select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
+
+<a name="shape.shapeImage"></a>
+
+### shape.shapeImage([*value*])
+If *value* is specified, sets the shape background image accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current shape background image accessor, which by default returns a color that contrasts the fill color.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> &#124; <code>String</code> | 
 
 <a name="shape.size"></a>
 
