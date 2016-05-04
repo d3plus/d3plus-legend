@@ -1,4 +1,4 @@
-import {default as constant} from "./constant";
+import {constant} from "d3plus-common";
 import {max, sum} from "d3-array";
 import {select as d3Select} from "d3-selection";
 import * as d3plusShape from "d3plus-shape";
