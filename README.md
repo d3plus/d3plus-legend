@@ -99,7 +99,9 @@ shape().data([data])(function() { alert("draw complete!"); })
     * [.id([*value*])](#shape.id)
     * [.label([*value*])](#shape.label)
     * [.labelBounds([*bounds*])](#shape.labelBounds)
+    * [.on([*typenames*], [*listener*])](#shape.on)
     * [.orient([*orient*])](#shape.orient)
+    * [.outerBounds()](#shape.outerBounds)
     * [.padding([*value*])](#shape.padding)
     * [.select([*selector*])](#shape.select)
     * [.shapeImage([*value*])](#shape.shapeImage)
@@ -265,6 +267,18 @@ function(w, h) {
 }
       
 ```
+<a name="shape.on"></a>
+
+### shape.on([*typenames*], [*listener*])
+Adds or removes a *listener* to each shape for the specified event *typenames*. If a *listener* is not specified, returns the currently-assigned listener for the specified event *typename*. Mirrors the core [d3-selection](https://github.com/d3/d3-selection#selection_on) behavior.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*typenames*] | <code>String</code> | 
+| [*listener*] | <code>function</code> | 
+
 <a name="shape.orient"></a>
 
 ### shape.orient([*orient*])
@@ -276,6 +290,16 @@ If *orient* is specified, sets the orientation of the shape and returns this gen
 | --- | --- | --- | --- |
 | [*orient*] | <code>String</code> | <code>&quot;horizontal&quot;</code> | Supports `"horizontal"` and `"vertical"` orientations. |
 
+<a name="shape.outerBounds"></a>
+
+### shape.outerBounds()
+If called after the elements have been drawn to DOM, will returns the outer bounds of the legend content.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+**Example**  
+```js
+{"width": 180, "height": 24, "x": 10, "y": 20}
+```
 <a name="shape.padding"></a>
 
 ### shape.padding([*value*])
