@@ -76,6 +76,8 @@ export default function(data = []) {
     }
   }
 
+  const on = {};
+
   let align = "center",
       backgroundColor = "transparent",
       color = shapeColor,
@@ -206,7 +208,7 @@ export default function(data = []) {
       .merge(shapeGroup);
 
     // Legend Shapes
-    d3plusShape.rect()
+    const legendShapes = d3plusShape.rect()
       .backgroundImage(shapeImage)
       .data(data)
       .fill(color)
@@ -224,8 +226,11 @@ export default function(data = []) {
       .verticalAlign("top")
       .width(size)
       .x(x)
-      .y(y)
-      ();
+      .y(y);
+
+    const events = Object.keys(on);
+    for (let e = 0; e < events.length; e++) legendShapes.on(events[e], on[events[e]]);
+    legendShapes();
 
     if (callback) setTimeout(callback, 100);
 
@@ -356,6 +361,16 @@ function(w, h) {
   */
   shape.labelBounds = function(_) {
     return arguments.length ? (labelBounds = _, shape) : labelBounds;
+  };
+
+  /**
+      @memberof shape
+      @desc Adds or removes a *listener* to each shape for the specified event *typenames*. If a *listener* is not specified, returns the currently-assigned listener for the specified event *typename*. Mirrors the core [d3-selection](https://github.com/d3/d3-selection#selection_on) behavior.
+      @param {String} [*typenames*]
+      @param {Function} [*listener*]
+  */
+  shape.on = function(typenames, listener) {
+    return arguments.length === 2 ? (on[typenames] = listener, shape) : arguments.length ? on[typenames] : on;
   };
 
   /**
