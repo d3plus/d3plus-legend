@@ -2,7 +2,7 @@ import {constant} from "d3plus-common";
 import {max, sum} from "d3-array";
 import {select as d3Select} from "d3-selection";
 import * as d3plusShape from "d3plus-shape";
-import {split, width as measureText, wrap} from "d3plus-text";
+import {width as measureText, wrap} from "d3plus-text";
 
 /**
     The default id accessor function.
@@ -128,7 +128,6 @@ export default function(data = []) {
       const h = orient === "horizontal" ? height - (data.length + 1) * padding : height,
             w = orient === "vertical" ? width - padding * 3 - size(d, i) : width;
       const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(label(d, i));
-      res.words = split(res.sentence);
       res.width = Math.ceil(max(res.lines.map((t) => measureText(t, {"font-family": f, "font-size": s})))) + s;
       res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {
