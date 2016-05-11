@@ -1,24 +1,8 @@
-import {constant} from "d3plus-common";
+import {accessor, constant} from "d3plus-common";
 import {max, sum} from "d3-array";
 import {select as d3Select} from "d3-selection";
 import * as d3plusShape from "d3plus-shape";
 import {width as measureText, wrap} from "d3plus-text";
-
-/**
-    The default id accessor function.
-    @private
-*/
-function shapeFill(d) {
-  return d.color;
-}
-
-/**
-    The default id accessor function.
-    @private
-*/
-function shapeId(d) {
-  return d.id;
-}
 
 /**
     @function shape
@@ -82,14 +66,14 @@ export default function(data = []) {
   let align = "center",
       backgroundColor = "transparent",
       duration = 600,
-      fill = shapeFill,
+      fill = accessor("color"),
       fontColor = constant("#444"),
       fontFamily = constant("sans-serif"),
       fontResize = constant(false),
       fontSize = constant(10),
       height = 100,
-      id = shapeId,
-      label = shapeId,
+      id = accessor("id"),
+      label = accessor("id"),
       labelBounds = shapeLabelBounds,
       lineData = [],
       lineHeight,
