@@ -8,7 +8,7 @@ import {width as measureText, wrap} from "d3plus-text";
     The default id accessor function.
     @private
 */
-function shapeColor(d) {
+function shapeFill(d) {
   return d.color;
 }
 
@@ -81,7 +81,7 @@ export default function(data = []) {
 
   let align = "center",
       backgroundColor = "transparent",
-      color = shapeColor,
+      fill = shapeFill,
       fontColor = constant("#444"),
       fontFamily = constant("sans-serif"),
       fontResize = constant(false),
@@ -214,7 +214,7 @@ export default function(data = []) {
     const legendShapes = d3plusShape.rect()
       .backgroundImage(shapeImage)
       .data(data)
-      .fill(color)
+      .fill(fill)
       .fontColor(fontColor)
       .fontFamily(fontFamily)
       .fontResize(fontResize)
@@ -261,24 +261,24 @@ export default function(data = []) {
 
   /**
       @memberof shape
-      @desc If *value* is specified, sets the color accessor to the specified function and returns this generator. If *value* is not specified, returns the current color accessor.
+      @desc If *data* is specified, sets the data array to the specified array and returns this generator. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
+      @param {Array} [*data* = []]
+  */
+  shape.data = function(_) {
+    return arguments.length ? (data = _, shape) : data;
+  };
+
+  /**
+      @memberof shape
+      @desc If *value* is specified, sets the fill accessor to the specified function and returns this generator. If *value* is not specified, returns the current fill accessor.
       @param {Function} [*value*]
       @example
 function value(d) {
   return d.color;
 }
   */
-  shape.color = function(_) {
-    return arguments.length ? (color = _, shape) : color;
-  };
-
-  /**
-      @memberof shape
-      @desc If *data* is specified, sets the data array to the specified array and returns this generator. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
-      @param {Array} [*data* = []]
-  */
-  shape.data = function(_) {
-    return arguments.length ? (data = _, shape) : data;
+  shape.fill = function(_) {
+    return arguments.length ? (fill = _, shape) : fill;
   };
 
   /**
