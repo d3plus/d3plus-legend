@@ -89,8 +89,8 @@ shape().data([data])(function() { alert("draw complete!"); })
 * [shape([data])](#shape)
     * [.align([*value*])](#shape.align)
     * [.backgroundColor([*color*])](#shape.backgroundColor)
-    * [.color([*value*])](#shape.color)
     * [.data([*data*])](#shape.data)
+    * [.fill([*value*])](#shape.fill)
     * [.fontColor([*value*])](#shape.fontColor)
     * [.fontFamily([*value*])](#shape.fontFamily)
     * [.fontResize([*value*])](#shape.fontResize)
@@ -133,10 +133,21 @@ If a valid CSS *color* is specified, sets the overall background color to the sp
 | --- | --- | --- |
 | [*color*] | <code>String</code> | <code>[]</code> | 
 
-<a name="shape.color"></a>
+<a name="shape.data"></a>
 
-### shape.color([*value*])
-If *value* is specified, sets the color accessor to the specified function and returns this generator. If *value* is not specified, returns the current color accessor.
+### shape.data([*data*])
+If *data* is specified, sets the data array to the specified array and returns this generator. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*data*] | <code>Array</code> | <code>[]</code> | 
+
+<a name="shape.fill"></a>
+
+### shape.fill([*value*])
+If *value* is specified, sets the fill accessor to the specified function and returns this generator. If *value* is not specified, returns the current fill accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
 
@@ -150,17 +161,6 @@ function value(d) {
   return d.color;
 }
 ```
-<a name="shape.data"></a>
-
-### shape.data([*data*])
-If *data* is specified, sets the data array to the specified array and returns this generator. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
-
-**Kind**: static method of <code>[shape](#shape)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [*data*] | <code>Array</code> | <code>[]</code> | 
-
 <a name="shape.fontColor"></a>
 
 ### shape.fontColor([*value*])
