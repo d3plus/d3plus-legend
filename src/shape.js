@@ -81,6 +81,7 @@ export default function(data = []) {
 
   let align = "center",
       backgroundColor = "transparent",
+      duration = 600,
       fill = shapeFill,
       fontColor = constant("#444"),
       fontFamily = constant("sans-serif"),
@@ -114,6 +115,7 @@ export default function(data = []) {
     // Background Rectangle
     d3plusShape.rect()
       .data([{"id": "legend-background"}])
+      .duration(duration)
       .fill(backgroundColor)
       .height(height)
       .select(select.node())
@@ -214,6 +216,7 @@ export default function(data = []) {
     const legendShapes = d3plusShape.rect()
       .backgroundImage(shapeImage)
       .data(data)
+      .duration(duration)
       .fill(fill)
       .fontColor(fontColor)
       .fontFamily(fontFamily)
@@ -235,7 +238,7 @@ export default function(data = []) {
     for (let e = 0; e < events.length; e++) legendShapes.on(events[e], on[events[e]]);
     legendShapes();
 
-    if (callback) setTimeout(callback, 100);
+    if (callback) setTimeout(callback, duration + 100);
 
     return shape;
 
@@ -266,6 +269,15 @@ export default function(data = []) {
   */
   shape.data = function(_) {
     return arguments.length ? (data = _, shape) : data;
+  };
+
+  /**
+      @memberof rect
+      @desc If *ms* is specified, sets the animation duration to the specified number and returns this generator. If *ms* is not specified, returns the current animation duration.
+      @param {Number} [*ms* = 600]
+  */
+  shape.duration = function(_) {
+    return arguments.length ? (duration = _, shape) : duration;
   };
 
   /**
