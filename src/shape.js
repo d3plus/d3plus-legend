@@ -96,13 +96,21 @@ export default function(data = []) {
     if (select === void 0) shape.select(d3Select("body").append("svg").attr("width", `${window.innerWidth}px`).attr("height", `${window.innerHeight}px`).node());
     if (lineHeight === void 0) lineHeight = (d, i) => fontSize(d, i) * 1.1;
 
+    // Background <g> Group
+    let bgGroup = select.selectAll("g.d3plus-legend-bg-group")
+      .data([0]);
+
+    bgGroup = bgGroup.enter().append("g")
+        .attr("class", "d3plus-legend-bg-group")
+      .merge(bgGroup);
+
     // Background Rectangle
     d3plusShape.rect()
       .data([{"id": "legend-background"}])
       .duration(duration)
       .fill(backgroundColor)
       .height(height)
-      .select(select.node())
+      .select(bgGroup.node())
       .width(width)
       .x(width / 2)
       .y(height / 2)
