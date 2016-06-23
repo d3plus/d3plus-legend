@@ -82,6 +82,8 @@ export default function(data = []) {
       select,
       shapeImage = constant(false),
       size = constant(10),
+      stroke = constant("black"),
+      strokeWidth = constant(0),
       verticalAlign = "middle",
       width = 400,
       x = shapeX,
@@ -221,6 +223,8 @@ export default function(data = []) {
       .labelPadding(0)
       .lineHeight(lineHeight)
       .select(shapeGroup.node())
+      .stroke(stroke)
+      .strokeWidth(strokeWidth)
       .verticalAlign("top")
       .width(size)
       .x(x)
@@ -433,6 +437,32 @@ function(w, h) {
   */
   shape.size = function(_) {
     return arguments.length ? (size = typeof _ === "function" ? _ : constant(_), shape) : size;
+  };
+
+  /**
+      @memberof shape
+      @desc If *value* is specified, sets the stroke accessor to the specified function and returns this generator. If *value* is not specified, returns the current stroke accessor.
+      @param {Function} [*value*]
+      @example
+function value(d) {
+  return d.color;
+}
+  */
+  shape.stroke = function(_) {
+    return arguments.length ? (stroke = _, shape) : stroke;
+  };
+
+  /**
+      @memberof shape
+      @desc If *value* is specified, sets the stroke-width accessor to the specified function and returns this generator. If *value* is not specified, returns the current stroke-width accessor.
+      @param {Function} [*value*]
+      @example
+function value(d) {
+  return d.color;
+}
+  */
+  shape.strokeWidth = function(_) {
+    return arguments.length ? (strokeWidth = _, shape) : strokeWidth;
   };
 
   /**
