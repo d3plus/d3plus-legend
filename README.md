@@ -97,6 +97,8 @@ shape().data([data])(function() { alert("draw complete!"); })
     * [.select([*selector*])](#shape.select)
     * [.shapeImage([*value*])](#shape.shapeImage)
     * [.size([*value*])](#shape.size)
+    * [.stroke([*value*])](#shape.stroke)
+    * [.strokeWidth([*value*])](#shape.strokeWidth)
     * [.verticalAlign([*value*])](#shape.verticalAlign)
     * [.width([*value*])](#shape.width)
     * [.x([*value*])](#shape.x)
@@ -335,6 +337,40 @@ If *value* is specified, sets the size accessor to the specified function or num
 | --- | --- | --- |
 | [*value*] | <code>function</code> &#124; <code>Number</code> | <code>20</code> | 
 
+<a name="shape.stroke"></a>
+
+### shape.stroke([*value*])
+If *value* is specified, sets the stroke accessor to the specified function and returns this generator. If *value* is not specified, returns the current stroke accessor.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> | 
+
+**Example**  
+```js
+function value(d) {
+  return d.color;
+}
+```
+<a name="shape.strokeWidth"></a>
+
+### shape.strokeWidth([*value*])
+If *value* is specified, sets the stroke-width accessor to the specified function and returns this generator. If *value* is not specified, returns the current stroke-width accessor.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> | 
+
+**Example**  
+```js
+function value(d) {
+  return d.color;
+}
+```
 <a name="shape.verticalAlign"></a>
 
 ### shape.verticalAlign([*value*])
