@@ -1,1 +1,1 @@
-export {default as shape} from "./src/shape";
+export {default as legend} from "./src/legend";
