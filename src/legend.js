@@ -429,7 +429,7 @@ function(w, h) {
   /**
       @memberof shape
       @desc If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns this generator. If *selector* is not specified, returns the current SVG container element.
-      @param {String|HTMLElement} [*selector* = d3Select("body").append("svg")]
+      @param {String|HTMLElement} [*selector* = d3.select("body").append("svg")]
   */
   shape.select = function(_) {
     return arguments.length ? (select = d3Select(_), shape) : select;
