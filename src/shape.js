@@ -257,6 +257,23 @@ export default function(data = []) {
 
   /**
       @memberof shape
+      @desc If *value* is specified, sets the methods that correspond to the key/value pairs and returns this generator. If *value* is not specified, returns the current configuration.
+      @param {Object} [*value*]
+  */
+  shape.config = function(_) {
+    if (arguments.length) {
+      for (const k in _) if ({}.hasOwnProperty.call(_, k)) shape[k](_[k]);
+      return shape;
+    }
+    else {
+      const config = {};
+      for (const k in shape.prototype.constructor) if (k !== "config" && {}.hasOwnProperty.call(shape, k)) config[k] = shape[k]();
+      return config;
+    }
+  };
+
+  /**
+      @memberof shape
       @desc If *data* is specified, sets the data array to the specified array and returns this generator. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
       @param {Array} [*data* = []]
   */
