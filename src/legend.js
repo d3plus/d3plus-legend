@@ -206,28 +206,25 @@ export default function(data = []) {
 
     // Legend Shapes
     const legendShapes = d3plusShape.rect()
-      .backgroundImage(shapeImage)
-      .data(data)
-      .duration(duration)
-      .fill(fill)
-      .fontColor(fontColor)
-      .fontFamily(fontFamily)
-      .fontResize(fontResize)
-      .fontSize(fontSize)
-      .height(size)
-      .id(id)
-      .innerBounds(labelBounds)
-      .label(visibleLabels ? label : false)
-      .labelPadding(0)
-      .lineHeight(lineHeight)
-      .opacity(opacity)
-      .select(shapeGroup.node())
-      .stroke(stroke)
-      .strokeWidth(strokeWidth)
-      .verticalAlign("top")
-      .width(size)
-      .x(x)
-      .y(y);
+      .config({
+        backgroundImage: shapeImage,
+        data,
+        duration,
+        fill,
+        fontColor, fontFamily, fontResize, fontSize,
+        height: size,
+        id,
+        lineHeight,
+        opacity,
+        innerBounds: labelBounds,
+        label: visibleLabels ? label : false,
+        labelPadding: 0,
+        select: shapeGroup.node(),
+        stroke, strokeWidth,
+        verticalAlign: "top",
+        width: size,
+        x, y
+      });
 
     const events = Object.keys(on);
     for (let e = 0; e < events.length; e++) legendShapes.on(events[e], on[events[e]]);
