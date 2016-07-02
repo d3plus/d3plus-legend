@@ -77,6 +77,7 @@ export default function(data = []) {
       labelBounds = shapeLabelBounds,
       lineData = [],
       lineHeight,
+      opacity = 1,
       orient = "horizontal",
       padding = 5,
       select,
@@ -219,6 +220,7 @@ export default function(data = []) {
       .label(visibleLabels ? label : false)
       .labelPadding(0)
       .lineHeight(lineHeight)
+      .opacity(opacity)
       .select(shapeGroup.node())
       .stroke(stroke)
       .strokeWidth(strokeWidth)
@@ -396,6 +398,15 @@ function(w, h) {
   */
   shape.on = function(typenames, listener) {
     return arguments.length === 2 ? (on[typenames] = listener, shape) : arguments.length ? on[typenames] : on;
+  };
+
+  /**
+      @memberof shape
+      @desc If *value* is specified, sets the opacity accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current opacity accessor, which by default returns a color that contrasts the fill color.
+      @param {Function|Number} [*value* = 1]
+  */
+  shape.opacity = function(_) {
+    return arguments.length ? (opacity = typeof _ === "function" ? _ : constant(_), shape) : opacity;
   };
 
   /**
