@@ -1,9 +1,9 @@
 import {test} from "tape";
-import {default as shape} from "../src/shape.js";
+import {default as legend} from "../src/legend.js";
 
-test("shape", (assert) => {
+test("legend", (assert) => {
 
-  shape()
+  legend()
     (() => {
 
       assert.true(true, "function success");
