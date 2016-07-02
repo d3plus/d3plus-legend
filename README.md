@@ -92,6 +92,7 @@ shape().data([data])(function() { alert("draw complete!"); })
     * [.label([*value*])](#shape.label)
     * [.labelBounds([*bounds*])](#shape.labelBounds)
     * [.on([*typenames*], [*listener*])](#shape.on)
+    * [.opacity([*value*])](#shape.opacity)
     * [.orient([*orient*])](#shape.orient)
     * [.outerBounds()](#shape.outerBounds)
     * [.padding([*value*])](#shape.padding)
@@ -283,6 +284,17 @@ Adds or removes a *listener* to each shape for the specified event *typenames*. 
 | --- | --- |
 | [*typenames*] | <code>String</code> | 
 | [*listener*] | <code>function</code> | 
+
+<a name="shape.opacity"></a>
+
+### shape.opacity([*value*])
+If *value* is specified, sets the opacity accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current opacity accessor, which by default returns a color that contrasts the fill color.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>function</code> &#124; <code>Number</code> | <code>1</code> | 
 
 <a name="shape.orient"></a>
 
