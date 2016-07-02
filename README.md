@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/d3plus/d3plus-legend.svg?branch=master)](https://travis-ci.org/d3plus/d3plus-legend)
 [![Dependency Status](http://img.shields.io/david/d3plus/d3plus-legend.svg?style=flat-square)](https://david-dm.org/d3plus/d3plus-legend)
 
-A collection of chart legends/keys.
+A collection of chart legends and keys.
 
 ## Installation Options
 
@@ -21,10 +21,10 @@ npm install d3plus-legend
 
 <a name="install.browser"></a>
 ### Browser
-In a vanilla environment, a `d3plus_legend` global is exported. To use a compiled version hosted on [d3plus.org](https://d3plus.org) that includes all dependencies:
+In a vanilla environment, a `d3plus` global is exported. To use a compiled version hosted on [d3plus.org](https://d3plus.org) that includes all dependencies:
 
 ```html
-<script src="https://d3plus.org/js/d3plus-legend.v0.2.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-legend.v0.3.full.min.js"></script>
 ```
 
 Otherwise, [click here](https://github.com/d3plus/d3plus-legend/releases/latest) to download the latest release.
@@ -80,6 +80,7 @@ shape().data([data])(function() { alert("draw complete!"); })
 * [shape([data])](#shape)
     * [.align([*value*])](#shape.align)
     * [.backgroundColor([*color*])](#shape.backgroundColor)
+    * [.config([*value*])](#shape.config)
     * [.data([*data*])](#shape.data)
     * [.fill([*value*])](#shape.fill)
     * [.fontColor([*value*])](#shape.fontColor)
@@ -125,6 +126,17 @@ If a valid CSS *color* is specified, sets the overall background color to the sp
 | Param | Type | Default |
 | --- | --- | --- |
 | [*color*] | <code>String</code> | <code>[]</code> | 
+
+<a name="shape.config"></a>
+
+### shape.config([*value*])
+If *value* is specified, sets the methods that correspond to the key/value pairs and returns this generator. If *value* is not specified, returns the current configuration.
+
+**Kind**: static method of <code>[shape](#shape)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Object</code> | 
 
 <a name="shape.data"></a>
 
@@ -313,7 +325,7 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*selector*] | <code>String</code> &#124; <code>HTMLElement</code> | <code>d3Select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
+| [*selector*] | <code>String</code> &#124; <code>HTMLElement</code> | <code>d3.select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
 
 <a name="shape.shapeImage"></a>
 
