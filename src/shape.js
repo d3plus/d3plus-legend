@@ -32,7 +32,7 @@ export default function(data = []) {
   */
   function shapeLabelBounds(s, i) {
     const d = lineData[i];
-    return {"width": d.width, "height": d.height, "x": s.width / 2 + padding, "y": 1 - d.height / 2};
+    return {width: d.width, height: d.height, x: s.width / 2 + padding, y: 1 - d.height / 2};
   }
 
   /**
@@ -61,7 +61,7 @@ export default function(data = []) {
   }
 
   const on = {},
-        outerBounds = {"width": 0, "height": 0, "x": 0, "y": 0};
+        outerBounds = {width: 0, height: 0, x: 0, y: 0};
 
   let align = "center",
       backgroundColor = "transparent",
@@ -108,7 +108,7 @@ export default function(data = []) {
 
     // Background Rectangle
     d3plusShape.rect()
-      .data([{"id": "legend-background"}])
+      .data([{id: "legend-background"}])
       .duration(duration)
       .fill(backgroundColor)
       .height(height)
@@ -126,10 +126,7 @@ export default function(data = []) {
       const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(label(d, i));
       res.width = Math.ceil(max(res.lines.map((t) => measureText(t, {"font-family": f, "font-size": s})))) + s;
       res.height = Math.ceil(res.lines.length * (lh + 1));
-      res.og = {
-        "height": res.height,
-        "width": res.width
-      };
+      res.og = {height: res.height, width: res.width};
       res.data = d;
       res.f = f;
       res.s = s;
