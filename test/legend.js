@@ -1,7 +1,7 @@
 import {test} from "tape";
 import {default as legend} from "../src/legend.js";
 
-test("legend", (assert) => {
+test("legend", assert => {
 
   legend()
     (() => {

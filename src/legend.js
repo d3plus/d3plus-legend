@@ -41,9 +41,11 @@ export default function(data = []) {
   */
   function shapeX(d, i) {
     if (orient === "vertical") return outerBounds.x + size(d, i) / 2;
-    else return outerBounds.x + sum(data.slice(0, i).map((b, i) => size(b, i))) +
-                sum(lineData.slice(0, i).map((l) => l.width - fontSize(d, i))) +
-                size(d, i) / 2 + padding * 3 * i;
+    else {
+      return outerBounds.x + sum(data.slice(0, i).map((b, i) => size(b, i))) +
+             sum(lineData.slice(0, i).map(l => l.width - fontSize(d, i))) +
+             size(d, i) / 2 + padding * 3 * i;
+    }
   }
 
   /**
@@ -51,7 +53,7 @@ export default function(data = []) {
       @private
   */
   function shapeY(d, i) {
-    if (orient === "horizontal") return outerBounds.y + max(lineData.map((l) => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
+    if (orient === "horizontal") return outerBounds.y + max(lineData.map(l => l.height).concat(data.map((l, x) => size(l, x)))) / 2;
     else {
       const s = size(d, i);
       const pad = lineData[i].height > s ? lineData[i].height / 2 : s / 2,
@@ -125,7 +127,7 @@ export default function(data = []) {
       const h = orient === "horizontal" ? height - (data.length + 1) * padding : height,
             w = orient === "vertical" ? width - padding * 3 - size(d, i) : width;
       const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(label(d, i));
-      res.width = Math.ceil(max(res.lines.map((t) => measureText(t, {"font-family": f, "font-size": s})))) + s;
+      res.width = Math.ceil(max(res.lines.map(t => measureText(t, {"font-family": f, "font-size": s})))) + s;
       res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {height: res.height, width: res.width};
       res.data = d;
@@ -142,14 +144,14 @@ export default function(data = []) {
       textSpace = sum(lineData.map((d, i) => d.width - fontSize(d, i)));
       if (textSpace > availableSpace) {
         const wrappable = lineData
-          .filter((d) => d.words.length > 1)
+          .filter(d => d.words.length > 1)
           .sort((a, b) => b.sentence.length - a.sentence.length);
 
         if (wrappable.length && height > wrappable[0].height * 2) {
 
           let line = 2;
           while (line <= 5) {
-            const labels = wrappable.filter((d) => d.words.length >= line);
+            const labels = wrappable.filter(d => d.words.length >= line);
             if (!labels.length) break;
             for (let x = 0; x < wrappable.length; x++) {
               const label = wrappable[x];
@@ -157,7 +159,7 @@ export default function(data = []) {
               const res = wrap().fontFamily(label.f).fontSize(label.s).lineHeight(label.lh).width(w).height(h)(label.sentence);
               if (!res.truncated) {
                 textSpace -= label.width;
-                label.width = Math.ceil(max(res.lines.map((t) => measureText(t, {"font-family": label.f, "font-size": label.s})))) + label.s;
+                label.width = Math.ceil(max(res.lines.map(t => measureText(t, {"font-family": label.f, "font-size": label.s})))) + label.s;
                 label.height = res.lines.length * (label.lh + 1);
                 textSpace += label.width;
                 if (textSpace <= availableSpace) break;
