@@ -25,9 +25,9 @@
   "dependencies": {
     "d3-array": "^1.0.0",
     "d3-selection": "^1.0.0",
-    "d3plus-common": "^0.4.2",
+    "d3plus-common": "^0.5.2",
     "d3plus-shape": "^0.7.0",
-    "d3plus-text": "^0.7.1"
+    "d3plus-text": "^0.8.1"
   },
   "scripts": {
     "dev": "d3plus-dev",
