@@ -6,43 +6,19 @@
 
 A collection of chart legends and keys.
 
-## Installation Options
+## Installing
 
-* [NPM](#install.npm)
-* [Browser](#install.browser)
-* [AMD and CommonJS](#install.amd)
-* [Custom Builds](#install.custom)
-
-<a name="install.npm"></a>
-### NPM
-```sh
-npm install d3plus-legend
-```
-
-<a name="install.browser"></a>
-### Browser
-In a vanilla environment, a `d3plus` global is exported. To use a compiled version hosted on [d3plus.org](https://d3plus.org) that includes all dependencies:
+If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-legend/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
 <script src="https://d3plus.org/js/d3plus-legend.v0.3.full.min.js"></script>
 ```
 
-Otherwise, [click here](https://github.com/d3plus/d3plus-legend/releases/latest) to download the latest release.
 
-<a name="install.amd"></a>
-### AMD and CommonJS
-The released bundle natively supports both AMD and CommonJS, in addition to vanilla environments.
-
-<a name="install.custom"></a>
-### Custom Builds
-The source code is written using standard `import` and `export` statements. Create a custom build using [Rollup](https://github.com/rollup/rollup) or your preferred bundler. Take a look at the [index.js](https://github.com/d3plus/d3plus-legend/blob/master/index.js) file to see the modules exported.
-
----
-
-# API Reference
+## API Reference
 <a name="shape"></a>
 
-## shape([data])
+### shape([data])
 Creates an SVG shape legend based on an array of data. If *data* is specified, immediately draws based on the specified array and returns this generator. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
 
 **Kind**: global function  
@@ -108,7 +84,7 @@ shape().data([data])(function() { alert("draw complete!"); })
 
 <a name="shape.align"></a>
 
-### shape.align([*value*])
+#### shape.align([*value*])
 If *value* is specified, sets the horizontal alignment to the specified value and returns this generator. If *value* is not specified, returns the current horizontal alignment.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -119,7 +95,7 @@ If *value* is specified, sets the horizontal alignment to the specified value an
 
 <a name="shape.backgroundColor"></a>
 
-### shape.backgroundColor([*color*])
+#### shape.backgroundColor([*color*])
 If a valid CSS *color* is specified, sets the overall background color to the specified value and returns this generator. If *color* is not specified, returns the current background color.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -130,7 +106,7 @@ If a valid CSS *color* is specified, sets the overall background color to the sp
 
 <a name="shape.config"></a>
 
-### shape.config([*value*])
+#### shape.config([*value*])
 If *value* is specified, sets the methods that correspond to the key/value pairs and returns this generator. If *value* is not specified, returns the current configuration.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -141,7 +117,7 @@ If *value* is specified, sets the methods that correspond to the key/value pairs
 
 <a name="shape.data"></a>
 
-### shape.data([*data*])
+#### shape.data([*data*])
 If *data* is specified, sets the data array to the specified array and returns this generator. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -152,7 +128,7 @@ If *data* is specified, sets the data array to the specified array and returns t
 
 <a name="shape.fill"></a>
 
-### shape.fill([*value*])
+#### shape.fill([*value*])
 If *value* is specified, sets the fill accessor to the specified function and returns this generator. If *value* is not specified, returns the current fill accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -169,7 +145,7 @@ function value(d) {
 ```
 <a name="shape.fontColor"></a>
 
-### shape.fontColor([*value*])
+#### shape.fontColor([*value*])
 If *value* is specified, sets the font-color accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-color accessor, which by default returns a color that contrasts the fill color.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -180,7 +156,7 @@ If *value* is specified, sets the font-color accessor to the specified function 
 
 <a name="shape.fontFamily"></a>
 
-### shape.fontFamily([*value*])
+#### shape.fontFamily([*value*])
 If *value* is specified, sets the font-family accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-family accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -191,7 +167,7 @@ If *value* is specified, sets the font-family accessor to the specified function
 
 <a name="shape.fontResize"></a>
 
-### shape.fontResize([*value*])
+#### shape.fontResize([*value*])
 If *value* is specified, sets the font resizing accessor to the specified function or boolean and returns this generator. If *value* is not specified, returns the current font resizing accessor. When font resizing is enabled, the font-size of the value returned by [label](#shape.label) will be resized the best fit the rectangle.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -202,7 +178,7 @@ If *value* is specified, sets the font resizing accessor to the specified functi
 
 <a name="shape.fontSize"></a>
 
-### shape.fontSize([*value*])
+#### shape.fontSize([*value*])
 If *value* is specified, sets the font-size accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current font-size accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -213,7 +189,7 @@ If *value* is specified, sets the font-size accessor to the specified function o
 
 <a name="shape.height"></a>
 
-### shape.height([*value*])
+#### shape.height([*value*])
 If *value* is specified, sets the overall height of the legend and returns this generator. If *value* is not specified, returns the current height value.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -224,7 +200,7 @@ If *value* is specified, sets the overall height of the legend and returns this 
 
 <a name="shape.id"></a>
 
-### shape.id([*value*])
+#### shape.id([*value*])
 If *value* is specified, sets the id accessor to the specified function and returns this generator. If *value* is not specified, returns the current id accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -241,7 +217,7 @@ function value(d) {
 ```
 <a name="shape.label"></a>
 
-### shape.label([*value*])
+#### shape.label([*value*])
 If *value* is specified, sets the label accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current label accessor, which is the [id](#shape.id) accessor by default.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -252,7 +228,7 @@ If *value* is specified, sets the label accessor to the specified function or st
 
 <a name="shape.labelBounds"></a>
 
-### shape.labelBounds([*bounds*])
+#### shape.labelBounds([*bounds*])
 If *bounds* is specified, sets the inner bounds to the specified function and returns this legend generator. If *bounds* is not specified, returns the current inner bounds accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -275,7 +251,7 @@ function(w, h) {
 ```
 <a name="shape.on"></a>
 
-### shape.on([*typenames*], [*listener*])
+#### shape.on([*typenames*], [*listener*])
 Adds or removes a *listener* to each shape for the specified event *typenames*. If a *listener* is not specified, returns the currently-assigned listener for the specified event *typename*. Mirrors the core [d3-selection](https://github.com/d3/d3-selection#selection_on) behavior.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -287,7 +263,7 @@ Adds or removes a *listener* to each shape for the specified event *typenames*. 
 
 <a name="shape.opacity"></a>
 
-### shape.opacity([*value*])
+#### shape.opacity([*value*])
 If *value* is specified, sets the opacity accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current opacity accessor, which by default returns a color that contrasts the fill color.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -298,7 +274,7 @@ If *value* is specified, sets the opacity accessor to the specified function or 
 
 <a name="shape.orient"></a>
 
-### shape.orient([*orient*])
+#### shape.orient([*orient*])
 If *orient* is specified, sets the orientation of the shape and returns this generator. If *orient* is not specified, returns the current orientation.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -309,7 +285,7 @@ If *orient* is specified, sets the orientation of the shape and returns this gen
 
 <a name="shape.outerBounds"></a>
 
-### shape.outerBounds()
+#### shape.outerBounds()
 If called after the elements have been drawn to DOM, will returns the outer bounds of the legend content.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -319,7 +295,7 @@ If called after the elements have been drawn to DOM, will returns the outer boun
 ```
 <a name="shape.padding"></a>
 
-### shape.padding([*value*])
+#### shape.padding([*value*])
 If *value* is specified, sets the padding between each key to the specified number and returns this generator. If *value* is not specified, returns the current padding value.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -330,7 +306,7 @@ If *value* is specified, sets the padding between each key to the specified numb
 
 <a name="shape.select"></a>
 
-### shape.select([*selector*])
+#### shape.select([*selector*])
 If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns this generator. If *selector* is not specified, returns the current SVG container element.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -341,7 +317,7 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 
 <a name="shape.shapeImage"></a>
 
-### shape.shapeImage([*value*])
+#### shape.shapeImage([*value*])
 If *value* is specified, sets the shape background image accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current shape background image accessor, which by default returns a color that contrasts the fill color.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -352,7 +328,7 @@ If *value* is specified, sets the shape background image accessor to the specifi
 
 <a name="shape.size"></a>
 
-### shape.size([*value*])
+#### shape.size([*value*])
 If *value* is specified, sets the size accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current size accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -363,7 +339,7 @@ If *value* is specified, sets the size accessor to the specified function or num
 
 <a name="shape.stroke"></a>
 
-### shape.stroke([*value*])
+#### shape.stroke([*value*])
 If *value* is specified, sets the stroke accessor to the specified function and returns this generator. If *value* is not specified, returns the current stroke accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -380,7 +356,7 @@ function value(d) {
 ```
 <a name="shape.strokeWidth"></a>
 
-### shape.strokeWidth([*value*])
+#### shape.strokeWidth([*value*])
 If *value* is specified, sets the stroke-width accessor to the specified function and returns this generator. If *value* is not specified, returns the current stroke-width accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -397,7 +373,7 @@ function value(d) {
 ```
 <a name="shape.verticalAlign"></a>
 
-### shape.verticalAlign([*value*])
+#### shape.verticalAlign([*value*])
 If *value* is specified, sets the vertical alignment to the specified value and returns this generator. If *value* is not specified, returns the current vertical alignment.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -408,7 +384,7 @@ If *value* is specified, sets the vertical alignment to the specified value and 
 
 <a name="shape.width"></a>
 
-### shape.width([*value*])
+#### shape.width([*value*])
 If *value* is specified, sets the overall width of the legend and returns this generator. If *value* is not specified, returns the current width value.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -419,7 +395,7 @@ If *value* is specified, sets the overall width of the legend and returns this g
 
 <a name="shape.x"></a>
 
-### shape.x([*value*])
+#### shape.x([*value*])
 If *value* is specified, sets the x accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current x accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -430,7 +406,7 @@ If *value* is specified, sets the x accessor to the specified function or number
 
 <a name="shape.y"></a>
 
-### shape.y([*value*])
+#### shape.y([*value*])
 If *value* is specified, sets the y accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current y accessor.
 
 **Kind**: static method of <code>[shape](#shape)</code>  
@@ -439,3 +415,6 @@ If *value* is specified, sets the y accessor to the specified function or number
 | --- | --- |
 | [*value*] | <code>function</code> &#124; <code>Number</code> | 
 
+
+
+###### <sub>Documentation generated on Thu, 21 Jul 2016 22:00:06 GMT</sub>
