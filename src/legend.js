@@ -2,7 +2,7 @@ import {accessor, constant} from "d3plus-common";
 import {max, sum} from "d3-array";
 import {select as d3Select} from "d3-selection";
 import * as d3plusShape from "d3plus-shape";
-import {width as measureText, wrap} from "d3plus-text";
+import {textWidth as measureText, textWrap as wrap} from "d3plus-text";
 
 /**
     @function shape
