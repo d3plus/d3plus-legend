@@ -32,48 +32,49 @@ export default class ShapeLegend {
 
     const s = new d3plus.Shape();
 
-    this._shapeConfig = {
-      fill: accessor("color"),
-      fontColor: constant("#444"),
-      fontFamily: s.fontFamily(),
-      fontSize: constant(10)
-    };
-
     this._align = "center";
-    this._duration = 600;
     this._height = 100;
     this._id = accessor("id");
     this._label = accessor("id");
-    this._labelBounds = (s, i) => {
-      const d = this._lineData[i];
-      return {width: d.width, height: d.height, x: s.width / 2 + this._padding, y: 1 - d.height / 2};
-    };
     this._lineData = [];
-    this._on = {};
-    this._opacity = 1;
     this._orient = "horizontal";
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
-    this._size = constant(10);
+    this._shapeConfig = {
+      duration: s.duration(),
+      fill: accessor("color"),
+      fontColor: constant("#444"),
+      fontFamily: s.fontFamily(),
+      fontSize: constant(10),
+      height: constant(10),
+      labelBounds: (s, i) => {
+        const d = this._lineData[i];
+        return {width: d.width, height: d.height, x: s.width / 2 + this._padding, y: 1 - d.height / 2};
+      },
+      opacity: 1,
+      width: constant(10),
+      x: (d, i) => {
+        const s = this._shapeConfig.width;
+        if (this._orient === "vertical") return this._outerBounds.x + s(d, i) / 2;
+        else {
+          return this._outerBounds.x + sum(this._data.slice(0, i).map((b, i) => s(b, i))) +
+                 sum(this._lineData.slice(0, i).map(l => l.width - this._shapeConfig.fontSize(d, i))) +
+                 s(d, i) / 2 + this._padding * 3 * i;
+        }
+      },
+      y: (d, i) => {
+        const s = this._shapeConfig.height;
+        if (this._orient === "horizontal") return this._outerBounds.y + max(this._lineData.map(l => l.height).concat(this._data.map((l, x) => s(l, x)))) / 2;
+        else {
+          const h = s(d, i);
+          const pad = this._lineData[i].height > h ? this._lineData[i].height / 2 : h / 2,
+                prev = sum(this._lineData.slice(0, i), (l, x) => max([l.height, s(l.data, x)]));
+          return this._outerBounds.y + prev + pad + this._padding * i;
+        }
+      }
+    };
     this._verticalAlign = "middle";
     this._width = 400;
-    this._x = (d, i) => {
-      if (this._orient === "vertical") return this._outerBounds.x + this._size(d, i) / 2;
-      else {
-        return this._outerBounds.x + sum(this._data.slice(0, i).map((b, i) => this._size(b, i))) +
-               sum(this._lineData.slice(0, i).map(l => l.width - this._shapeConfig.fontSize(d, i))) +
-               this._size(d, i) / 2 + this._padding * 3 * i;
-      }
-    };
-    this._y = (d, i) => {
-      if (this._orient === "horizontal") return this._outerBounds.y + max(this._lineData.map(l => l.height).concat(this._data.map((l, x) => this._size(l, x)))) / 2;
-      else {
-        const s = this._size(d, i);
-        const pad = this._lineData[i].height > s ? this._lineData[i].height / 2 : s / 2,
-              prev = sum(this._lineData.slice(0, i), (l, x) => max([l.height, this._size(l.data, x)]));
-        return this._outerBounds.y + prev + pad + this._padding * i;
-      }
-    };
 
   }
 
@@ -91,7 +92,7 @@ export default class ShapeLegend {
     this._lineData = this._data.map((d, i) => {
       const f = this._shapeConfig.fontFamily(d, i), lh = this._lineHeight(d, i), s = this._shapeConfig.fontSize(d, i);
       const h = this._orient === "horizontal" ? this._height - (this._data.length + 1) * this._padding : this._height,
-            w = this._orient === "vertical" ? this._width - this._padding * 3 - this._size(d, i) : this._width;
+            w = this._orient === "vertical" ? this._width - this._padding * 3 - this._shapeConfig.width(d, i) : this._width;
       const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(this._label(d, i));
       res.width = Math.ceil(max(res.lines.map(t => measureText(t, {"font-family": f, "font-size": s})))) + s;
       res.height = Math.ceil(res.lines.length * (lh + 1));
@@ -106,7 +107,7 @@ export default class ShapeLegend {
     let availableSpace, textSpace, visibleLabels = true;
 
     if (this._orient === "horizontal") {
-      availableSpace = this._width - sum(this._data.map((d, i) => this._size(d, i) + this._padding * 3)) - this._padding * 2;
+      availableSpace = this._width - sum(this._data.map((d, i) => this._shapeConfig.width(d, i) + this._padding * 3)) - this._padding * 2;
       textSpace = sum(this._lineData.map((d, i) => d.width - this._shapeConfig.fontSize(d, i)));
       if (textSpace > availableSpace) {
         const wrappable = this._lineData
@@ -150,8 +151,8 @@ export default class ShapeLegend {
       }
     }
 
-    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._size(d.data, i)])),
-          innerWidth = textSpace + sum(this._data, (d, i) => this._size(d, i)) + this._padding * (this._data.length * (visibleLabels ? 3 : 1) - 2);
+    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)])),
+          innerWidth = textSpace + sum(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * (this._data.length * (visibleLabels ? 3 : 1) - 2);
     this._outerBounds.width = innerWidth;
     this._outerBounds.height = innerHeight;
 
@@ -173,28 +174,18 @@ export default class ShapeLegend {
       .merge(shapeGroup);
 
     // Legend Shapes
-    const shapes = new d3plus.Rect()
-      .config(this._shapeConfig)
+    new d3plus.Rect()
       .data(this._data)
-      .duration(this._duration)
-      .height(this._size)
       .id(this._id)
       .lineHeight(this._lineHeight)
-      .opacity(this._opacity)
-      .labelBounds(this._labelBounds)
       .label(visibleLabels ? this._label : false)
       .labelPadding(0)
       .select(shapeGroup.node())
       .verticalAlign("top")
-      .width(this._size)
-      .x(this._x)
-      .y(this._y);
+      .config(this._shapeConfig)
+      .render();
 
-    const events = Object.keys(this._on);
-    for (let e = 0; e < events.length; e++) shapes.on(events[e], this._on[events[e]]);
-    shapes.render();
-
-    if (callback) setTimeout(callback, this._duration + 100);
+    if (callback) setTimeout(callback, this._shapeConfig.duration + 100);
 
     return this;
 
@@ -236,15 +227,6 @@ export default class ShapeLegend {
   }
 
   /**
-      @memberof rect
-      @desc If *ms* is specified, sets the animation duration to the specified number and returns this generator. If *ms* is not specified, returns the current animation duration.
-      @param {Number} [*ms* = 600]
-  */
-  duration(_) {
-    return arguments.length ? (this._duration = _, this) : this._duration;
-  }
-
-  /**
       @memberof ShapeLegend
       @desc If *value* is specified, sets the overall height of the legend and returns this generator. If *value* is not specified, returns the current height value.
       @param {Number} [*value* = 100]
@@ -273,43 +255,6 @@ function value(d) {
   */
   label(_) {
     return arguments.length ? (this._label = typeof _ === "function" ? _ : constant(_), this) : this._label;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *bounds* is specified, sets the inner bounds to the specified function and returns this legend generator. If *bounds* is not specified, returns the current inner bounds accessor.
-      @example
-function(w, h) {
-  return {
-    "width": w,
-    "height": h,
-    "x": -w / 2,
-    "y": -h / 2
-  };
-}
-      @param {Function} [*bounds*] Given a shape's width and height, the function should return an object containing the following values: `width`, `height`, `x`, `y`.
-  */
-  labelBounds(_) {
-    return arguments.length ? (this._labelBounds = _, this) : this._labelBounds;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc Adds or removes a *listener* to each shape for the specified event *typenames*. If a *listener* is not specified, returns the currently-assigned listener for the specified event *typename*. Mirrors the core [d3-selection](https://github.com/d3/d3-selection#selection_on) behavior.
-      @param {String} [*typenames*]
-      @param {Function} [*listener*]
-  */
-  on(typenames, listener) {
-    return arguments.length === 2 ? (this._on[typenames] = listener, this) : arguments.length ? this._on[typenames] : this._on;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *value* is specified, sets the opacity accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current opacity accessor, which by default returns a color that contrasts the fill color.
-      @param {Function|Number} [*value* = 1]
-  */
-  opacity(_) {
-    return arguments.length ? (this._opacity = typeof _ === "function" ? _ : constant(_), this) : this._opacity;
   }
 
   /**
@@ -360,15 +305,6 @@ function(w, h) {
 
   /**
       @memberof ShapeLegend
-      @desc If *value* is specified, sets the size accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current size accessor.
-      @param {Function|Number} [*value* = 20]
-  */
-  size(_) {
-    return arguments.length ? (this._size = typeof _ === "function" ? _ : constant(_), this) : this._size;
-  }
-
-  /**
-      @memberof ShapeLegend
       @desc If *value* is specified, sets the vertical alignment to the specified value and returns this generator. If *value* is not specified, returns the current vertical alignment.
       @param {String} [*value* = "middle"] Supports `"top"` and `"middle"` and `"bottom"`.
   */
@@ -383,24 +319,6 @@ function(w, h) {
   */
   width(_) {
     return arguments.length ? (this._width = _, this) : this._width;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *value* is specified, sets the x accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current x accessor.
-      @param {Function|Number} [*value*]
-  */
-  x(_) {
-    return arguments.length ? (this._x = typeof _ === "function" ? _ : constant(_), this) : this._x;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *value* is specified, sets the y accessor to the specified function or number and returns this generator. If *value* is not specified, returns the current y accessor.
-      @param {Function|Number} [*value*]
-  */
-  y(_) {
-    return arguments.length ? (this._y = typeof _ === "function" ? _ : constant(_), this) : this._y;
   }
 
 }
