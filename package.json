@@ -25,12 +25,15 @@
   "dependencies": {
     "d3-array": "^1.0.0",
     "d3-selection": "^1.0.2",
-    "d3plus-common": "^0.5.2",
+    "d3plus-common": "^0.5.4",
     "d3plus-shape": "^0.7.0",
     "d3plus-text": "^0.8.3"
   },
   "scripts": {
     "dev": "d3plus-dev",
+    "docs": "d3plus-docs",
+    "env": "d3plus-env",
+    "exmaples": "d3plus-examples",
     "release": "d3plus-release",
     "test": "d3plus-test"
   }
