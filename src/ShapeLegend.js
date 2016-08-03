@@ -1,5 +1,6 @@
 import {accessor, constant} from "d3plus-common";
 import {max, sum} from "d3-array";
+import {nest} from "d3-collection";
 import {select as d3Select} from "d3-selection";
 import * as d3plus from "d3plus-shape";
 import {textWidth as measureText, textWrap as wrap} from "d3plus-text";
@@ -40,6 +41,7 @@ export default class ShapeLegend {
     this._orient = "horizontal";
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
+    this._shape = constant("Rect");
     this._shapeConfig = {
       duration: s.duration(),
       fill: accessor("color"),
@@ -48,10 +50,12 @@ export default class ShapeLegend {
       fontSize: constant(10),
       height: constant(10),
       labelBounds: (s, i) => {
-        const d = this._lineData[i];
-        return {width: d.width, height: d.height, x: s.width / 2 + this._padding, y: 1 - d.height / 2};
+        const d = this._lineData[i],
+              w = s.r !== void 0 ? s.r : s.width / 2;
+        return {width: d.width, height: d.height, x: w + this._padding, y: 1 - d.height / 2};
       },
       opacity: 1,
+      r: constant(5),
       width: constant(10),
       x: (d, i) => {
         const s = this._shapeConfig.width;
@@ -90,7 +94,9 @@ export default class ShapeLegend {
 
     // Calculate Text Sizes
     this._lineData = this._data.map((d, i) => {
-      const f = this._shapeConfig.fontFamily(d, i), lh = this._lineHeight(d, i), s = this._shapeConfig.fontSize(d, i);
+      const f = this._shapeConfig.fontFamily(d, i),
+            lh = this._lineHeight(d, i),
+            s = this._shapeConfig.fontSize(d, i);
       const h = this._orient === "horizontal" ? this._height - (this._data.length + 1) * this._padding : this._height,
             w = this._orient === "vertical" ? this._width - this._padding * 3 - this._shapeConfig.width(d, i) : this._width;
       const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(this._label(d, i));
@@ -181,16 +187,20 @@ export default class ShapeLegend {
       .merge(shapeGroup);
 
     // Legend Shapes
-    new d3plus.Rect()
-      .data(this._data)
-      .id(this._id)
-      .lineHeight(this._lineHeight)
-      .label(visibleLabels ? this._label : false)
-      .labelPadding(0)
-      .select(shapeGroup.node())
-      .verticalAlign("top")
-      .config(this._shapeConfig)
-      .render();
+    nest().key(this._shape).entries(this._data).forEach(d => {
+
+      new d3plus[d.key]()
+        .data(d.values)
+        .id(this._id)
+        .lineHeight(this._lineHeight)
+        .label(visibleLabels ? this._label : false)
+        .labelPadding(0)
+        .select(shapeGroup.node())
+        .verticalAlign("top")
+        .config(this._shapeConfig)
+        .render();
+
+    });
 
     if (callback) setTimeout(callback, this._shapeConfig.duration + 100);
 
@@ -299,6 +309,15 @@ function value(d) {
   */
   select(_) {
     return arguments.length ? (this._select = d3Select(_), this) : this._select;
+  }
+
+  /**
+      @memberof ShapeLegend
+      @desc If *value* is specified, sets the shape accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current shape accessor.
+      @param {Function|String} [*value* = "Rect"]
+  */
+  shape(_) {
+    return arguments.length ? (this._shape = typeof _ === "function" ? _ : constant(_), this) : this._shape;
   }
 
   /**
