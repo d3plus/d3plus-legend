@@ -1,7 +1,7 @@
 import {accessor, constant} from "d3plus-common";
 import {max, sum} from "d3-array";
 import {select as d3Select} from "d3-selection";
-import * as d3plusShape from "d3plus-shape";
+import * as d3plus from "d3plus-shape";
 import {textWidth as measureText, textWrap as wrap} from "d3plus-text";
 
 /**
@@ -186,7 +186,7 @@ export default function(data = []) {
       .merge(shapeGroup);
 
     // Legend Shapes
-    const legendShapes = d3plusShape.rect()
+    const legendShapes = new d3plus.Rect()
       .config({
         backgroundImage: shapeImage,
         data,
@@ -197,7 +197,7 @@ export default function(data = []) {
         id,
         lineHeight,
         opacity,
-        innerBounds: labelBounds,
+        labelBounds,
         label: visibleLabels ? label : false,
         labelPadding: 0,
         select: shapeGroup.node(),
@@ -209,7 +209,7 @@ export default function(data = []) {
 
     const events = Object.keys(on);
     for (let e = 0; e < events.length; e++) legendShapes.on(events[e], on[events[e]]);
-    legendShapes();
+    legendShapes.render();
 
     if (callback) setTimeout(callback, duration + 100);
 
