@@ -66,7 +66,6 @@ export default function(data = []) {
         outerBounds = {width: 0, height: 0, x: 0, y: 0};
 
   let align = "center",
-      backgroundColor = "transparent",
       duration = 600,
       fill = accessor("color"),
       fontColor = constant("#444"),
@@ -100,26 +99,6 @@ export default function(data = []) {
 
     if (select === void 0) shape.select(d3Select("body").append("svg").attr("width", `${window.innerWidth}px`).attr("height", `${window.innerHeight}px`).node());
     if (lineHeight === void 0) lineHeight = (d, i) => fontSize(d, i) * 1.1;
-
-    // Background <g> Group
-    let bgGroup = select.selectAll("g.d3plus-legend-bg-group")
-      .data([0]);
-
-    bgGroup = bgGroup.enter().append("g")
-        .attr("class", "d3plus-legend-bg-group")
-      .merge(bgGroup);
-
-    // Background Rectangle
-    d3plusShape.rect()
-      .data([{id: "legend-background"}])
-      .duration(duration)
-      .fill(backgroundColor)
-      .height(height)
-      .select(bgGroup.node())
-      .width(width)
-      .x(width / 2)
-      .y(height / 2)
-      ();
 
     // Calculate Text Sizes
     lineData = data.map((d, i) => {
@@ -245,15 +224,6 @@ export default function(data = []) {
   */
   shape.align = function(_) {
     return arguments.length ? (align = _, shape) : align;
-  };
-
-  /**
-      @memberof shape
-      @desc If a valid CSS *color* is specified, sets the overall background color to the specified value and returns this generator. If *color* is not specified, returns the current background color.
-      @param {String} [*color* = []]
-  */
-  shape.backgroundColor = function(_) {
-    return arguments.length ? (backgroundColor = _, shape) : backgroundColor;
   };
 
   /**
