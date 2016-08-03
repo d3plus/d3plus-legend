@@ -8,24 +8,6 @@ import {textWidth as measureText, textWrap as wrap} from "d3plus-text";
 /**
     @class ShapeLegend
     @desc Creates an SVG shape legend based on an array of data. If *data* is specified, immediately draws based on the specified array and returns this generator. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
-    @param {Array} [data = []]
-    @example <caption>a sample dataset</caption>
-var data = [
-  {"id": 0, "color": "brickred"},
-  {"id": 1, "color": "cornflowerblue"}
-];
-@example <caption>passed to the generator</caption>
-new ShapeLegend()
-  .data([data])
-  .render();
-@example <caption>creates the following</caption>
-<g class="d3plus-shape-rect" id="d3plus-shape-rect-0" transform="translate(100,50)">
-  <rect width="200" height="100" x="-100" y="-50" fill="black"></rect>
-</g>
-@example <caption>this is shorthand for the following</caption>
-shape().data([data])();
-@example <caption>which also allows a post-draw callback function</caption>
-shape().data([data])(function() { alert("draw complete!"); })
 */
 export default class ShapeLegend {
 
@@ -179,11 +161,11 @@ export default class ShapeLegend {
     this._outerBounds.y = yOffset;
 
     // Shape <g> Group
-    let shapeGroup = this._select.selectAll("g.d3plus-legendShape")
+    let shapeGroup = this._select.selectAll("g.d3plus-ShapeLegend")
       .data([0]);
 
     shapeGroup = shapeGroup.enter().append("g")
-        .attr("class", "d3plus-legendShape")
+        .attr("class", "d3plus-ShapeLegend")
       .merge(shapeGroup);
 
     // Legend Shapes
