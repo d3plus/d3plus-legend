@@ -141,6 +141,11 @@ export default class ShapeLegend {
         else visibleLabels = false;
       }
     }
+    else {
+      availableSpace = this._width - max(this._data.map((d, i) => this._shapeConfig.width(d, i) + this._padding * 3)) - this._padding * 2;
+      textSpace = max(this._lineData.map((d, i) => d.width - this._shapeConfig.fontSize(d, i)));
+    }
+
     if (textSpace > availableSpace) visibleLabels = false;
 
     if (!visibleLabels) {
@@ -152,7 +157,9 @@ export default class ShapeLegend {
     }
 
     const innerHeight = max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)])),
-          innerWidth = textSpace + sum(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * (this._data.length * (visibleLabels ? 3 : 1) - 2);
+          innerWidth = this._orient === "horizontal"
+                     ? textSpace + sum(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * (this._data.length * (visibleLabels ? 3 : 1) - 2)
+                     : textSpace + max(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * 3;
     this._outerBounds.width = innerWidth;
     this._outerBounds.height = innerHeight;
 
@@ -166,11 +173,11 @@ export default class ShapeLegend {
     this._outerBounds.y = yOffset;
 
     // Shape <g> Group
-    let shapeGroup = this._select.selectAll("g.d3plus-legend-shape-group")
+    let shapeGroup = this._select.selectAll("g.d3plus-legendShape")
       .data([0]);
 
     shapeGroup = shapeGroup.enter().append("g")
-        .attr("class", "d3plus-legend-shape-group")
+        .attr("class", "d3plus-legendShape")
       .merge(shapeGroup);
 
     // Legend Shapes
