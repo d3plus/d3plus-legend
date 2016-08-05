@@ -1,28 +1,29 @@
 import {accessor, constant} from "d3plus-common";
 import {max, sum} from "d3-array";
 import {nest} from "d3-collection";
-import {select as d3Select} from "d3-selection";
 import * as d3plus from "d3plus-shape";
-import {textWidth as measureText, textWrap as wrap} from "d3plus-text";
+import {textWidth, textWrap} from "d3plus-text";
+
+import {default as BaseLegend} from "./BaseLegend";
 
 /**
     @class ShapeLegend
-    @desc Creates an SVG shape legend based on an array of data. If *data* is specified, immediately draws based on the specified array and returns this generator. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
+    @extends BaseLegend
+    @desc Creates an SVG shape legend based on an array of data. If *data* is specified, immediately draws based on the specified array and returns the current class instance. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
 */
-export default class ShapeLegend {
+export default class ShapeLegend extends BaseLegend {
 
   constructor() {
+
+    super();
 
     const s = new d3plus.Shape();
 
     this._align = "center";
-    this._height = 100;
     this._id = accessor("id");
     this._label = accessor("id");
     this._lineData = [];
     this._orient = "horizontal";
-    this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
-    this._padding = 5;
     this._shape = constant("Rect");
     this._shapeConfig = {
       duration: s.duration(),
@@ -60,7 +61,6 @@ export default class ShapeLegend {
       }
     };
     this._verticalAlign = "middle";
-    this._width = 400;
 
   }
 
@@ -71,7 +71,8 @@ export default class ShapeLegend {
   */
   render(callback) {
 
-    if (this._select === void 0) this.select(d3Select("body").append("svg").attr("width", `${window.innerWidth}px`).attr("height", `${window.innerHeight}px`).node());
+    super.render(callback);
+
     if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._shapeConfig.fontSize(d, i) * 1.1;
 
     // Calculate Text Sizes
@@ -81,8 +82,8 @@ export default class ShapeLegend {
             s = this._shapeConfig.fontSize(d, i);
       const h = this._orient === "horizontal" ? this._height - (this._data.length + 1) * this._padding : this._height,
             w = this._orient === "vertical" ? this._width - this._padding * 3 - this._shapeConfig.width(d, i) : this._width;
-      const res = wrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(this._label(d, i));
-      res.width = Math.ceil(max(res.lines.map(t => measureText(t, {"font-family": f, "font-size": s})))) + s;
+      const res = textWrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(this._label(d, i));
+      res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s;
       res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {height: res.height, width: res.width};
       res.data = d;
@@ -111,10 +112,10 @@ export default class ShapeLegend {
             for (let x = 0; x < wrappable.length; x++) {
               const label = wrappable[x];
               const h = label.og.height * line, w = label.og.width * (1.5 * (1 / line));
-              const res = wrap().fontFamily(label.f).fontSize(label.s).lineHeight(label.lh).width(w).height(h)(label.sentence);
+              const res = textWrap().fontFamily(label.f).fontSize(label.s).lineHeight(label.lh).width(w).height(h)(label.sentence);
               if (!res.truncated) {
                 textSpace -= label.width;
-                label.width = Math.ceil(max(res.lines.map(t => measureText(t, {"font-family": label.f, "font-size": label.s})))) + label.s;
+                label.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": label.f, "font-size": label.s})))) + label.s;
                 label.height = res.lines.length * (label.lh + 1);
                 textSpace += label.width;
                 if (textSpace <= availableSpace) break;
@@ -173,6 +174,7 @@ export default class ShapeLegend {
 
       new d3plus[d.key]()
         .data(d.values)
+        .duration(this._duration)
         .id(this._id)
         .lineHeight(this._lineHeight)
         .label(visibleLabels ? this._label : false)
@@ -192,7 +194,7 @@ export default class ShapeLegend {
 
   /**
       @memberof ShapeLegend
-      @desc If *value* is specified, sets the horizontal alignment to the specified value and returns this generator. If *value* is not specified, returns the current horizontal alignment.
+      @desc If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
       @param {String} [*value* = "center"] Supports `"left"` and `"center"` and `"right"`.
   */
   align(_) {
@@ -201,24 +203,7 @@ export default class ShapeLegend {
 
   /**
       @memberof ShapeLegend
-      @desc If *value* is specified, sets the methods that correspond to the key/value pairs and returns this generator. If *value* is not specified, returns the current configuration.
-      @param {Object} [*value*]
-  */
-  config(_) {
-    if (arguments.length) {
-      for (const k in _) if ({}.hasOwnProperty.call(_, k) && k in this) this[k](_[k]);
-      return this;
-    }
-    else {
-      const config = {};
-      for (const k in this.prototype.constructor) if (k !== "config" && {}.hasOwnProperty.call(this, k)) config[k] = this[k]();
-      return config;
-    }
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *data* is specified, sets the data array to the specified array and returns this generator. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
+      @desc If *data* is specified, sets the data array to the specified array and returns the current class instance. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
       @param {Array} [*data* = []]
   */
   data(_) {
@@ -227,16 +212,7 @@ export default class ShapeLegend {
 
   /**
       @memberof ShapeLegend
-      @desc If *value* is specified, sets the overall height of the legend and returns this generator. If *value* is not specified, returns the current height value.
-      @param {Number} [*value* = 100]
-  */
-  height(_) {
-    return arguments.length ? (this._height = _, this) : this._height;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *value* is specified, sets the id accessor to the specified function and returns this generator. If *value* is not specified, returns the current id accessor.
+      @desc If *value* is specified, sets the id accessor to the specified function and returns the current class instance. If *value* is not specified, returns the current id accessor.
       @param {Function} [*value*]
       @example
 function value(d) {
@@ -249,7 +225,7 @@ function value(d) {
 
   /**
       @memberof ShapeLegend
-      @desc If *value* is specified, sets the label accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current label accessor, which is the [id](#shape.id) accessor by default.
+      @desc If *value* is specified, sets the label accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current label accessor, which is the [id](#shape.id) accessor by default.
       @param {Function|String} [*value*]
   */
   label(_) {
@@ -258,7 +234,7 @@ function value(d) {
 
   /**
       @memberof ShapeLegend
-      @desc If *orient* is specified, sets the orientation of the shape and returns this generator. If *orient* is not specified, returns the current orientation.
+      @desc If *orient* is specified, sets the orientation of the shape and returns the current class instance. If *orient* is not specified, returns the current orientation.
       @param {String} [*orient* = "horizontal"] Supports `"horizontal"` and `"vertical"` orientations.
   */
   orient(_) {
@@ -267,35 +243,7 @@ function value(d) {
 
   /**
       @memberof ShapeLegend
-      @desc If called after the elements have been drawn to DOM, will returns the outer bounds of the legend content.
-      @example
-{"width": 180, "height": 24, "x": 10, "y": 20}
-  */
-  outerBounds() {
-    return this._outerBounds;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *value* is specified, sets the padding between each key to the specified number and returns this generator. If *value* is not specified, returns the current padding value.
-      @param {Number} [*value* = 10]
-  */
-  padding(_) {
-    return arguments.length ? (this._padding = _, this) : this._padding;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns this generator. If *selector* is not specified, returns the current SVG container element.
-      @param {String|HTMLElement} [*selector* = d3.select("body").append("svg")]
-  */
-  select(_) {
-    return arguments.length ? (this._select = d3Select(_), this) : this._select;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *value* is specified, sets the shape accessor to the specified function or string and returns this generator. If *value* is not specified, returns the current shape accessor.
+      @desc If *value* is specified, sets the shape accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current shape accessor.
       @param {Function|String} [*value* = "Rect"]
   */
   shape(_) {
@@ -304,7 +252,7 @@ function value(d) {
 
   /**
       @memberof ShapeLegend
-      @desc If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns this generator. If *config* is not specified, returns the current shape configuration.
+      @desc If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns the current class instance. If *config* is not specified, returns the current shape configuration.
       @param {Object} [*config* = {}]
   */
   shapeConfig(_) {
@@ -313,20 +261,11 @@ function value(d) {
 
   /**
       @memberof ShapeLegend
-      @desc If *value* is specified, sets the vertical alignment to the specified value and returns this generator. If *value* is not specified, returns the current vertical alignment.
+      @desc If *value* is specified, sets the vertical alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current vertical alignment.
       @param {String} [*value* = "middle"] Supports `"top"` and `"middle"` and `"bottom"`.
   */
   verticalAlign(_) {
     return arguments.length ? (this._verticalAlign = _, this) : this._verticalAlign;
-  }
-
-  /**
-      @memberof ShapeLegend
-      @desc If *value* is specified, sets the overall width of the legend and returns this generator. If *value* is not specified, returns the current width value.
-      @param {Number} [*value* = 400]
-  */
-  width(_) {
-    return arguments.length ? (this._width = _, this) : this._width;
   }
 
 }

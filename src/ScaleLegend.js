@@ -1,25 +1,24 @@
 import {constant} from "d3plus-common";
 import {max} from "d3-array";
-import {select as d3Select} from "d3-selection";
-import {transition} from "d3-transition";
 import * as scales from "d3-scale";
 import {textBox, textWidth, textWrap} from "d3plus-text";
 
+import {default as BaseLegend} from "./BaseLegend";
+
 /**
     @class ScaleLegend
-    @desc Creates an SVG scale based on an array of data. If *data* is specified, immediately draws based on the specified array and returns this generator. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
+    @extends BaseLegend
+    @desc Creates an SVG scale based on an array of data. If *data* is specified, immediately draws based on the specified array and returns the current class instance. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
 */
-export default class ScaleLegend {
+export default class ScaleLegend extends BaseLegend {
 
   constructor() {
 
+    super();
+
     this._align = "middle";
     this._domain = [0, 10];
-    this._duration = 600;
-    this._height = 100;
     this.orient("bottom");
-    this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
-    this._padding = 5;
     this._scale = "linear";
     this._strokeWidth = 1;
     this._textBoxConfig = {
@@ -28,8 +27,6 @@ export default class ScaleLegend {
       fontSize: constant(10)
     };
     this._tickSize = 5;
-    this._uuid = new Date().getTime();
-    this._width = 400;
 
   }
 
@@ -94,14 +91,14 @@ export default class ScaleLegend {
   */
   render(callback) {
 
-    if (this._select === void 0) this.select(d3Select("body").append("svg").attr("width", `${this._width}px`).attr("height", `${this._height}px`).node());
+    super.render(callback);
+
     if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._textBoxConfig.fontSize(d, i) * 1.1;
 
     const {width, height, x, y} = this._position;
 
     const clipId = `d3plus-ShapeLegend-clip-${this._uuid}`,
-          p = this._padding,
-          t = transition().duration(this._duration);
+          p = this._padding;
 
     let size = this[`_${width}`] - p * 2;
 
@@ -173,7 +170,7 @@ export default class ScaleLegend {
     const axisClip = clip.selectAll("rect").data([null]);
     axisClip.enter().append("rect")
       .call(this._clipPosition.bind(this))
-      .merge(axisClip).transition(t)
+      .merge(axisClip).transition(this._transition)
         .call(this._clipPosition.bind(this));
 
     const bar = group.selectAll("line.bar").data([null]);
@@ -183,7 +180,7 @@ export default class ScaleLegend {
         .attr("stroke", "#000")
         .attr("opacity", 0)
         .call(this._barPosition.bind(this))
-      .merge(bar).transition(t)
+      .merge(bar).transition(this._transition)
         .attr("opacity", 1)
         .call(this._barPosition.bind(this));
 
@@ -191,7 +188,7 @@ export default class ScaleLegend {
 
     const ticks = group.selectAll("line.tick").data(valueData, d => d.id);
 
-    ticks.exit().transition(t)
+    ticks.exit().transition(this._transition)
       .attr("opacity", 0)
       .call(this._tickPosition.bind(this))
       .remove();
@@ -202,7 +199,7 @@ export default class ScaleLegend {
         .attr("opacity", 0)
         .attr("clip-path", `url(#${clipId})`)
         .call(this._tickPosition.bind(this), true)
-      .merge(ticks).transition(t)
+      .merge(ticks).transition(this._transition)
         .attr("opacity", 1)
         .call(this._tickPosition.bind(this));
 
@@ -230,15 +227,13 @@ export default class ScaleLegend {
 
     this._lastScale = this._d3Scale;
 
-    if (callback) setTimeout(callback, this._duration + 100);
-
     return this;
 
   }
 
   /**
       @memberof ScaleLegend
-      @desc If *value* is specified, sets the horizontal alignment to the specified value and returns this generator. If *value* is not specified, returns the current horizontal alignment.
+      @desc If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
       @param {String} [*value* = "center"] Supports `"left"` and `"center"` and `"right"`.
   */
   align(_) {
@@ -247,24 +242,7 @@ export default class ScaleLegend {
 
   /**
       @memberof ScaleLegend
-      @desc If *value* is specified, sets the methods that correspond to the key/value pairs and returns this generator. If *value* is not specified, returns the current configuration.
-      @param {Object} [*value*]
-  */
-  config(_) {
-    if (arguments.length) {
-      for (const k in _) if ({}.hasOwnProperty.call(_, k) && k in this) this[k](_[k]);
-      return this;
-    }
-    else {
-      const config = {};
-      for (const k in this.prototype.constructor) if (k !== "config" && {}.hasOwnProperty.call(this, k)) config[k] = this[k]();
-      return config;
-    }
-  }
-
-  /**
-      @memberof ScaleLegend
-      @desc If *value* is specified, sets the scale domain of the legend and returns this generator. If *value* is not specified, returns the current scale domain.
+      @desc If *value* is specified, sets the scale domain of the legend and returns the current class instance. If *value* is not specified, returns the current scale domain.
       @param {Array} [*value* = [0, 10]]
   */
   domain(_) {
@@ -273,16 +251,7 @@ export default class ScaleLegend {
 
   /**
       @memberof ScaleLegend
-      @desc If *value* is specified, sets the overall height of the legend and returns this generator. If *value* is not specified, returns the current height value.
-      @param {Number} [*value* = 100]
-  */
-  height(_) {
-    return arguments.length ? (this._height = _, this) : this._height;
-  }
-
-  /**
-      @memberof ScaleLegend
-      @desc If *orient* is specified, sets the orientation of the shape and returns this generator. If *orient* is not specified, returns the current orientation.
+      @desc If *orient* is specified, sets the orientation of the shape and returns the current class instance. If *orient* is not specified, returns the current orientation.
       @param {String} [*orient* = "bottom"] Supports `"top"`, `"right"`, `"bottom"`, and `"left"` orientations.
   */
   orient(_) {
@@ -301,26 +270,7 @@ export default class ScaleLegend {
 
   /**
       @memberof ScaleLegend
-      @desc If called after the elements have been drawn to DOM, will returns the outer bounds of the legend content.
-      @example
-{"width": 180, "height": 24, "x": 10, "y": 20}
-  */
-  outerBounds() {
-    return this._outerBounds;
-  }
-
-  /**
-      @memberof ScaleLegend
-      @desc If *value* is specified, sets the padding between each key to the specified number and returns this generator. If *value* is not specified, returns the current padding value.
-      @param {Number} [*value* = 10]
-  */
-  padding(_) {
-    return arguments.length ? (this._padding = _, this) : this._padding;
-  }
-
-  /**
-      @memberof ScaleLegend
-      @desc If *value* is specified, sets the scale of the legend and returns this generator. If *value* is not specified, returns the current this._d3Scale
+      @desc If *value* is specified, sets the scale of the legend and returns the current class instance. If *value* is not specified, returns the current this._d3Scale
       @param {String} [*value* = "linear"]
   */
   scale(_) {
@@ -328,17 +278,8 @@ export default class ScaleLegend {
   }
 
   /**
-      @memberof ScaleLegend
-      @desc If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns this generator. If *selector* is not specified, returns the current SVG container element.
-      @param {String|HTMLElement} [*selector* = d3.select("body").append("svg")]
-  */
-  select(_) {
-    return arguments.length ? (this._select = d3Select(_), this) : this._select;
-  }
-
-  /**
       @memberof ShapeLegend
-      @desc If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns this generator. If *config* is not specified, returns the current shape configuration.
+      @desc If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns the current class instance. If *config* is not specified, returns the current shape configuration.
       @param {Object} [*config* = {}]
   */
   textBoxConfig(_) {
@@ -347,7 +288,7 @@ export default class ScaleLegend {
 
   /**
       @memberof ScaleLegend
-      @desc If *value* is specified, sets the tick values of the legend and returns this generator. If *value* is not specified, returns the current tick values, which by default are interpreted based on the [domain](#ScaleLegend.domain) and the available [width](#ScaleLegend.width).
+      @desc If *value* is specified, sets the tick values of the legend and returns the current class instance. If *value* is not specified, returns the current tick values, which by default are interpreted based on the [domain](#ScaleLegend.domain) and the available [width](#ScaleLegend.width).
       @param {Array} [*value*]
   */
   ticks(_) {
@@ -356,20 +297,11 @@ export default class ScaleLegend {
 
   /**
       @memberof ScaleLegend
-      @desc If *value* is specified, sets the tick size of the legend and returns this generator. If *value* is not specified, returns the current tick size.
+      @desc If *value* is specified, sets the tick size of the legend and returns the current class instance. If *value* is not specified, returns the current tick size.
       @param {Number} [*value* = 5]
   */
   tickSize(_) {
     return arguments.length ? (this._tickSize = _, this) : this._tickSize;
-  }
-
-  /**
-      @memberof ScaleLegend
-      @desc If *value* is specified, sets the overall width of the legend and returns this generator. If *value* is not specified, returns the current width value.
-      @param {Number} [*value* = 400]
-  */
-  width(_) {
-    return arguments.length ? (this._width = _, this) : this._width;
   }
 
 }
