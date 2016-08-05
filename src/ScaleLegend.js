@@ -145,8 +145,8 @@ export default class ScaleLegend extends BaseLegend {
 
     this._outerBounds = {
       [height]: this._tickSize + max(textData, t => t[height]) + p * 2,
-      [width]: size,
-      [x]: this._d3Scale.range()[0]
+      [width]: this[`_${width}`] - p * 2,
+      [x]: p
     };
     this._outerBounds[y] = this._align === "start" ? this._padding
                          : this._align === "end" ? this[`_${height}`] - this._outerBounds[height]
