@@ -186,8 +186,6 @@ export default class ShapeLegend extends BaseLegend {
 
     });
 
-    if (callback) setTimeout(callback, this._shapeConfig.duration + 100);
-
     return this;
 
   }
