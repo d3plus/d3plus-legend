@@ -33,8 +33,8 @@ export default class ShapeLegend extends BaseLegend {
       fontFamily: s.fontFamily(),
       fontSize: constant(10),
       height: constant(10),
-      labelBounds: (s, i) => {
-        const d = this._lineData[i],
+      labelBounds: (dd, i, s) => {
+        const d = this._lineData[dd.i],
               w = s.r !== void 0 ? s.r : s.width / 2;
         return {width: d.width, height: d.height, x: w + this._padding, y: 1 - d.height / 2};
       },
@@ -91,6 +91,7 @@ export default class ShapeLegend extends BaseLegend {
       res.f = f;
       res.s = s;
       res.lh = lh;
+      res.id = this._id(d, i);
       return res;
     });
 
@@ -170,19 +171,44 @@ export default class ShapeLegend extends BaseLegend {
         .attr("class", "d3plus-ShapeLegend")
       .merge(shapeGroup);
 
+    const baseConfig = this._shapeConfig,
+          config = {
+            id: d => d.id,
+            label: d => d.label,
+            lineHeight: d => d.lH
+          };
+    const shapeData = this._data.map((d, i) => {
+
+      const obj = {
+        data: d, i,
+        id: this._id(d, i),
+        label: visibleLabels ? this._label(d, i) : null,
+        lH: this._lineHeight(d, i),
+        shape: this._shape(d, i)
+      };
+
+      for (const k in baseConfig) {
+        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k) && typeof baseConfig[k] === "function") {
+          obj[k] = baseConfig[k](d, i);
+          config[k] = d => d[k];
+        }
+      }
+
+      return obj;
+
+    });
+
     // Legend Shapes
-    nest().key(this._shape).entries(this._data).forEach(d => {
+    nest().key(d => d.shape).entries(shapeData).forEach(d => {
 
       new d3plus[d.key]()
         .data(d.values)
         .duration(this._duration)
-        .id(this._id)
-        .lineHeight(this._lineHeight)
-        .label(visibleLabels ? this._label : false)
         .labelPadding(0)
         .select(shapeGroup.node())
         .verticalAlign("top")
-        .config(this._shapeConfig)
+        .config(baseConfig)
+        .config(config)
         .render();
 
     });
