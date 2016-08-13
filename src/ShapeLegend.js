@@ -20,6 +20,7 @@ export default class ShapeLegend extends BaseLegend {
     const s = new d3plus.Shape();
 
     this._align = "center";
+    this._data = [];
     this._id = accessor("id");
     this._label = accessor("id");
     this._lineData = [];
