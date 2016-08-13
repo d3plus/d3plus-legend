@@ -277,4 +277,4 @@ If *value* is specified, sets the vertical alignment to the specified value and 
 
 
 
-###### <sub>Documentation generated on Fri, 05 Aug 2016 20:17:05 GMT</sub>
+###### <sub>Documentation generated on Sat, 13 Aug 2016 14:48:17 GMT</sub>
