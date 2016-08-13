@@ -1,7 +1,7 @@
 import {constant} from "d3plus-common";
 import {max} from "d3-array";
 import * as scales from "d3-scale";
-import {textBox, textWidth, textWrap} from "d3plus-text";
+import {TextBox, textWidth, textWrap} from "d3plus-text";
 
 import {default as BaseLegend} from "./BaseLegend";
 
@@ -22,7 +22,7 @@ export default class ScaleLegend extends BaseLegend {
     this._scale = "linear";
     this._strokeWidth = 1;
     this._textBoxConfig = {
-      fontFamily: textBox().fontFamily(),
+      fontFamily: new TextBox().fontFamily(),
       fontResize: false,
       fontSize: constant(10)
     };
@@ -205,7 +205,8 @@ export default class ScaleLegend extends BaseLegend {
 
     const maxTextHeight = max(textData, t => t.height),
           maxTextWidth = max(textData, (t, i) => t.width + this._textBoxConfig.fontSize(values[i], i));
-    textBox()
+
+    new TextBox()
       .data(valueData)
       .duration(this._duration)
       .height(maxTextHeight)
@@ -223,7 +224,7 @@ export default class ScaleLegend extends BaseLegend {
         return ["right", "bottom"].includes(this._orient) ? this._outerBounds.y + this._tickSize + p : this._outerBounds.y;
       })
       .config(this._textBoxConfig)
-      ();
+      .render();
 
     this._lastScale = this._d3Scale;
 
