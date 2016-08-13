@@ -104,7 +104,7 @@ export default class ScaleLegend extends BaseLegend {
 
     this._d3Scale = scales[`scale${this._scale.charAt(0).toUpperCase()}${this._scale.slice(1)}`]()
       .domain(this._domain)
-      .range([p, p + size]);
+      .rangeRound([p, p + size]);
 
     const values = this._ticks || this._d3Scale.ticks();
 
@@ -131,6 +131,7 @@ export default class ScaleLegend extends BaseLegend {
 
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s}))));
       res.height = Math.ceil(res.lines.length * (lh + 1));
+      if (res.width % 2) res.width++;
       return res;
 
     }
@@ -141,7 +142,7 @@ export default class ScaleLegend extends BaseLegend {
           lastWidth = textData[textData.length - 1][width];
 
     size -= firstWidth / 2 + lastWidth / 2;
-    this._d3Scale.range([p + firstWidth / 2, p + firstWidth / 2 + size]);
+    this._d3Scale.rangeRound([p + firstWidth / 2, p + firstWidth / 2 + size]);
 
     this._outerBounds = {
       [height]: this._tickSize + max(textData, t => t[height]) + p * 2,
