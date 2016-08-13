@@ -2,7 +2,7 @@ import {accessor, constant} from "d3plus-common";
 import {max, sum} from "d3-array";
 import {nest} from "d3-collection";
 import * as d3plus from "d3plus-shape";
-import {textWidth, textWrap} from "d3plus-text";
+import {TextBox, textWidth, textWrap} from "d3plus-text";
 
 import {default as BaseLegend} from "./BaseLegend";
 
@@ -52,12 +52,12 @@ export default class ShapeLegend extends BaseLegend {
       },
       y: (d, i) => {
         const s = this._shapeConfig.height;
-        if (this._orient === "horizontal") return this._outerBounds.y + max(this._lineData.map(l => l.height).concat(this._data.map((l, x) => s(l, x)))) / 2;
+        if (this._orient === "horizontal") return this._titleHeight + this._outerBounds.y + max(this._lineData.map(l => l.height).concat(this._data.map((l, x) => s(l, x)))) / 2;
         else {
           const h = s(d, i);
           const pad = this._lineData[i].height > h ? this._lineData[i].height / 2 : h / 2,
                 prev = sum(this._lineData.slice(0, i), (l, x) => max([l.height, s(l.data, x)]));
-          return this._outerBounds.y + prev + pad + this._padding * i;
+          return this._titleHeight + this._outerBounds.y + prev + pad + this._padding * i;
         }
       }
     };
@@ -76,12 +76,31 @@ export default class ShapeLegend extends BaseLegend {
 
     if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._shapeConfig.fontSize(d, i) * 1.1;
 
+    // Shape <g> Group
+    let shapeGroup = this._select.selectAll("g.d3plus-ShapeLegend")
+      .data([0]);
+
+    shapeGroup = shapeGroup.enter().append("g")
+        .attr("class", "d3plus-ShapeLegend")
+      .merge(shapeGroup);
+
+    let availableHeight = this._height;
+    this._titleHeight = 0;
+    if (this._title) {
+      const f = this._titleConfig.fontFamily,
+            lH = this._titleConfig.lineHeight,
+            s = this._titleConfig.fontSize;
+      const res = textWrap().fontFamily(f).fontSize(s).lineHeight(lH).width(this._width).height(this._height)(this._title);
+      this._titleHeight = lH + res.lines.length + this._padding;
+      availableHeight -= this._titleHeight;
+    }
+
     // Calculate Text Sizes
     this._lineData = this._data.map((d, i) => {
       const f = this._shapeConfig.fontFamily(d, i),
             lh = this._lineHeight(d, i),
             s = this._shapeConfig.fontSize(d, i);
-      const h = this._orient === "horizontal" ? this._height - (this._data.length + 1) * this._padding : this._height,
+      const h = this._orient === "horizontal" ? availableHeight - (this._data.length + 1) * this._padding : this._height,
             w = this._orient === "vertical" ? this._width - this._padding * 3 - this._shapeConfig.width(d, i) : this._width;
       const res = textWrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(this._label(d, i));
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s;
@@ -105,7 +124,7 @@ export default class ShapeLegend extends BaseLegend {
           .filter(d => d.words.length > 1)
           .sort((a, b) => b.sentence.length - a.sentence.length);
 
-        if (wrappable.length && this._height > wrappable[0].height * 2) {
+        if (wrappable.length && availableHeight > wrappable[0].height * 2) {
 
           let line = 2;
           while (line <= 5) {
@@ -147,7 +166,7 @@ export default class ShapeLegend extends BaseLegend {
       }
     }
 
-    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)])),
+    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)])) + this._titleHeight,
           innerWidth = this._orient === "horizontal"
                      ? textSpace + sum(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * (this._data.length * (visibleLabels ? 3 : 1) - 2)
                      : textSpace + max(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * 3;
@@ -163,13 +182,15 @@ export default class ShapeLegend extends BaseLegend {
     this._outerBounds.x = xOffset;
     this._outerBounds.y = yOffset;
 
-    // Shape <g> Group
-    let shapeGroup = this._select.selectAll("g.d3plus-ShapeLegend")
-      .data([0]);
-
-    shapeGroup = shapeGroup.enter().append("g")
-        .attr("class", "d3plus-ShapeLegend")
-      .merge(shapeGroup);
+    new TextBox()
+      .data(this._title ? [{text: this._title}] : [])
+      .duration(this._duration)
+      .select(shapeGroup.node())
+      .width(this._width)
+      .x(0)
+      .y(this._outerBounds.y)
+      .config(this._titleConfig)
+      .render();
 
     const baseConfig = this._shapeConfig,
           config = {

@@ -17,6 +17,12 @@ export default class BaseLegend extends BaseClass {
     this._height = 200;
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
+    this._titleConfig = {
+      fontFamily: "Verdana",
+      fontSize: 12,
+      lineHeight: 13,
+      textAnchor: "middle"
+    };
     this._width = 400;
 
   }
@@ -82,6 +88,24 @@ export default class BaseLegend extends BaseClass {
   */
   select(_) {
     return arguments.length ? (this._select = select(_), this) : this._select;
+  }
+
+  /**
+      @memberof BaseLegend
+      @desc If *value* is specified, sets the title of the legend and returns the current class instance. If *value* is not specified, returns the current title.
+      @param {String} [*value*]
+  */
+  title(_) {
+    return arguments.length ? (this._title = _, this) : this._title;
+  }
+
+  /**
+      @memberof BaseLegend
+      @desc If *value* is specified, sets the title configuration of the legend and returns the current class instance. If *value* is not specified, returns the current title configuration.
+      @param {Object} [*value*]
+  */
+  titleConfig(_) {
+    return arguments.length ? (this._titleConfig = Object.assign(this._titleConfig, _), this) : this._titleConfig;
   }
 
   /**
