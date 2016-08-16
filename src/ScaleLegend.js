@@ -119,15 +119,18 @@ export default class ScaleLegend extends BaseLegend {
       .domain(this._domain)
       .rangeRound([p, p + size]);
 
-    const values = this._ticks || this._d3Scale.ticks();
+    const values = this._tickLabels || this._ticks || this._d3Scale.ticks();
 
     let space = 0;
-    for (let i = 0; i < values.length; i++) {
-      const s = this._d3Scale(values[i + 1]) - this._d3Scale(values[i]);
-      if (s > space) space = s;
+    if (values.length > 1) {
+      for (let i = 0; i < values.length; i++) {
+        const s = this._d3Scale(values[i + 1]) - this._d3Scale(values[i]);
+        if (s > space) space = s;
+      }
     }
+    else space = size;
 
-    function measureText(d, i) {
+    const textData = values.map((d, i) => {
 
       const f = this._textBoxConfig.fontFamily(d, i),
             s = this._textBoxConfig.fontSize(d, i);
@@ -142,23 +145,43 @@ export default class ScaleLegend extends BaseLegend {
         .height(this._height - this._tickSize - p)
         (d);
 
+      res.d = d;
+      res.fS = s;
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s}))));
       res.height = Math.ceil(res.lines.length * (lh + 1));
       if (res.width % 2) res.width++;
       return res;
 
+    });
+
+    if (textData.length) {
+
+      const first = textData[0],
+            last = textData[textData.length - 1],
+            range = this._d3Scale.range();
+
+      const firstB = this._d3Scale(first.d) - first[width] / 2,
+            lastB = this._d3Scale(last.d) + last[width] / 2;
+
+      if (firstB < range[0]) {
+        const d = range[0] - firstB;
+        size -= d;
+        range[0] += d;
+      }
+      if (lastB > range[1]) {
+        const d = lastB - range[1];
+        size -= d;
+        range[1] -= d;
+      }
+
+      this._d3Scale.rangeRound(range);
+
     }
 
-    const textData = values.map(measureText.bind(this));
-
-    const firstWidth = textData[0][width],
-          lastWidth = textData[textData.length - 1][width];
-
-    size -= firstWidth / 2 + lastWidth / 2;
-    this._d3Scale.rangeRound([p + firstWidth / 2, p + firstWidth / 2 + size]);
+    const tPad = textData.length ? p * 2 : 0;
 
     this._outerBounds = {
-      [height]: this._titleHeight + this._tickSize + max(textData, t => t[height]) + p * 2,
+      [height]: this._titleHeight + this._tickSize + (max(textData, t => t[height]) || 0) + tPad,
       [width]: this[`_${width}`] - p * 2,
       [x]: p
     };
@@ -198,9 +221,9 @@ export default class ScaleLegend extends BaseLegend {
         .attr("opacity", 1)
         .call(this._barPosition.bind(this));
 
-    const valueData = values.map(d => ({id: d}));
+    const tickData = (this._ticks || this._d3Scale.ticks()).map(d => ({id: d}));
 
-    const ticks = group.selectAll("line.tick").data(valueData, d => d.id);
+    const ticks = group.selectAll("line.tick").data(tickData, d => d.id);
 
     ticks.exit().transition(this._transition)
       .attr("opacity", 0)
@@ -217,8 +240,8 @@ export default class ScaleLegend extends BaseLegend {
         .attr("opacity", 1)
         .call(this._tickPosition.bind(this));
 
-    const maxTextHeight = max(textData, t => t.height),
-          maxTextWidth = max(textData, (t, i) => t.width + this._textBoxConfig.fontSize(values[i], i));
+    const maxTextHeight = max(textData, t => t.height) || 0,
+          maxTextWidth = max(textData, t => t.width + t.fS) || 0;
 
     let titleGroup = group.selectAll("g.d3plus-scaleLegend-title").data([null]);
     titleGroup = titleGroup.enter().append("g").attr("class", "d3plus-scaleLegend-title").merge(titleGroup);
@@ -242,7 +265,7 @@ export default class ScaleLegend extends BaseLegend {
     tickGroup = tickGroup.enter().append("g").attr("class", "d3plus-scaleLegend-ticks").merge(tickGroup);
 
     new TextBox()
-      .data(valueData)
+      .data(values.map(d => ({id: d})))
       .duration(this._duration)
       .height(maxTextHeight)
       .select(tickGroup.node())
@@ -320,6 +343,15 @@ export default class ScaleLegend extends BaseLegend {
   */
   textBoxConfig(_) {
     return arguments.length ? (this._textBoxConfig = Object.assign(this._textBoxConfig, _), this) : this._textBoxConfig;
+  }
+
+  /**
+      @memberof ScaleLegend
+      @desc If *value* is specified, sets the visible tick labels of the legend and returns the current class instance. If *value* is not specified, returns the current visible tick labels, which defaults to showing all labels.
+      @param {Array} [*value*]
+  */
+  tickLabels(_) {
+    return arguments.length ? (this._tickLabels = _, this) : this._tickLabels;
   }
 
   /**
