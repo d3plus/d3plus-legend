@@ -119,7 +119,7 @@ export default class ScaleLegend extends BaseLegend {
     this._d3Scale = scales[`scale${this._scale.charAt(0).toUpperCase()}${this._scale.slice(1)}`]()
       .domain(this._domain)
       .rangeRound(this._range || [p, p + size]);
-    console.log(this._tickScale(size));
+
     const ticks = this._ticks || this._d3Scale.ticks(Math.floor(size / this._tickScale(size)));
     const values = this._tickLabels || ticks;
 
