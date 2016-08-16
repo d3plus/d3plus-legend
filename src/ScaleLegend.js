@@ -102,6 +102,19 @@ export default class ScaleLegend extends BaseLegend {
 
     let size = this[`_${width}`] - p * 2;
 
+    this._titleHeight = 0;
+    if (this._title) {
+      const lH = this._titleConfig.lineHeight ? this._titleConfig.lineHeight : this._titleConfig.fontSize * 1.1,
+            titleWrap = textWrap()
+              .fontFamily(this._titleConfig.fontFamily)
+              .fontSize(this._titleConfig.fontSize)
+              .lineHeight(lH)
+              .width(size)
+              .height(this._height - this._tickSize - p)
+              (this._title);
+      this._titleHeight = titleWrap.lines.length * lH + p;
+    }
+
     this._d3Scale = scales[`scale${this._scale.charAt(0).toUpperCase()}${this._scale.slice(1)}`]()
       .domain(this._domain)
       .rangeRound([p, p + size]);
@@ -113,13 +126,13 @@ export default class ScaleLegend extends BaseLegend {
       const s = this._d3Scale(values[i + 1]) - this._d3Scale(values[i]);
       if (s > space) space = s;
     }
-    space -= p;
 
     function measureText(d, i) {
 
       const f = this._textBoxConfig.fontFamily(d, i),
-            lh = this._lineHeight(d, i),
             s = this._textBoxConfig.fontSize(d, i);
+
+      const lh = this._textBoxConfig.lineHeight ? this._textBoxConfig.lineHeight(d, i) : s * 1.1;
 
       const res = textWrap()
         .fontFamily(f)
@@ -145,7 +158,7 @@ export default class ScaleLegend extends BaseLegend {
     this._d3Scale.rangeRound([p + firstWidth / 2, p + firstWidth / 2 + size]);
 
     this._outerBounds = {
-      [height]: this._tickSize + max(textData, t => t[height]) + p * 2,
+      [height]: this._titleHeight + this._tickSize + max(textData, t => t[height]) + p * 2,
       [width]: this[`_${width}`] - p * 2,
       [x]: p
     };
@@ -207,22 +220,43 @@ export default class ScaleLegend extends BaseLegend {
     const maxTextHeight = max(textData, t => t.height),
           maxTextWidth = max(textData, (t, i) => t.width + this._textBoxConfig.fontSize(values[i], i));
 
+    let titleGroup = group.selectAll("g.d3plus-scaleLegend-title").data([null]);
+    titleGroup = titleGroup.enter().append("g").attr("class", "d3plus-scaleLegend-title").merge(titleGroup);
+
+    new TextBox()
+      .data(this._title ? [{text: this._title}] : [])
+      .duration(this._duration)
+      .height(this._outerBounds.height)
+      .rotate(this._orient === "left" ? -90 : this._orient === "right" ? 90 : 0)
+      .select(titleGroup.node())
+      .text(d => d.text)
+      .textAnchor("middle")
+      .verticalAlign(this._orient === "bottom" ? "bottom" : "top")
+      .width(this._outerBounds[width])
+      .x(["top", "bottom"].includes(this._orient) ? this._outerBounds.x : this._orient === "left" ? this._outerBounds.x + this._titleHeight / 2 - this._outerBounds[width] / 2 : this._outerBounds.x + this._outerBounds.width - this._titleHeight / 2 - this._outerBounds[width] / 2)
+      .y(["top", "bottom"].includes(this._orient) ? this._outerBounds.y : this._outerBounds.y - this._titleHeight / 2 + this._outerBounds[width] / 2)
+      .config(this._titleConfig)
+      .render();
+
+    let tickGroup = group.selectAll("g.d3plus-scaleLegend-ticks").data([null]);
+    tickGroup = tickGroup.enter().append("g").attr("class", "d3plus-scaleLegend-ticks").merge(tickGroup);
+
     new TextBox()
       .data(valueData)
       .duration(this._duration)
       .height(maxTextHeight)
-      .select(group.node())
+      .select(tickGroup.node())
       .text(d => d.id)
       .textAnchor(this._orient === "left" ? "end" : this._orient === "right" ? "start" : "middle")
       .verticalAlign(this._orient === "bottom" ? "top" : this._orient === "top" ? "bottom" : "middle")
       .width(maxTextWidth)
       .x((d, i) => {
         if (["top", "bottom"].includes(this._orient)) return this._d3Scale(d.id) - maxTextWidth / 2;
-        return this._orient === "left" ? this._outerBounds.x - this._textBoxConfig.fontSize(values[i], i) / 2 : this._outerBounds.x + this._tickSize + this._padding;
+        return this._orient === "left" ? this._titleHeight + this._outerBounds.x - this._textBoxConfig.fontSize(values[i], i) / 2 : this._outerBounds.x + this._tickSize + this._padding;
       })
       .y(d => {
         if (["left", "right"].includes(this._orient)) return this._d3Scale(d.id) - maxTextHeight / 2;
-        return ["right", "bottom"].includes(this._orient) ? this._outerBounds.y + this._tickSize + p : this._outerBounds.y;
+        return this._orient === "bottom" ? this._outerBounds.y + this._tickSize + p : this._titleHeight + this._outerBounds.y;
       })
       .config(this._textBoxConfig)
       .render();
