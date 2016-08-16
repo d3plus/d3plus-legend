@@ -26,6 +26,7 @@ export default class ScaleLegend extends BaseLegend {
       fontResize: false,
       fontSize: constant(10)
     };
+    this._tickScale = scales.scaleSqrt().domain([10, 400]).range([10, 50]);
     this._tickSize = 5;
 
   }
@@ -100,7 +101,7 @@ export default class ScaleLegend extends BaseLegend {
     const clipId = `d3plus-ShapeLegend-clip-${this._uuid}`,
           p = this._padding;
 
-    let size = this[`_${width}`] - p * 2;
+    let size = this._range ? this._range[1] - this._range[0] : this[`_${width}`] - p * 2;
 
     this._titleHeight = 0;
     if (this._title) {
@@ -117,9 +118,10 @@ export default class ScaleLegend extends BaseLegend {
 
     this._d3Scale = scales[`scale${this._scale.charAt(0).toUpperCase()}${this._scale.slice(1)}`]()
       .domain(this._domain)
-      .rangeRound([p, p + size]);
-
-    const values = this._tickLabels || this._ticks || this._d3Scale.ticks();
+      .rangeRound(this._range || [p, p + size]);
+    console.log(this._tickScale(size));
+    const ticks = this._ticks || this._d3Scale.ticks(Math.floor(size / this._tickScale(size)));
+    const values = this._tickLabels || ticks;
 
     let space = 0;
     if (values.length > 1) {
@@ -145,6 +147,7 @@ export default class ScaleLegend extends BaseLegend {
         .height(this._height - this._tickSize - p)
         (d);
 
+      res.lines = res.lines.filter(d => d !== "");
       res.d = d;
       res.fS = s;
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s}))));
@@ -154,7 +157,7 @@ export default class ScaleLegend extends BaseLegend {
 
     });
 
-    if (textData.length) {
+    if (this._range === void 0 && textData.length) {
 
       const first = textData[0],
             last = textData[textData.length - 1],
@@ -179,7 +182,6 @@ export default class ScaleLegend extends BaseLegend {
     }
 
     const tPad = textData.length ? p * 2 : 0;
-
     this._outerBounds = {
       [height]: this._titleHeight + this._tickSize + (max(textData, t => t[height]) || 0) + tPad,
       [width]: this[`_${width}`] - p * 2,
@@ -221,22 +223,20 @@ export default class ScaleLegend extends BaseLegend {
         .attr("opacity", 1)
         .call(this._barPosition.bind(this));
 
-    const tickData = (this._ticks || this._d3Scale.ticks()).map(d => ({id: d}));
+    const lines = group.selectAll("line.tick").data(ticks.map(d => ({id: d})), d => d.id);
 
-    const ticks = group.selectAll("line.tick").data(tickData, d => d.id);
-
-    ticks.exit().transition(this._transition)
+    lines.exit().transition(this._transition)
       .attr("opacity", 0)
       .call(this._tickPosition.bind(this))
       .remove();
 
-    ticks.enter().append("line")
+    lines.enter().append("line")
         .attr("class", "tick")
         .attr("stroke", "#000")
         .attr("opacity", 0)
         .attr("clip-path", `url(#${clipId})`)
         .call(this._tickPosition.bind(this), true)
-      .merge(ticks).transition(this._transition)
+      .merge(lines).transition(this._transition)
         .attr("opacity", 1)
         .call(this._tickPosition.bind(this));
 
@@ -325,6 +325,15 @@ export default class ScaleLegend extends BaseLegend {
       return this._orient = _, this;
     }
     return this._orient;
+  }
+
+  /**
+      @memberof ScaleLegend
+      @desc If *value* is specified, sets the scale range (in pixels) of the legend and returns the current class instance. If *value* is not specified, returns the current scale range.
+      @param {Array} [*value*]
+  */
+  range(_) {
+    return arguments.length ? (this._range = _, this) : this._range;
   }
 
   /**
