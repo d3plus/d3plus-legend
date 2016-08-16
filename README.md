@@ -49,7 +49,9 @@ Creates an SVG scale based on an array of data. If *data* is specified, immediat
     * [.align([*value*])](#ScaleLegend.align)
     * [.domain([*value*])](#ScaleLegend.domain)
     * [.orient([*orient*])](#ScaleLegend.orient)
+    * [.range([*value*])](#ScaleLegend.range)
     * [.scale([*value*])](#ScaleLegend.scale)
+    * [.tickLabels([*value*])](#ScaleLegend.tickLabels)
     * [.ticks([*value*])](#ScaleLegend.ticks)
     * [.tickSize([*value*])](#ScaleLegend.tickSize)
 
@@ -102,6 +104,17 @@ If *orient* is specified, sets the orientation of the shape and returns the curr
 | --- | --- | --- | --- |
 | [*orient*] | <code>String</code> | <code>&quot;bottom&quot;</code> | Supports `"top"`, `"right"`, `"bottom"`, and `"left"` orientations. |
 
+<a name="ScaleLegend.range"></a>
+
+#### ScaleLegend.range([*value*])
+If *value* is specified, sets the scale range (in pixels) of the legend and returns the current class instance. If *value* is not specified, returns the current scale range.
+
+**Kind**: static method of <code>[ScaleLegend](#ScaleLegend)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Array</code> | 
+
 <a name="ScaleLegend.scale"></a>
 
 #### ScaleLegend.scale([*value*])
@@ -112,6 +125,17 @@ If *value* is specified, sets the scale of the legend and returns the current cl
 | Param | Type | Default |
 | --- | --- | --- |
 | [*value*] | <code>String</code> | <code>&quot;linear&quot;</code> | 
+
+<a name="ScaleLegend.tickLabels"></a>
+
+#### ScaleLegend.tickLabels([*value*])
+If *value* is specified, sets the visible tick labels of the legend and returns the current class instance. If *value* is not specified, returns the current visible tick labels, which defaults to showing all labels.
+
+**Kind**: static method of <code>[ScaleLegend](#ScaleLegend)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Array</code> | 
 
 <a name="ScaleLegend.ticks"></a>
 
@@ -277,4 +301,4 @@ If *value* is specified, sets the vertical alignment to the specified value and 
 
 
 
-###### <sub>Documentation generated on Sat, 13 Aug 2016 14:48:17 GMT</sub>
+###### <sub>Documentation generated on Tue, 16 Aug 2016 22:04:25 GMT</sub>
