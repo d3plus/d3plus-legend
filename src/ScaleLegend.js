@@ -101,7 +101,10 @@ export default class ScaleLegend extends BaseLegend {
     const clipId = `d3plus-ShapeLegend-clip-${this._uuid}`,
           p = this._padding;
 
-    let size = this._range ? this._range[1] - this._range[0] : this[`_${width}`] - p * 2;
+    const range = this._range ? this._range.slice() : [undefined, undefined];
+    if (range[0] === void 0) range[0] = p;
+    if (range[1] === void 0) range[1] = this[`_${width}`] - p;
+    let size = range[1] - range[0];
 
     this._titleHeight = 0;
     if (this._title) {
@@ -118,7 +121,7 @@ export default class ScaleLegend extends BaseLegend {
 
     this._d3Scale = scales[`scale${this._scale.charAt(0).toUpperCase()}${this._scale.slice(1)}`]()
       .domain(this._domain)
-      .rangeRound(this._range || [p, p + size]);
+      .rangeRound(range);
 
     let ticks = this._ticks || this._d3Scale.ticks(Math.floor(size / this._tickScale(size)));
     const tickFormat = this._d3Scale.tickFormat(ticks.length - 1);
@@ -160,24 +163,34 @@ export default class ScaleLegend extends BaseLegend {
 
     });
 
-    if (this._range === void 0 && textData.length) {
+    const rangeInit = range.slice();
+    if (textData.length) {
 
       const first = textData[0],
-            last = textData[textData.length - 1],
-            range = this._d3Scale.range();
+            last = textData[textData.length - 1];
 
-      const firstB = this._d3Scale(first.d) - first[width] / 2 - p,
-            lastB = this._d3Scale(last.d) + last[width] / 2 + p;
-
+      const firstB = this._d3Scale(first.d) - first[width] / 2 - p;
       if (firstB < range[0]) {
         const d = range[0] - firstB;
-        size -= d;
-        range[0] += d;
+        if (this._range === void 0 || this._range[0] === void 0) {
+          size -= d;
+          range[0] += d;
+        }
+        else if (this._range) {
+          rangeInit[0] -= d;
+        }
       }
+
+      const lastB = this._d3Scale(last.d) + last[width] / 2 + p;
       if (lastB > range[1]) {
         const d = lastB - range[1];
-        size -= d;
-        range[1] -= d;
+        if (this._range === void 0 || this._range[1] === void 0) {
+          size -= d;
+          range[1] -= d;
+        }
+        else if (this._range) {
+          rangeInit[1] += d;
+        }
       }
 
       this._d3Scale.rangeRound(range);
@@ -187,8 +200,8 @@ export default class ScaleLegend extends BaseLegend {
     const tPad = textData.length ? p * 2 : 0;
     this._outerBounds = {
       [height]: this._titleHeight + this._tickSize + (max(textData, t => t[height]) || 0) + tPad,
-      [width]: this[`_${width}`] - p * 2,
-      [x]: p
+      [width]: rangeInit[1] - rangeInit[0],
+      [x]: rangeInit[0]
     };
     this._outerBounds[y] = this._align === "start" ? this._padding
                          : this._align === "end" ? this[`_${height}`] - this._outerBounds[height]
@@ -332,7 +345,7 @@ export default class ScaleLegend extends BaseLegend {
 
   /**
       @memberof ScaleLegend
-      @desc If *value* is specified, sets the scale range (in pixels) of the legend and returns the current class instance. If *value* is not specified, returns the current scale range.
+      @desc If *value* is specified, sets the scale range (in pixels) of the legend and returns the current class instance. The given array must have 2 values, but one may be `undefined` to allow the default behavior for that value. If *value* is not specified, returns the current scale range.
       @param {Array} [*value*]
   */
   range(_) {
