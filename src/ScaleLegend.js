@@ -120,7 +120,9 @@ export default class ScaleLegend extends BaseLegend {
       .domain(this._domain)
       .rangeRound(this._range || [p, p + size]);
 
-    const ticks = this._ticks || this._d3Scale.ticks(Math.floor(size / this._tickScale(size)));
+    let ticks = this._ticks || this._d3Scale.ticks(Math.floor(size / this._tickScale(size)));
+    const tickFormat = this._d3Scale.tickFormat(ticks.length - 1);
+    if (!this._ticks) ticks = ticks.map(tickFormat).map(Number);
     const values = this._tickLabels || ticks;
 
     let space = 0;
@@ -164,8 +166,8 @@ export default class ScaleLegend extends BaseLegend {
             last = textData[textData.length - 1],
             range = this._d3Scale.range();
 
-      const firstB = this._d3Scale(first.d) - first[width] / 2,
-            lastB = this._d3Scale(last.d) + last[width] / 2;
+      const firstB = this._d3Scale(first.d) - first[width] / 2 - p,
+            lastB = this._d3Scale(last.d) + last[width] / 2 + p;
 
       if (firstB < range[0]) {
         const d = range[0] - firstB;
@@ -270,7 +272,7 @@ export default class ScaleLegend extends BaseLegend {
       .duration(this._duration)
       .height(maxTextHeight)
       .select(tickGroup.node())
-      .text(d => d.id)
+      .text(d => tickFormat(d.id))
       .textAnchor(this._orient === "left" ? "end" : this._orient === "right" ? "start" : "middle")
       .verticalAlign(this._orient === "bottom" ? "top" : this._orient === "top" ? "bottom" : "middle")
       .width(maxTextWidth)
