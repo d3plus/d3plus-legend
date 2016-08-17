@@ -1,6 +1,6 @@
 {
   "name": "d3plus-legend",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "An easy to use javascript chart legend.",
   "main": "build/d3plus-legend.js",
   "jsnext:main": "index",
@@ -25,9 +25,7 @@
   "dependencies": {
     "d3-array": "^1.0.1",
     "d3-collection": "^1.0.1",
-    "d3-scale": "^1.0.3",
     "d3-selection": "^1.0.2",
-    "d3-transition": "^1.0.1",
     "d3plus-common": "^0.5.7",
     "d3plus-shape": "^0.8.2",
     "d3plus-text": "^0.9.1"
