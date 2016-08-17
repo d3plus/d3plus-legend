@@ -2,7 +2,7 @@ import {max, sum} from "d3-array";
 import {nest} from "d3-collection";
 import {select} from "d3-selection";
 
-import {accessor, BaseClass, constant} from "d3plus-common";
+import {accessor, BaseClass, constant, elem} from "d3plus-common";
 import * as d3plus from "d3plus-shape";
 import {TextBox, textWidth, textWrap} from "d3plus-text";
 
@@ -87,12 +87,7 @@ export default class Legend extends BaseClass {
     if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._shapeConfig.fontSize(d, i) * 1.1;
 
     // Shape <g> Group
-    let shapeGroup = this._select.selectAll("g.d3plus-Legend")
-      .data([0]);
-
-    shapeGroup = shapeGroup.enter().append("g")
-        .attr("class", "d3plus-Legend")
-      .merge(shapeGroup);
+    const shapeGroup = elem("g.d3plus-Legend", {parent: this._select});
 
     let availableHeight = this._height;
     this._titleHeight = 0;
