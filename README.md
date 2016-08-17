@@ -107,7 +107,7 @@ If *orient* is specified, sets the orientation of the shape and returns the curr
 <a name="ScaleLegend.range"></a>
 
 #### ScaleLegend.range([*value*])
-If *value* is specified, sets the scale range (in pixels) of the legend and returns the current class instance. If *value* is not specified, returns the current scale range.
+If *value* is specified, sets the scale range (in pixels) of the legend and returns the current class instance. The given array must have 2 values, but one may be `undefined` to allow the default behavior for that value. If *value* is not specified, returns the current scale range.
 
 **Kind**: static method of <code>[ScaleLegend](#ScaleLegend)</code>  
 
@@ -301,4 +301,4 @@ If *value* is specified, sets the vertical alignment to the specified value and 
 
 
 
-###### <sub>Documentation generated on Tue, 16 Aug 2016 22:04:25 GMT</sub>
+###### <sub>Documentation generated on Wed, 17 Aug 2016 15:57:08 GMT</sub>
