@@ -153,6 +153,7 @@ export default class ScaleLegend extends BaseLegend {
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s}))));
       res.height = Math.ceil(res.lines.length * (lh + 1));
       if (res.width % 2) res.width++;
+
       return res;
 
     });
@@ -265,7 +266,7 @@ export default class ScaleLegend extends BaseLegend {
     tickGroup = tickGroup.enter().append("g").attr("class", "d3plus-scaleLegend-ticks").merge(tickGroup);
 
     new TextBox()
-      .data(values.map(d => ({id: d})))
+      .data(values.filter((d, i) => textData[i].lines.length).map(d => ({id: d})))
       .duration(this._duration)
       .height(maxTextHeight)
       .select(tickGroup.node())
