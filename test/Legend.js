@@ -1,9 +1,9 @@
 import {test} from "tape";
-import {default as ShapeLegend} from "../src/ShapeLegend.js";
+import {default as Legend} from "../src/Legend.js";
 
-test("ShapeLegend", assert => {
+test("Legend", assert => {
 
-  new ShapeLegend()
+  new Legend()
     .render(() => {
 
       assert.true(true, "function success");

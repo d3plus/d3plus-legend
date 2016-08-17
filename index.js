@@ -1,2 +1,1 @@
-export {default as BaseLegend} from "./src/BaseLegend";
-export {default as ShapeLegend} from "./src/ShapeLegend";
+export {default as Legend} from "./src/Legend";
