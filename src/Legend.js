@@ -214,9 +214,19 @@ export default class Legend extends BaseClass {
       };
 
       for (const k in baseConfig) {
-        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k) && typeof baseConfig[k] === "function") {
-          obj[k] = baseConfig[k](d, i);
-          config[k] = d => d[k];
+        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k)) {
+          if (typeof baseConfig[k] === "function") {
+            obj[k] = baseConfig[k](d, i);
+            config[k] = d => d[k];
+          }
+          else if (k === "on") {
+            config[k] = {};
+            for (const t in baseConfig[k]) {
+              if ({}.hasOwnProperty.call(baseConfig[k], t)) {
+                config[k][t] = d => baseConfig[k][t](d.data, d.i);
+              }
+            }
+          }
         }
       }
 
