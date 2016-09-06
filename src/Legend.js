@@ -208,7 +208,7 @@ export default class Legend extends BaseClass {
       const obj = {
         data: d, i,
         id: this._id(d, i),
-        label: visibleLabels ? this._label(d, i) : null,
+        label: visibleLabels ? this._label(d, i) : false,
         lH: this._lineHeight(d, i),
         shape: this._shape(d, i)
       };
