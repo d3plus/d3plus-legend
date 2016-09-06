@@ -171,7 +171,9 @@ export default class Legend extends BaseClass {
       }
     }
 
-    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)])) + this._titleHeight,
+    const innerHeight = this._orient === "horizontal"
+                      ? max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)])) + this._titleHeight
+                      : sum(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)]) + this._padding) + this._titleHeight,
           innerWidth = this._orient === "horizontal"
                      ? textSpace + sum(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * (this._data.length * (visibleLabels ? 3 : 1) - 2)
                      : textSpace + max(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * 3;
