@@ -12,7 +12,7 @@ An easy to use javascript chart legend.
 If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-legend/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-legend.v0.5.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-legend.v0.6.full.min.js"></script>
 ```
 
 
@@ -32,7 +32,6 @@ If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest rel
     * [.height([*value*])](#Legend.height)
     * [.id([*value*])](#Legend.id)
     * [.label([*value*])](#Legend.label)
-    * [.orient([*orient*])](#Legend.orient)
     * [.outerBounds()](#Legend.outerBounds)
     * [.padding([*value*])](#Legend.padding)
     * [.select([*selector*])](#Legend.select)
@@ -130,17 +129,6 @@ If *value* is specified, sets the label accessor to the specified function or st
 | Param | Type |
 | --- | --- |
 | [*value*] | <code>function</code> &#124; <code>String</code> | 
-
-<a name="Legend.orient"></a>
-
-#### Legend.orient([*orient*])
-If *orient* is specified, sets the orientation of the shape and returns the current class instance. If *orient* is not specified, returns the current orientation.
-
-**Kind**: static method of <code>[Legend](#Legend)</code>  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [*orient*] | <code>String</code> | <code>&quot;horizontal&quot;</code> | Supports `"horizontal"` and `"vertical"` orientations. |
 
 <a name="Legend.outerBounds"></a>
 
@@ -242,4 +230,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Thu, 18 Aug 2016 22:02:33 GMT</sub>
+###### <sub>Documentation generated on Wed, 07 Sep 2016 21:19:01 GMT</sub>
