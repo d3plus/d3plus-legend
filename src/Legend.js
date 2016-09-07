@@ -36,6 +36,11 @@ export default class Legend extends BaseClass {
       fontFamily: s.fontFamily(),
       fontSize: constant(10),
       height: constant(10),
+      hitArea: dd => {
+        const d = this._lineData[this._data.indexOf(dd)],
+              h = max([d.height, d.shapeHeight]);
+        return {width: d.width + d.shapeWidth + (d.width ? this._padding : 0), height: h, x: -d.shapeWidth / 2, y: -h / 2};
+      },
       labelBounds: (dd, i, s) => {
         const d = this._lineData[dd.i],
               w = s.r !== void 0 ? s.r : s.width / 2;
