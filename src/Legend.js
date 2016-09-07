@@ -26,7 +26,6 @@ export default class Legend extends BaseClass {
     this._id = accessor("id");
     this._label = accessor("id");
     this._lineData = [];
-    this._orient = "horizontal";
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
     this._shape = constant("Rect");
@@ -40,40 +39,43 @@ export default class Legend extends BaseClass {
       labelBounds: (dd, i, s) => {
         const d = this._lineData[dd.i],
               w = s.r !== void 0 ? s.r : s.width / 2;
-        return {width: d.width, height: d.height, x: w + this._padding, y: 1 - d.height / 2};
+        return {width: d.width, height: d.height, x: w + this._padding, y: -d.height / 2};
       },
       opacity: 1,
       r: constant(5),
       width: constant(10),
       x: (d, i) => {
         const s = this._shapeConfig.width;
-        if (this._orient === "vertical") return this._outerBounds.x + s(d, i) / 2;
-        else {
-          return this._outerBounds.x + sum(this._data.slice(0, i).map((b, i) => s(b, i))) +
-                 sum(this._lineData.slice(0, i).map(l => l.width - this._shapeConfig.fontSize(d, i))) +
-                 s(d, i) / 2 + this._padding * 3 * i;
-        }
+        const y = this._lineData[i].y;
+        const pad = this._align === "left" ? 0 : this._align === "center"
+                  ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
+                  : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
+        return this._rowWidth(this._lineData.slice(0, i).filter(l => y === l.y)) + this._padding +
+               this._outerBounds.x + s(d, i) / 2 + pad;
       },
       y: (d, i) => {
         const s = this._shapeConfig.height;
-        if (this._orient === "horizontal") return this._titleHeight + this._outerBounds.y + max(this._lineData.map(l => l.height).concat(this._data.map((l, x) => s(l, x)))) / 2;
-        else {
-          const h = s(d, i);
-          const pad = this._lineData[i].height > h ? this._lineData[i].height / 2 : h / 2,
-                prev = sum(this._lineData.slice(0, i), (l, x) => max([l.height, s(l.data, x)]));
-          return this._titleHeight + this._outerBounds.y + prev + pad + this._padding * i;
-        }
+        const ld = this._lineData[i];
+        return ld.y + this._titleHeight + this._outerBounds.y +
+               max(this._lineData.filter(l => ld.y === l.y).map(l => l.height).concat(this._data.map((l, x) => s(l, x)))) / 2;
       }
     };
     this._titleConfig = {
       fontFamily: "Verdana",
       fontSize: 12,
-      lineHeight: 13,
-      textAnchor: "middle"
+      lineHeight: 13
     };
     this._verticalAlign = "middle";
     this._width = 400;
 
+  }
+
+  _rowHeight(row) {
+    return max(row.map(d => d.height).concat(row.map(d => d.shapeHeight))) + this._padding;
+  }
+
+  _rowWidth(row) {
+    return sum(row.map(d => d.shapeWidth + d.width + this._padding * (d.width ? 2 : 1))) - this._padding;
   }
 
   /**
@@ -102,11 +104,12 @@ export default class Legend extends BaseClass {
 
     // Calculate Text Sizes
     this._lineData = this._data.map((d, i) => {
+      const shapeWidth = this._shapeConfig.width(d, i);
       const f = this._shapeConfig.fontFamily(d, i),
             lh = this._lineHeight(d, i),
             s = this._shapeConfig.fontSize(d, i);
-      const h = this._orient === "horizontal" ? availableHeight - (this._data.length + 1) * this._padding : this._height,
-            w = this._orient === "vertical" ? this._width - this._padding * 3 - this._shapeConfig.width(d, i) : this._width;
+      const h = availableHeight - (this._data.length + 1) * this._padding,
+            w = this._width;
       const res = textWrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(this._label(d, i));
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s;
       res.height = Math.ceil(res.lines.length * (lh + 1));
@@ -115,77 +118,119 @@ export default class Legend extends BaseClass {
       res.f = f;
       res.s = s;
       res.lh = lh;
+      res.y = 0;
       res.id = this._id(d, i);
+      res.i = i;
+      res.shapeWidth = shapeWidth;
+      res.shapeHeight = this._shapeConfig.height(d, i);
       return res;
     });
 
-    let availableSpace, textSpace, visibleLabels = true;
+    let spaceNeeded;
+    const availableWidth = this._width - this._padding * 2;
+    spaceNeeded = sum(this._lineData.map(d => d.shapeWidth + this._padding * 2 + d.width)) - this._padding;
 
-    if (this._orient === "horizontal") {
-      availableSpace = this._width - sum(this._data.map((d, i) => this._shapeConfig.width(d, i) + this._padding * 3)) - this._padding * 2;
-      textSpace = sum(this._lineData.map((d, i) => d.width - this._shapeConfig.fontSize(d, i)));
-      if (textSpace > availableSpace) {
-        const wrappable = this._lineData
-          .filter(d => d.words.length > 1)
-          .sort((a, b) => b.sentence.length - a.sentence.length);
+    if (spaceNeeded > availableWidth) {
+      let lines = 1, newRows = [];
 
-        if (wrappable.length && availableHeight > wrappable[0].height * 2) {
+      const maxLines = max(this._lineData.map(d => d.words.length));
+      this._wrapLines = function() {
 
-          let line = 2;
-          while (line <= 5) {
-            const labels = wrappable.filter(d => d.words.length >= line);
-            if (!labels.length) break;
-            for (let x = 0; x < wrappable.length; x++) {
-              const label = wrappable[x];
-              const h = label.og.height * line, w = label.og.width * (1.5 * (1 / line));
-              const res = textWrap().fontFamily(label.f).fontSize(label.s).lineHeight(label.lh).width(w).height(h)(label.sentence);
-              if (!res.truncated) {
-                textSpace -= label.width;
-                label.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": label.f, "font-size": label.s})))) + label.s;
-                label.height = res.lines.length * (label.lh + 1);
-                textSpace += label.width;
-                if (textSpace <= availableSpace) break;
-              }
+        lines++;
+
+        if (lines > maxLines) return;
+
+        const wrappable = lines === 1 ? this._lineData.slice()
+                        : this._lineData.filter(d => d.width + d.shapeWidth + this._padding * (d.width ? 2 : 1) > availableWidth && d.words.length >= lines)
+                            .sort((a, b) => b.sentence.length - a.sentence.length);
+
+        if (wrappable.length && availableHeight > wrappable[0].height * lines) {
+
+          let truncated = false;
+          for (let x = 0; x < wrappable.length; x++) {
+            const label = wrappable[x];
+            const h = label.og.height * lines, w = label.og.width * (1.5 * (1 / lines));
+            const res = textWrap().fontFamily(label.f).fontSize(label.s).lineHeight(label.lh).width(w).height(h)(label.sentence);
+            if (!res.truncated) {
+              label.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": label.f, "font-size": label.s})))) + label.s;
+              label.height = res.lines.length * (label.lh + 1);
             }
-            if (textSpace <= availableSpace) break;
-            line++;
-
+            else {
+              truncated = true;
+              break;
+            }
           }
-
+          if (!truncated) this._wrapRows();
         }
-        else visibleLabels = false;
+        else {
+          newRows = [];
+          return;
+        }
+
+      };
+
+      this._wrapRows = function() {
+        newRows = [];
+        let row = 1, rowWidth = 0;
+        for (let i = 0; i < this._lineData.length; i++) {
+          const d = this._lineData[i],
+                w = d.width + this._padding * (d.width ? 2 : 1) + d.shapeWidth;
+          if (sum(newRows.map(row => max(row, d => max([d.height, d.shapeHeight])))) > availableHeight) {
+            newRows = [];
+            break;
+          }
+          if (rowWidth + w < availableWidth) {
+            rowWidth += w;
+          }
+          else if (w > availableWidth) {
+            newRows = [];
+            this._wrapLines();
+            break;
+          }
+          else {
+            rowWidth = w;
+            row++;
+          }
+          if (!newRows[row - 1]) newRows[row - 1] = [];
+          newRows[row - 1].push(d);
+        }
+      };
+
+      this._wrapRows();
+
+      if (!newRows.length || sum(newRows, this._rowHeight.bind(this)) + this._padding > availableHeight) {
+        spaceNeeded = sum(this._lineData.map(d => d.shapeWidth + this._padding * 1)) - this._padding;
+        for (let i = 0; i < this._lineData.length; i++) {
+          this._lineData[i].width = 0;
+          this._lineData[i].height = 0;
+        }
+        this._wrapRows();
+      }
+
+      if (newRows.length && sum(newRows, this._rowHeight.bind(this)) + this._padding < availableHeight) {
+        newRows.forEach((row, i) => {
+          row.forEach(d => {
+            if (i) {
+              d.y = sum(newRows.slice(0, i), this._rowHeight.bind(this));
+            }
+          });
+        });
+        spaceNeeded = max(newRows, l => sum(l, d => d.shapeWidth + this._padding * (d.width ? 2 : 1) + d.width)) - this._padding;
       }
     }
-    else {
-      availableSpace = this._width - max(this._data.map((d, i) => this._shapeConfig.width(d, i) + this._padding * 3)) - this._padding * 2;
-      textSpace = max(this._lineData.map((d, i) => d.width - this._shapeConfig.fontSize(d, i)));
-    }
 
-    if (textSpace > availableSpace) visibleLabels = false;
+    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)]) + d.y) + this._titleHeight,
+          innerWidth = spaceNeeded;
 
-    if (!visibleLabels) {
-      textSpace = 0;
-      for (let i = 0; i < this._lineData.length; i++) {
-        this._lineData[i].width = 0;
-        this._lineData[i].height = 0;
-      }
-    }
-
-    const innerHeight = this._orient === "horizontal"
-                      ? max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)])) + this._titleHeight
-                      : sum(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)]) + this._padding) + this._titleHeight,
-          innerWidth = this._orient === "horizontal"
-                     ? textSpace + sum(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * (this._data.length * (visibleLabels ? 3 : 1) - 2)
-                     : textSpace + max(this._data, (d, i) => this._shapeConfig.width(d, i)) + this._padding * 3;
     this._outerBounds.width = innerWidth;
     this._outerBounds.height = innerHeight;
 
     let xOffset = this._padding,
         yOffset = this._padding;
-    if (this._align === "center") xOffset = (this._width - this._padding * 2 - innerWidth) / 2;
-    else if (this._align === "right") xOffset = this._width - this._padding * 2 - innerWidth;
-    if (this._verticalAlign === "middle") yOffset = (this._height - this._padding * 2 - innerHeight) / 2;
-    else if (this._verticalAlign === "bottom") yOffset = this._height - this._padding * 2 - innerHeight;
+    if (this._align === "center") xOffset = (this._width - innerWidth) / 2;
+    else if (this._align === "right") xOffset = this._width - this._padding - innerWidth;
+    if (this._verticalAlign === "middle") yOffset = (this._height - innerHeight) / 2;
+    else if (this._verticalAlign === "bottom") yOffset = this._height - this._padding - innerHeight;
     this._outerBounds.x = xOffset;
     this._outerBounds.y = yOffset;
 
@@ -193,8 +238,9 @@ export default class Legend extends BaseClass {
       .data(this._title ? [{text: this._title}] : [])
       .duration(this._duration)
       .select(shapeGroup.node())
-      .width(this._width)
-      .x(0)
+      .textAnchor({left: "start", center: "middle", right: "end"}[this._align])
+      .width(this._width - this._padding * 2)
+      .x(this._padding)
       .y(this._outerBounds.y)
       .config(this._titleConfig)
       .render();
@@ -205,12 +251,13 @@ export default class Legend extends BaseClass {
             label: d => d.label,
             lineHeight: d => d.lH
           };
+
     const shapeData = this._data.map((d, i) => {
 
       const obj = {
         data: d, i,
         id: this._id(d, i),
-        label: visibleLabels ? this._label(d, i) : false,
+        label: this._lineData[i].width ? this._label(d, i) : false,
         lH: this._lineHeight(d, i),
         shape: this._shape(d, i)
       };
@@ -313,15 +360,6 @@ function value(d) {
   */
   label(_) {
     return arguments.length ? (this._label = typeof _ === "function" ? _ : constant(_), this) : this._label;
-  }
-
-  /**
-      @memberof Legend
-      @desc If *orient* is specified, sets the orientation of the shape and returns the current class instance. If *orient* is not specified, returns the current orientation.
-      @param {String} [*orient* = "horizontal"] Supports `"horizontal"` and `"vertical"` orientations.
-  */
-  orient(_) {
-    return arguments.length ? (this._orient = _, this) : this._orient;
   }
 
   /**
