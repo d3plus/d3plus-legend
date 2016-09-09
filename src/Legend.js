@@ -277,7 +277,9 @@ export default class Legend extends BaseClass {
             config[k] = {};
             for (const t in baseConfig[k]) {
               if ({}.hasOwnProperty.call(baseConfig[k], t)) {
-                config[k][t] = d => baseConfig[k][t](d.data, d.i);
+                config[k][t] = function(d) {
+                  baseConfig[k][t].bind(this)(d.data, d.i);
+                };
               }
             }
           }
