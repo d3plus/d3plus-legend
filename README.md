@@ -230,4 +230,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Wed, 07 Sep 2016 21:19:01 GMT</sub>
+###### <sub>Documentation generated on Fri, 09 Sep 2016 19:10:04 GMT</sub>
