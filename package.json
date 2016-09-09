@@ -28,7 +28,7 @@
     "d3-selection": "^1.0.2",
     "d3plus-common": "^0.5.9",
     "d3plus-shape": "^0.8.12",
-    "d3plus-text": "^0.9.3"
+    "d3plus-text": "^0.9.5"
   },
   "scripts": {
     "dev": "d3plus-dev",
