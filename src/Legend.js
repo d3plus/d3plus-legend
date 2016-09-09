@@ -94,7 +94,7 @@ export default class Legend extends BaseClass {
     if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._shapeConfig.fontSize(d, i) * 1.1;
 
     // Shape <g> Group
-    const shapeGroup = elem("g.d3plus-Legend", {parent: this._select});
+    this._group = elem("g.d3plus-Legend", {parent: this._select});
 
     let availableHeight = this._height;
     this._titleHeight = 0;
@@ -242,7 +242,7 @@ export default class Legend extends BaseClass {
     new TextBox()
       .data(this._title ? [{text: this._title}] : [])
       .duration(this._duration)
-      .select(shapeGroup.node())
+      .select(this._group.node())
       .textAnchor({left: "start", center: "middle", right: "end"}[this._align])
       .width(this._width - this._padding * 2)
       .x(this._padding)
@@ -250,60 +250,8 @@ export default class Legend extends BaseClass {
       .config(this._titleConfig)
       .render();
 
-    const baseConfig = this._shapeConfig,
-          config = {
-            id: d => d.id,
-            label: d => d.label,
-            lineHeight: d => d.lH
-          };
-
-    const shapeData = this._data.map((d, i) => {
-
-      const obj = {
-        data: d, i,
-        id: this._id(d, i),
-        label: this._lineData[i].width ? this._label(d, i) : false,
-        lH: this._lineHeight(d, i),
-        shape: this._shape(d, i)
-      };
-
-      for (const k in baseConfig) {
-        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k)) {
-          if (typeof baseConfig[k] === "function") {
-            obj[k] = baseConfig[k](d, i);
-            config[k] = d => d[k];
-          }
-          else if (k === "on") {
-            config[k] = {};
-            for (const t in baseConfig[k]) {
-              if ({}.hasOwnProperty.call(baseConfig[k], t)) {
-                config[k][t] = function(d) {
-                  baseConfig[k][t].bind(this)(d.data, d.i);
-                };
-              }
-            }
-          }
-        }
-      }
-
-      return obj;
-
-    });
-
-    // Legend Shapes
-    nest().key(d => d.shape).entries(shapeData).forEach(d => {
-
-      new d3plus[d.key]()
-        .data(d.values)
-        .duration(this._duration)
-        .labelPadding(0)
-        .select(shapeGroup.node())
-        .verticalAlign("top")
-        .config(baseConfig)
-        .config(config)
-        .render();
-
-    });
+    this._shapes = {};
+    this.update();
 
     if (callback) setTimeout(callback, this._duration + 100);
 
@@ -431,6 +379,72 @@ function value(d) {
   */
   titleConfig(_) {
     return arguments.length ? (this._titleConfig = Object.assign(this._titleConfig, _), this) : this._titleConfig;
+  }
+
+  /**
+      @memberof Legend
+      @desc Pass-through function to update specific shapes.
+      @param {Selector} *selector*
+  */
+  update(_) {
+
+    const baseConfig = this._shapeConfig,
+          config = {
+            id: d => d.id,
+            label: d => d.label,
+            lineHeight: d => d.lH
+          };
+
+    const data = this._data.map((d, i) => {
+
+      const obj = {
+        data: d, i,
+        id: this._id(d, i),
+        label: this._lineData[i].width ? this._label(d, i) : false,
+        lH: this._lineHeight(d, i),
+        shape: this._shape(d, i)
+      };
+
+      for (const k in baseConfig) {
+        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k)) {
+          if (typeof baseConfig[k] === "function") {
+            obj[k] = baseConfig[k](d, i);
+            config[k] = d => d[k];
+          }
+          else if (k === "on") {
+            config[k] = {};
+            for (const t in baseConfig[k]) {
+              if ({}.hasOwnProperty.call(baseConfig[k], t)) {
+                config[k][t] = function(d) {
+                  baseConfig[k][t].bind(this)(d.data, d.i);
+                };
+              }
+            }
+          }
+        }
+      }
+
+      return obj;
+
+    });
+
+    // Legend Shapes
+    nest().key(d => d.shape).entries(data).forEach(d => {
+
+      const s = this._shapes[d.key] = (this._shapes[d.key] || new d3plus[d.key]())
+        .data(d.values)
+        .duration(this._duration)
+        .labelPadding(0)
+        .select(this._group.node())
+        .verticalAlign("top")
+        .config(Object.assign({}, baseConfig, config));
+
+      if (_) s.fill("red").update(_);
+      else s.render();
+
+    });
+
+    return this;
   }
 
   /**
