@@ -1,6 +1,6 @@
 {
   "name": "d3plus-legend",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "An easy to use javascript chart legend.",
   "main": "build/d3plus-legend.js",
   "jsnext:main": "index",
