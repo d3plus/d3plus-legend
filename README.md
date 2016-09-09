@@ -39,6 +39,7 @@ If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest rel
     * [.shapeConfig([*config*])](#Legend.shapeConfig)
     * [.title([*value*])](#Legend.title)
     * [.titleConfig([*value*])](#Legend.titleConfig)
+    * [.update(*selector*)](#Legend.update)
     * [.verticalAlign([*value*])](#Legend.verticalAlign)
     * [.width([*value*])](#Legend.width)
 
@@ -206,6 +207,17 @@ If *value* is specified, sets the title configuration of the legend and returns 
 | --- | --- |
 | [*value*] | <code>Object</code> | 
 
+<a name="Legend.update"></a>
+
+#### Legend.update(*selector*)
+Pass-through function to update specific shapes.
+
+**Kind**: static method of <code>[Legend](#Legend)</code>  
+
+| Param | Type |
+| --- | --- |
+| *selector* | <code>Selector</code> | 
+
 <a name="Legend.verticalAlign"></a>
 
 #### Legend.verticalAlign([*value*])
@@ -230,4 +242,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Fri, 09 Sep 2016 20:07:29 GMT</sub>
+###### <sub>Documentation generated on Fri, 09 Sep 2016 20:48:18 GMT</sub>
