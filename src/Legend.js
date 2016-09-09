@@ -250,8 +250,60 @@ export default class Legend extends BaseClass {
       .config(this._titleConfig)
       .render();
 
-    this._shapes = {};
-    this.update();
+    this._shapes = [];
+    const baseConfig = this._shapeConfig,
+          config = {
+            id: d => d.id,
+            label: d => d.label,
+            lineHeight: d => d.lH
+          };
+
+    const data = this._data.map((d, i) => {
+
+      const obj = {
+        data: d, i,
+        id: this._id(d, i),
+        label: this._lineData[i].width ? this._label(d, i) : false,
+        lH: this._lineHeight(d, i),
+        shape: this._shape(d, i)
+      };
+
+      for (const k in baseConfig) {
+        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k)) {
+          if (typeof baseConfig[k] === "function") {
+            obj[k] = baseConfig[k](d, i);
+            config[k] = d => d[k];
+          }
+          else if (k === "on") {
+            config[k] = {};
+            for (const t in baseConfig[k]) {
+              if ({}.hasOwnProperty.call(baseConfig[k], t)) {
+                config[k][t] = function(d) {
+                  baseConfig[k][t].bind(this)(d.data, d.i);
+                };
+              }
+            }
+          }
+        }
+      }
+
+      return obj;
+
+    });
+
+    // Legend Shapes
+    nest().key(d => d.shape).entries(data).forEach(d => {
+
+      new d3plus[d.key]()
+        .data(d.values)
+        .duration(this._duration)
+        .labelPadding(0)
+        .select(this._group.node())
+        .verticalAlign("top")
+        .config(Object.assign({}, baseConfig, config))
+        .render();
+
+    });
 
     if (callback) setTimeout(callback, this._duration + 100);
 
@@ -379,72 +431,6 @@ function value(d) {
   */
   titleConfig(_) {
     return arguments.length ? (this._titleConfig = Object.assign(this._titleConfig, _), this) : this._titleConfig;
-  }
-
-  /**
-      @memberof Legend
-      @desc Pass-through function to update specific shapes.
-      @param {Selector} *selector*
-  */
-  update(_) {
-
-    const baseConfig = this._shapeConfig,
-          config = {
-            id: d => d.id,
-            label: d => d.label,
-            lineHeight: d => d.lH
-          };
-
-    const data = this._data.map((d, i) => {
-
-      const obj = {
-        data: d, i,
-        id: this._id(d, i),
-        label: this._lineData[i].width ? this._label(d, i) : false,
-        lH: this._lineHeight(d, i),
-        shape: this._shape(d, i)
-      };
-
-      for (const k in baseConfig) {
-        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k)) {
-          if (typeof baseConfig[k] === "function") {
-            obj[k] = baseConfig[k](d, i);
-            config[k] = d => d[k];
-          }
-          else if (k === "on") {
-            config[k] = {};
-            for (const t in baseConfig[k]) {
-              if ({}.hasOwnProperty.call(baseConfig[k], t)) {
-                config[k][t] = function(d) {
-                  baseConfig[k][t].bind(this)(d.data, d.i);
-                };
-              }
-            }
-          }
-        }
-      }
-
-      return obj;
-
-    });
-
-    // Legend Shapes
-    nest().key(d => d.shape).entries(data).forEach(d => {
-
-      const s = this._shapes[d.key] = (this._shapes[d.key] || new d3plus[d.key]())
-        .data(d.values)
-        .duration(this._duration)
-        .labelPadding(0)
-        .select(this._group.node())
-        .verticalAlign("top")
-        .config(Object.assign({}, baseConfig, config));
-
-      if (_) s.update(_);
-      else s.render();
-
-    });
-
-    return this;
   }
 
   /**
