@@ -439,7 +439,7 @@ function value(d) {
         .verticalAlign("top")
         .config(Object.assign({}, baseConfig, config));
 
-      if (_) s.fill("red").update(_);
+      if (_) s.update(_);
       else s.render();
 
     });
