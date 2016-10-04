@@ -13,6 +13,11 @@ import {TextBox, textWidth, textWrap} from "d3plus-text";
 */
 export default class Legend extends BaseClass {
 
+  /**
+      @memberof Legend
+      @desc Invoked when creating a new class instance, and sets any default parameters.
+      @private
+  */
   constructor() {
 
     super();
@@ -34,6 +39,7 @@ export default class Legend extends BaseClass {
       fill: accessor("color"),
       fontColor: constant("#444"),
       fontFamily: s.fontFamily(),
+      fontResize: false,
       fontSize: constant(10),
       height: constant(10),
       hitArea: dd => {
