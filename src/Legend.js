@@ -297,7 +297,6 @@ export default class Legend extends BaseClass {
     });
 
     // Legend Shapes
-    console.log(d3plus);
     d3plus.forEach(Shape => {
 
       new Shape()
