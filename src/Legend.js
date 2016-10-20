@@ -2,8 +2,7 @@ import {max, sum} from "d3-array";
 import {select} from "d3-selection";
 
 import {accessor, BaseClass, constant, elem} from "d3plus-common";
-import {Circle, Rect} from "d3plus-shape";
-const d3plus = [Circle, Rect];
+import * as shapes from "d3plus-shape";
 import {TextBox, textWidth, textWrap} from "d3plus-text";
 
 /**
@@ -36,7 +35,7 @@ export default class Legend extends BaseClass {
       duration: this._duration,
       fill: accessor("color"),
       fontColor: constant("#444"),
-      fontFamily: new Rect().fontFamily(),
+      fontFamily: new shapes.Rect().fontFamily(),
       fontResize: false,
       fontSize: constant(10),
       height: constant(10),
@@ -297,10 +296,10 @@ export default class Legend extends BaseClass {
     });
 
     // Legend Shapes
-    d3plus.forEach(Shape => {
+    ["Circle", "Rect"].forEach(Shape => {
 
-      new Shape()
-        .data(data.filter(d => d.shape === Shape.name))
+      new shapes[Shape]()
+        .data(data.filter(d => d.shape === Shape))
         .duration(this._duration)
         .labelPadding(0)
         .select(this._group.node())
