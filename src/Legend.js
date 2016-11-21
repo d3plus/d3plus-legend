@@ -78,6 +78,11 @@ export default class Legend extends BaseClass {
 
   }
 
+  _fetchConfig(key, d, i) {
+    return typeof this._shapeConfig[key] === "function"
+         ? this._shapeConfig[key](d, i) : this._shapeConfig[key];
+  }
+
   _rowHeight(row) {
     return max(row.map(d => d.height).concat(row.map(d => d.shapeHeight))) + this._padding;
   }
@@ -94,7 +99,7 @@ export default class Legend extends BaseClass {
   render(callback) {
 
     if (this._select === void 0) this.select(select("body").append("svg").attr("width", `${this._width}px`).attr("height", `${this._height}px`).node());
-    if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._shapeConfig.fontSize(d, i) * 1.1;
+    if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._fetchConfig("fontSize", d, i) * 1.1;
 
     // Shape <g> Group
     this._group = elem("g.d3plus-Legend", {parent: this._select});
@@ -105,20 +110,32 @@ export default class Legend extends BaseClass {
       const f = this._titleConfig.fontFamily,
             lH = this._titleConfig.lineHeight,
             s = this._titleConfig.fontSize;
-      const res = textWrap().fontFamily(f).fontSize(s).lineHeight(lH).width(this._width).height(this._height)(this._title);
+      const res = textWrap()
+        .fontFamily(f)
+        .fontSize(s)
+        .lineHeight(lH)
+        .width(this._width)
+        .height(this._height)
+        (this._title);
       this._titleHeight = lH + res.lines.length + this._padding;
       availableHeight -= this._titleHeight;
     }
 
     // Calculate Text Sizes
     this._lineData = this._data.map((d, i) => {
-      const shapeWidth = this._shapeConfig.width(d, i);
-      const f = this._shapeConfig.fontFamily(d, i),
+      const f = this._fetchConfig("fontFamily", d, i),
             lh = this._lineHeight(d, i),
-            s = this._shapeConfig.fontSize(d, i);
+            s = this._fetchConfig("fontSize", d, i),
+            shapeWidth = this._fetchConfig("width", d, i);
       const h = availableHeight - (this._data.length + 1) * this._padding,
             w = this._width;
-      const res = textWrap().fontFamily(f).fontSize(s).lineHeight(lh).width(w).height(h)(this._label(d, i));
+      const res = textWrap()
+        .fontFamily(f)
+        .fontSize(s)
+        .lineHeight(lh)
+        .width(w)
+        .height(h)
+        (this._label(d, i));
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s;
       res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {height: res.height, width: res.width};
@@ -130,7 +147,7 @@ export default class Legend extends BaseClass {
       res.id = this._id(d, i);
       res.i = i;
       res.shapeWidth = shapeWidth;
-      res.shapeHeight = this._shapeConfig.height(d, i);
+      res.shapeHeight = this._fetchConfig("height", d, i);
       return res;
     });
 
@@ -227,7 +244,7 @@ export default class Legend extends BaseClass {
       }
     }
 
-    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._shapeConfig.height(d.data, i)]) + d.y) + this._titleHeight,
+    const innerHeight = max(this._lineData, (d, i) => max([d.height, this._fetchConfig("height", d.data, i)]) + d.y) + this._titleHeight,
           innerWidth = spaceNeeded;
 
     this._outerBounds.width = innerWidth;
