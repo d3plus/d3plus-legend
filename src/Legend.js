@@ -264,6 +264,7 @@ export default class Legend extends BaseClass {
     const data = this._data.map((d, i) => {
 
       const obj = {
+        __d3plus__: true,
         data: d, i,
         id: this._id(d, i),
         label: this._lineData[i].width ? this._label(d, i) : false,
