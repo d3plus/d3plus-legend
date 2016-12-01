@@ -30,6 +30,7 @@ If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest rel
     * [.data([*data*])](#Legend.data)
     * [.duration([*value*])](#Legend.duration)
     * [.height([*value*])](#Legend.height)
+    * [.highlight([*value*])](#Legend.highlight)
     * [.id([*value*])](#Legend.id)
     * [.label([*value*])](#Legend.label)
     * [.outerBounds()](#Legend.outerBounds)
@@ -101,6 +102,17 @@ If *value* is specified, sets the overall height of the legend and returns the c
 | Param | Type | Default |
 | --- | --- | --- |
 | [*value*] | <code>Number</code> | <code>100</code> | 
+
+<a name="Legend.highlight"></a>
+
+#### Legend.highlight([*value*])
+If *value* is specified, sets the highlight method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current highlight method.
+
+**Kind**: static method of <code>[Legend](#Legend)</code>  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> | 
 
 <a name="Legend.id"></a>
 
@@ -230,4 +242,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Thu, 01 Dec 2016 00:14:17 GMT</sub>
+###### <sub>Documentation generated on Thu, 01 Dec 2016 15:33:54 GMT</sub>
