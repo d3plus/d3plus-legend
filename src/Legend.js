@@ -314,16 +314,17 @@ export default class Legend extends BaseClass {
     });
 
     // Legend Shapes
+    this._shapes = [];
     ["Circle", "Rect"].forEach(Shape => {
 
-      new shapes[Shape]()
+      this._shapes.push(new shapes[Shape]()
         .data(data.filter(d => d.shape === Shape))
         .duration(this._duration)
         .labelPadding(0)
         .select(this._group.node())
         .verticalAlign("top")
         .config(Object.assign({}, baseConfig, config))
-        .render();
+        .render());
 
     });
 
@@ -367,6 +368,16 @@ export default class Legend extends BaseClass {
   */
   height(_) {
     return arguments.length ? (this._height = _, this) : this._height;
+  }
+
+  /**
+      @memberof Legend
+      @desc If *value* is specified, sets the highlight method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current highlight method.
+      @param {Function} [*value*]
+  */
+  highlight(_) {
+    this._shapes.forEach(s => s.highlight(_));
+    return this;
   }
 
   /**
