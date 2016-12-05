@@ -27,7 +27,7 @@
     "d3-selection": "^1.0.3",
     "d3plus-common": "^0.6.9",
     "d3plus-shape": "^0.10.8",
-    "d3plus-text": "^0.9.9"
+    "d3plus-text": "^0.9.10"
   },
   "scripts": {
     "build": "d3plus-build",
