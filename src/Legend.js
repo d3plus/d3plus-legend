@@ -1,3 +1,8 @@
+/**
+    @external BaseClass
+    @see https://github.com/d3plus/d3plus-common#BaseClass
+*/
+
 import {max, sum} from "d3-array";
 import {select} from "d3-selection";
 
@@ -7,7 +12,7 @@ import {TextBox, textWidth, textWrap} from "d3plus-text";
 
 /**
     @class Legend
-    @extends BaseClass
+    @extends external:BaseClass
     @desc Creates an SVG scale based on an array of data. If *data* is specified, immediately draws based on the specified array and returns the current class instance. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
 */
 export default class Legend extends BaseClass {
