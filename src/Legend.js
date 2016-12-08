@@ -95,6 +95,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc Renders the current Legend to the page. If a *callback* is specified, it will be called once the legend is done drawing.
       @param {Function} [*callback* = undefined]
+      @chainable
   */
   render(callback) {
 
@@ -338,6 +339,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc If *value* is specified, sets the active method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current active method.
       @param {Function} [*value*]
+      @chainable
   */
   active(_) {
     this._shapes.forEach(s => s.active(_));
@@ -348,6 +350,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
       @param {String} [*value* = "center"] Supports `"left"` and `"center"` and `"right"`.
+      @chainable
   */
   align(_) {
     return arguments.length ? (this._align = _, this) : this._align;
@@ -357,6 +360,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc If *data* is specified, sets the data array to the specified array and returns the current class instance. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
       @param {Array} [*data* = []]
+      @chainable
   */
   data(_) {
     return arguments.length ? (this._data = _, this) : this._data;
@@ -366,6 +370,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc If *value* is specified, sets the transition duration of the legend and returns the current class instance. If *value* is not specified, returns the current duration.
       @param {Number} [*value* = 600]
+      @chainable
   */
   duration(_) {
     return arguments.length ? (this._duration = _, this) : this._duration;
@@ -375,6 +380,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc If *value* is specified, sets the overall height of the legend and returns the current class instance. If *value* is not specified, returns the current height value.
       @param {Number} [*value* = 100]
+      @chainable
   */
   height(_) {
     return arguments.length ? (this._height = _, this) : this._height;
@@ -384,6 +390,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc If *value* is specified, sets the hover method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current hover method.
       @param {Function} [*value*]
+      @chainable
   */
   hover(_) {
     this._shapes.forEach(s => s.hover(_));
@@ -394,6 +401,7 @@ export default class Legend extends BaseClass {
       @memberof Legend
       @desc If *value* is specified, sets the id accessor to the specified function and returns the current class instance. If *value* is not specified, returns the current id accessor.
       @param {Function} [*value*]
+      @chainable
       @example
 function value(d) {
   return d.id;
@@ -407,6 +415,7 @@ function value(d) {
       @memberof Legend
       @desc If *value* is specified, sets the label accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current label accessor, which is the [id](#shape.id) accessor by default.
       @param {Function|String} [*value*]
+      @chainable
   */
   label(_) {
     return arguments.length ? (this._label = typeof _ === "function" ? _ : constant(_), this) : this._label;
@@ -426,6 +435,7 @@ function value(d) {
       @memberof Legend
       @desc If *value* is specified, sets the padding between each key to the specified number and returns the current class instance. If *value* is not specified, returns the current padding value.
       @param {Number} [*value* = 10]
+      @chainable
   */
   padding(_) {
     return arguments.length ? (this._padding = _, this) : this._padding;
@@ -435,6 +445,7 @@ function value(d) {
       @memberof Legend
       @desc If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns the current class instance. If *selector* is not specified, returns the current SVG container element.
       @param {String|HTMLElement} [*selector* = d3.select("body").append("svg")]
+      @chainable
   */
   select(_) {
     return arguments.length ? (this._select = select(_), this) : this._select;
@@ -444,6 +455,7 @@ function value(d) {
       @memberof Legend
       @desc If *value* is specified, sets the shape accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current shape accessor.
       @param {Function|String} [*value* = "Rect"]
+      @chainable
   */
   shape(_) {
     return arguments.length ? (this._shape = typeof _ === "function" ? _ : constant(_), this) : this._shape;
@@ -453,6 +465,7 @@ function value(d) {
       @memberof Legend
       @desc If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns the current class instance. If *config* is not specified, returns the current shape configuration.
       @param {Object} [*config* = {}]
+      @chainable
   */
   shapeConfig(_) {
     return arguments.length ? (this._shapeConfig = Object.assign(this._shapeConfig, _), this) : this._shapeConfig;
@@ -462,6 +475,7 @@ function value(d) {
       @memberof Legend
       @desc If *value* is specified, sets the title of the legend and returns the current class instance. If *value* is not specified, returns the current title.
       @param {String} [*value*]
+      @chainable
   */
   title(_) {
     return arguments.length ? (this._title = _, this) : this._title;
@@ -471,6 +485,7 @@ function value(d) {
       @memberof Legend
       @desc If *value* is specified, sets the title configuration of the legend and returns the current class instance. If *value* is not specified, returns the current title configuration.
       @param {Object} [*value*]
+      @chainable
   */
   titleConfig(_) {
     return arguments.length ? (this._titleConfig = Object.assign(this._titleConfig, _), this) : this._titleConfig;
@@ -480,6 +495,7 @@ function value(d) {
       @memberof Legend
       @desc If *value* is specified, sets the vertical alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current vertical alignment.
       @param {String} [*value* = "middle"] Supports `"top"` and `"middle"` and `"bottom"`.
+      @chainable
   */
   verticalAlign(_) {
     return arguments.length ? (this._verticalAlign = _, this) : this._verticalAlign;
@@ -489,6 +505,7 @@ function value(d) {
       @memberof Legend
       @desc If *value* is specified, sets the overall width of the legend and returns the current class instance. If *value* is not specified, returns the current width value.
       @param {Number} [*value* = 400]
+      @chainable
   */
   width(_) {
     return arguments.length ? (this._width = _, this) : this._width;
