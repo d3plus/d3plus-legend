@@ -336,6 +336,16 @@ export default class Legend extends BaseClass {
 
   /**
       @memberof Legend
+      @desc If *value* is specified, sets the active method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current active method.
+      @param {Function} [*value*]
+  */
+  active(_) {
+    this._shapes.forEach(s => s.active(_));
+    return this;
+  }
+
+  /**
+      @memberof Legend
       @desc If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
       @param {String} [*value* = "center"] Supports `"left"` and `"center"` and `"right"`.
   */
@@ -372,11 +382,11 @@ export default class Legend extends BaseClass {
 
   /**
       @memberof Legend
-      @desc If *value* is specified, sets the highlight method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current highlight method.
+      @desc If *value* is specified, sets the hover method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current hover method.
       @param {Function} [*value*]
   */
-  highlight(_) {
-    this._shapes.forEach(s => s.highlight(_));
+  hover(_) {
+    this._shapes.forEach(s => s.hover(_));
     return this;
   }
 
