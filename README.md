@@ -12,36 +12,37 @@ An easy to use javascript chart legend.
 If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-legend/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-legend.v0.6.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-legend.v0.7.full.min.js"></script>
 ```
 
 
 ## API Reference
 <a name="Legend"></a>
 
-### Legend ⇐ <code>BaseClass</code>
+### Legend ⇐ <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>
 **Kind**: global class  
-**Extends:** <code>BaseClass</code>  
+**Extends:** <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>  
 
-* [Legend](#Legend) ⇐ <code>BaseClass</code>
+* [Legend](#Legend) ⇐ <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>
     * [new Legend()](#new_Legend_new)
-    * [.render([*callback*])](#Legend.render)
-    * [.align([*value*])](#Legend.align)
-    * [.data([*data*])](#Legend.data)
-    * [.duration([*value*])](#Legend.duration)
-    * [.height([*value*])](#Legend.height)
-    * [.highlight([*value*])](#Legend.highlight)
-    * [.id([*value*])](#Legend.id)
-    * [.label([*value*])](#Legend.label)
+    * [.render([*callback*])](#Legend.render) ↩︎
+    * [.active([*value*])](#Legend.active) ↩︎
+    * [.align([*value*])](#Legend.align) ↩︎
+    * [.data([*data*])](#Legend.data) ↩︎
+    * [.duration([*value*])](#Legend.duration) ↩︎
+    * [.height([*value*])](#Legend.height) ↩︎
+    * [.hover([*value*])](#Legend.hover) ↩︎
+    * [.id([*value*])](#Legend.id) ↩︎
+    * [.label([*value*])](#Legend.label) ↩︎
     * [.outerBounds()](#Legend.outerBounds)
-    * [.padding([*value*])](#Legend.padding)
-    * [.select([*selector*])](#Legend.select)
-    * [.shape([*value*])](#Legend.shape)
-    * [.shapeConfig([*config*])](#Legend.shapeConfig)
-    * [.title([*value*])](#Legend.title)
-    * [.titleConfig([*value*])](#Legend.titleConfig)
-    * [.verticalAlign([*value*])](#Legend.verticalAlign)
-    * [.width([*value*])](#Legend.width)
+    * [.padding([*value*])](#Legend.padding) ↩︎
+    * [.select([*selector*])](#Legend.select) ↩︎
+    * [.shape([*value*])](#Legend.shape) ↩︎
+    * [.shapeConfig([*config*])](#Legend.shapeConfig) ↩︎
+    * [.title([*value*])](#Legend.title) ↩︎
+    * [.titleConfig([*value*])](#Legend.titleConfig) ↩︎
+    * [.verticalAlign([*value*])](#Legend.verticalAlign) ↩︎
+    * [.width([*value*])](#Legend.width) ↩︎
 
 <a name="new_Legend_new"></a>
 
@@ -50,21 +51,35 @@ Creates an SVG scale based on an array of data. If *data* is specified, immediat
 
 <a name="Legend.render"></a>
 
-#### Legend.render([*callback*])
+#### Legend.render([*callback*]) ↩︎
 Renders the current Legend to the page. If a *callback* is specified, it will be called once the legend is done drawing.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type |
 | --- | --- |
 | [*callback*] | <code>function</code> | 
 
+<a name="Legend.active"></a>
+
+#### Legend.active([*value*]) ↩︎
+If *value* is specified, sets the active method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current active method.
+
+**Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> | 
+
 <a name="Legend.align"></a>
 
-#### Legend.align([*value*])
+#### Legend.align([*value*]) ↩︎
 If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -72,10 +87,11 @@ If *value* is specified, sets the horizontal alignment to the specified value an
 
 <a name="Legend.data"></a>
 
-#### Legend.data([*data*])
+#### Legend.data([*data*]) ↩︎
 If *data* is specified, sets the data array to the specified array and returns the current class instance. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -83,10 +99,11 @@ If *data* is specified, sets the data array to the specified array and returns t
 
 <a name="Legend.duration"></a>
 
-#### Legend.duration([*value*])
+#### Legend.duration([*value*]) ↩︎
 If *value* is specified, sets the transition duration of the legend and returns the current class instance. If *value* is not specified, returns the current duration.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -94,21 +111,23 @@ If *value* is specified, sets the transition duration of the legend and returns 
 
 <a name="Legend.height"></a>
 
-#### Legend.height([*value*])
+#### Legend.height([*value*]) ↩︎
 If *value* is specified, sets the overall height of the legend and returns the current class instance. If *value* is not specified, returns the current height value.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
 | [*value*] | <code>Number</code> | <code>100</code> | 
 
-<a name="Legend.highlight"></a>
+<a name="Legend.hover"></a>
 
-#### Legend.highlight([*value*])
-If *value* is specified, sets the highlight method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current highlight method.
+#### Legend.hover([*value*]) ↩︎
+If *value* is specified, sets the hover method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current hover method.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type |
 | --- | --- |
@@ -116,10 +135,11 @@ If *value* is specified, sets the highlight method for all shapes to the specifi
 
 <a name="Legend.id"></a>
 
-#### Legend.id([*value*])
+#### Legend.id([*value*]) ↩︎
 If *value* is specified, sets the id accessor to the specified function and returns the current class instance. If *value* is not specified, returns the current id accessor.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type |
 | --- | --- |
@@ -133,10 +153,11 @@ function value(d) {
 ```
 <a name="Legend.label"></a>
 
-#### Legend.label([*value*])
+#### Legend.label([*value*]) ↩︎
 If *value* is specified, sets the label accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current label accessor, which is the [id](#shape.id) accessor by default.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type |
 | --- | --- |
@@ -154,10 +175,11 @@ If called after the elements have been drawn to DOM, will returns the outer boun
 ```
 <a name="Legend.padding"></a>
 
-#### Legend.padding([*value*])
+#### Legend.padding([*value*]) ↩︎
 If *value* is specified, sets the padding between each key to the specified number and returns the current class instance. If *value* is not specified, returns the current padding value.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -165,10 +187,11 @@ If *value* is specified, sets the padding between each key to the specified numb
 
 <a name="Legend.select"></a>
 
-#### Legend.select([*selector*])
+#### Legend.select([*selector*]) ↩︎
 If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns the current class instance. If *selector* is not specified, returns the current SVG container element.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -176,10 +199,11 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 
 <a name="Legend.shape"></a>
 
-#### Legend.shape([*value*])
+#### Legend.shape([*value*]) ↩︎
 If *value* is specified, sets the shape accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current shape accessor.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -187,10 +211,11 @@ If *value* is specified, sets the shape accessor to the specified function or st
 
 <a name="Legend.shapeConfig"></a>
 
-#### Legend.shapeConfig([*config*])
+#### Legend.shapeConfig([*config*]) ↩︎
 If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns the current class instance. If *config* is not specified, returns the current shape configuration.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -198,10 +223,11 @@ If *config* is specified, sets the methods that correspond to the key/value pair
 
 <a name="Legend.title"></a>
 
-#### Legend.title([*value*])
+#### Legend.title([*value*]) ↩︎
 If *value* is specified, sets the title of the legend and returns the current class instance. If *value* is not specified, returns the current title.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type |
 | --- | --- |
@@ -209,10 +235,11 @@ If *value* is specified, sets the title of the legend and returns the current cl
 
 <a name="Legend.titleConfig"></a>
 
-#### Legend.titleConfig([*value*])
+#### Legend.titleConfig([*value*]) ↩︎
 If *value* is specified, sets the title configuration of the legend and returns the current class instance. If *value* is not specified, returns the current title configuration.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type |
 | --- | --- |
@@ -220,10 +247,11 @@ If *value* is specified, sets the title configuration of the legend and returns 
 
 <a name="Legend.verticalAlign"></a>
 
-#### Legend.verticalAlign([*value*])
+#### Legend.verticalAlign([*value*]) ↩︎
 If *value* is specified, sets the vertical alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current vertical alignment.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -231,10 +259,11 @@ If *value* is specified, sets the vertical alignment to the specified value and 
 
 <a name="Legend.width"></a>
 
-#### Legend.width([*value*])
+#### Legend.width([*value*]) ↩︎
 If *value* is specified, sets the overall width of the legend and returns the current class instance. If *value* is not specified, returns the current width value.
 
 **Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -242,4 +271,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Mon, 05 Dec 2016 03:00:17 GMT</sub>
+###### <sub>Documentation generated on Thu, 08 Dec 2016 16:54:37 GMT</sub>
