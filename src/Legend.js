@@ -48,7 +48,7 @@ export default class Legend extends BaseClass {
       hitArea: dd => {
         const d = this._lineData[this._data.indexOf(dd)],
               h = max([d.height, d.shapeHeight]);
-        return {width: d.width + d.shapeWidth + (d.width ? this._padding : 0), height: h, x: -d.shapeWidth / 2, y: -h / 2};
+        return {width: d.width + d.shapeWidth, height: h, x: -d.shapeWidth / 2, y: -h / 2};
       },
       labelBounds: (dd, i, s) => {
         const d = this._lineData[dd.i],
@@ -64,7 +64,8 @@ export default class Legend extends BaseClass {
         const pad = this._align === "left" || this._align === "right" && this._direction === "column" ? 0 : this._align === "center"
                   ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
                   : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
-        return this._rowWidth(this._lineData.slice(0, i).filter(l => y === l.y)) + this._padding +
+        const prevWords = this._lineData.slice(0, i).filter(l => y === l.y);
+        return this._rowWidth(prevWords) + this._padding * (prevWords.length ? 2 : 0) +
                this._outerBounds.x + s(d, i) / 2 + pad;
       },
       y: (d, i) => {
@@ -94,7 +95,10 @@ export default class Legend extends BaseClass {
   }
 
   _rowWidth(row) {
-    return sum(row.map(d => d.shapeWidth + d.width + this._padding * (d.width ? 2 : 1))) - this._padding;
+    return sum(row.map((d, i) => {
+      const p = this._padding * (i === row.length - 1 ? 0 : d.width ? 2 : 1);
+      return d.shapeWidth + d.width + p;
+    }));
   }
 
   /**
@@ -143,7 +147,7 @@ export default class Legend extends BaseClass {
         .width(w)
         .height(h)
         (this._label(d, i));
-      res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s;
+      res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s * 0.75;
       res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {height: res.height, width: res.width};
       res.data = d;
@@ -160,7 +164,7 @@ export default class Legend extends BaseClass {
 
     let spaceNeeded;
     const availableWidth = this._width - this._padding * 2;
-    spaceNeeded = sum(this._lineData.map(d => d.shapeWidth + this._padding * 2 + d.width)) - this._padding;
+    spaceNeeded = this._rowWidth(this._lineData);
 
     if (this._direction === "column" || spaceNeeded > availableWidth) {
       let lines = 1, newRows = [];
@@ -235,7 +239,7 @@ export default class Legend extends BaseClass {
       this._wrapRows();
 
       if (!newRows.length || sum(newRows, this._rowHeight.bind(this)) + this._padding > availableHeight) {
-        spaceNeeded = sum(this._lineData.map(d => d.shapeWidth + this._padding * 1)) - this._padding;
+        spaceNeeded = sum(this._lineData.map(d => d.shapeWidth + this._padding)) - this._padding;
         for (let i = 0; i < this._lineData.length; i++) {
           this._lineData[i].width = 0;
           this._lineData[i].height = 0;
@@ -251,7 +255,7 @@ export default class Legend extends BaseClass {
             }
           });
         });
-        spaceNeeded = max(newRows, l => sum(l, d => d.shapeWidth + this._padding * (d.width ? 2 : 1) + d.width)) - this._padding;
+        spaceNeeded = max(newRows, this._rowWidth.bind(this));
       }
     }
 
