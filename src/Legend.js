@@ -162,7 +162,7 @@ export default class Legend extends BaseClass {
     const availableWidth = this._width - this._padding * 2;
     spaceNeeded = sum(this._lineData.map(d => d.shapeWidth + this._padding * 2 + d.width)) - this._padding;
 
-    if (spaceNeeded > availableWidth) {
+    if (this._direction === "column" || spaceNeeded > availableWidth) {
       let lines = 1, newRows = [];
 
       const maxLines = max(this._lineData.map(d => d.words.length));
