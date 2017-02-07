@@ -29,6 +29,7 @@ If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest rel
     * [.active([*value*])](#Legend.active) ↩︎
     * [.align([*value*])](#Legend.align) ↩︎
     * [.data([*data*])](#Legend.data) ↩︎
+    * [.direction([*value*])](#Legend.direction) ↩︎
     * [.duration([*value*])](#Legend.duration) ↩︎
     * [.height([*value*])](#Legend.height) ↩︎
     * [.hover([*value*])](#Legend.hover) ↩︎
@@ -96,6 +97,18 @@ If *data* is specified, sets the data array to the specified array and returns t
 | Param | Type | Default |
 | --- | --- | --- |
 | [*data*] | <code>Array</code> | <code>[]</code> | 
+
+<a name="Legend.direction"></a>
+
+#### Legend.direction([*value*]) ↩︎
+Sets the flow of the items inside the legend. If no value is passed, the current flow will be returned.
+
+**Kind**: static method of <code>[Legend](#Legend)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>String</code> | <code>&quot;row&quot;</code> | 
 
 <a name="Legend.duration"></a>
 
@@ -271,4 +284,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Thu, 26 Jan 2017 16:08:35 GMT</sub>
+###### <sub>Documentation generated on Tue, 07 Feb 2017 22:06:09 GMT</sub>
