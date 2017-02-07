@@ -28,6 +28,7 @@ export default class Legend extends BaseClass {
 
     this._align = "center";
     this._data = [];
+    this._direction = "row";
     this._duration = 600;
     this._height = 200;
     this._id = accessor("id");
@@ -210,20 +211,24 @@ export default class Legend extends BaseClass {
             newRows = [];
             break;
           }
-          if (rowWidth + w < availableWidth) {
-            rowWidth += w;
-          }
-          else if (w > availableWidth) {
+          if (w > availableWidth) {
             newRows = [];
             this._wrapLines();
             break;
           }
-          else {
+          else if (rowWidth + w < availableWidth) {
+            rowWidth += w;
+          }
+          else if (this._direction !== "column") {
             rowWidth = w;
             row++;
           }
           if (!newRows[row - 1]) newRows[row - 1] = [];
           newRows[row - 1].push(d);
+          if (this._direction === "column") {
+            rowWidth = 0;
+            row++;
+          }
         }
       };
 
@@ -369,6 +374,16 @@ export default class Legend extends BaseClass {
   */
   data(_) {
     return arguments.length ? (this._data = _, this) : this._data;
+  }
+
+  /**
+      @memberof Legend
+      @desc Sets the flow of the items inside the legend. If no value is passed, the current flow will be returned.
+      @param {String} [*value* = "row"]
+      @chainable
+  */
+  direction(_) {
+    return arguments.length ? (this._direction = _, this) : this._direction;
   }
 
   /**
