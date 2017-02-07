@@ -61,7 +61,7 @@ export default class Legend extends BaseClass {
       x: (d, i) => {
         const s = this._shapeConfig.width;
         const y = this._lineData[i].y;
-        const pad = this._align === "left" ? 0 : this._align === "center"
+        const pad = this._align === "left" || this._align === "right" && this._direction === "column" ? 0 : this._align === "center"
                   ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
                   : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
         return this._rowWidth(this._lineData.slice(0, i).filter(l => y === l.y)) + this._padding +
