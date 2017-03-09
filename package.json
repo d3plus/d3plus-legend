@@ -23,7 +23,7 @@
     "url": "http://www.dave-landry.com"
   },
   "dependencies": {
-    "d3-array": "^1.0.2",
+    "d3-array": "^1.1.0",
     "d3-selection": "^1.0.3",
     "d3plus-common": "^0.6.14",
     "d3plus-shape": "^0.12.4",
