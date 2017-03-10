@@ -95,21 +95,23 @@ export default class ColorScale extends BaseClass {
         .map(this._value)
         .filter(d => d !== null && typeof d === "number");
 
-      if (data.length < colors.length) {
-        const step = (data.length - 1) / (colors.length - 1);
+      if (data.length <= colors.length) {
+
         const ts = scaleLinear()
-          .domain(range(0, data.length + step, step))
+          .domain(range(0, data.length - 1))
           .interpolate(interpolateHsl)
           .range(colors);
 
-        colors = data.map((d, i) => ts(i));
+        colors = data.slice(0, data.length - 1).map((d, i) => ts(i));
       }
 
       const jenks = ckmeans(data, colors.length + 1);
+
       ticks = merge(jenks.map((c, i) => i === jenks.length - 1 ? [c[0], c[c.length - 1]] : [c[0]]));
       this._colorScale = scaleThreshold()
         .domain(ticks)
         .range(["black"].concat(colors).concat(colors[colors.length - 1]));
+
       ticks = ticks.slice(0, ticks.length - 1);
 
     }
