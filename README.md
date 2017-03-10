@@ -12,16 +12,225 @@ An easy to use javascript chart legend.
 If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-legend/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. Create a [custom bundle using Rollup](https://github.com/rollup/rollup) or your preferred bundler. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-legend.v0.7.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-legend.v0.8.full.min.js"></script>
 ```
 
 
 ## API Reference
+### Classes
+
+<dl>
+<dt><a href="#ColorScale">ColorScale</a> ⇐ <code><a href="https://github.com/d3plus/d3plus-common#BaseClass">BaseClass</a></code></dt>
+<dd></dd>
+<dt><a href="#Legend">Legend</a> ⇐ <code><a href="https://github.com/d3plus/d3plus-common#BaseClass">BaseClass</a></code></dt>
+<dd></dd>
+</dl>
+
+<a name="ColorScale"></a>
+
+### ColorScale ⇐ <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>
+**Kind**: global class  
+**Extends**: <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>  
+
+* [ColorScale](#ColorScale) ⇐ <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>
+    * [new ColorScale()](#new_ColorScale_new)
+    * [.render([*callback*])](#ColorScale.render) ↩︎
+    * [.axisConfig([*value*])](#ColorScale.axisConfig) ↩︎
+    * [.align([*value*])](#ColorScale.align) ↩︎
+    * [.color([*value*])](#ColorScale.color) ↩︎
+    * [.data([*data*])](#ColorScale.data) ↩︎
+    * [.duration([*value*])](#ColorScale.duration) ↩︎
+    * [.height([*value*])](#ColorScale.height) ↩︎
+    * [.orient([*value*])](#ColorScale.orient) ↩︎
+    * [.outerBounds()](#ColorScale.outerBounds)
+    * [.padding([*value*])](#ColorScale.padding) ↩︎
+    * [.scale([*value*])](#ColorScale.scale) ↩︎
+    * [.select([*selector*])](#ColorScale.select) ↩︎
+    * [.value([*value*])](#ColorScale.value) ↩︎
+    * [.width([*value*])](#ColorScale.width) ↩︎
+
+<a name="new_ColorScale_new"></a>
+
+#### new ColorScale()
+Creates an SVG scale based on an array of data. If *data* is specified, immediately draws based on the specified array and returns the current class instance. If *data* is not specified on instantiation, it can be passed/updated after instantiation using the [data](#shape.data) method.
+
+<a name="ColorScale.render"></a>
+
+#### ColorScale.render([*callback*]) ↩︎
+Renders the current ColorScale to the page. If a *callback* is specified, it will be called once the ColorScale is done drawing.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type |
+| --- | --- |
+| [*callback*] | <code>function</code> | 
+
+<a name="ColorScale.axisConfig"></a>
+
+#### ColorScale.axisConfig([*value*]) ↩︎
+If *value* is specified, sets the axis configuration of the ColorScale and returns the current class instance. If *value* is not specified, returns the current axis configuration.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Object</code> | 
+
+<a name="ColorScale.align"></a>
+
+#### ColorScale.align([*value*]) ↩︎
+If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [*value*] | <code>String</code> | <code>&quot;center&quot;</code> | Supports `"left"` and `"center"` and `"right"`. |
+
+<a name="ColorScale.color"></a>
+
+#### ColorScale.color([*value*]) ↩︎
+Defines the color or colors to be used for the scale. If only a single color is given as a String, then the scale is interpolated by lightening that color. Otherwise, the function expects an Array of color values to be used in order for the scale.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>String</code> &#124; <code>Array</code> | <code>&quot;#0C8040&quot;</code> | 
+
+<a name="ColorScale.data"></a>
+
+#### ColorScale.data([*data*]) ↩︎
+If *data* is specified, sets the data array to the specified array and returns the current class instance. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*data*] | <code>Array</code> | <code>[]</code> | 
+
+<a name="ColorScale.duration"></a>
+
+#### ColorScale.duration([*value*]) ↩︎
+If *value* is specified, sets the transition duration of the ColorScale and returns the current class instance. If *value* is not specified, returns the current duration.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>600</code> | 
+
+<a name="ColorScale.height"></a>
+
+#### ColorScale.height([*value*]) ↩︎
+If *value* is specified, sets the overall height of the ColorScale and returns the current class instance. If *value* is not specified, returns the current height value.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>100</code> | 
+
+<a name="ColorScale.orient"></a>
+
+#### ColorScale.orient([*value*]) ↩︎
+Sets the flow of the items inside the ColorScale. If no value is passed, the current flow will be returned.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>String</code> | <code>&quot;bottom&quot;</code> | 
+
+<a name="ColorScale.outerBounds"></a>
+
+#### ColorScale.outerBounds()
+If called after the elements have been drawn to DOM, will returns the outer bounds of the ColorScale content.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Example**  
+```js
+{"width": 180, "height": 24, "x": 10, "y": 20}
+```
+<a name="ColorScale.padding"></a>
+
+#### ColorScale.padding([*value*]) ↩︎
+If *value* is specified, sets the padding between each key to the specified number and returns the current class instance. If *value* is not specified, returns the current padding value.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>10</code> | 
+
+<a name="ColorScale.scale"></a>
+
+#### ColorScale.scale([*value*]) ↩︎
+If *value* is specified, sets the scale of the ColorScale and returns the current class instance. If *value* is not specified, returns the current scale value.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [*value*] | <code>String</code> | <code>&quot;linear&quot;</code> | Can either be "linear", "jenks", or "buckets". |
+
+<a name="ColorScale.select"></a>
+
+#### ColorScale.select([*selector*]) ↩︎
+If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns the current class instance. If *selector* is not specified, returns the current SVG container element.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*selector*] | <code>String</code> &#124; <code>HTMLElement</code> | <code>d3.select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
+
+<a name="ColorScale.value"></a>
+
+#### ColorScale.value([*value*]) ↩︎
+If *value* is specified, sets the value accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current value accessor.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>function</code> &#124; <code>String</code> | 
+
+**Example**  
+```js
+function value(d) {
+  return d.value;
+}
+```
+<a name="ColorScale.width"></a>
+
+#### ColorScale.width([*value*]) ↩︎
+If *value* is specified, sets the overall width of the ColorScale and returns the current class instance. If *value* is not specified, returns the current width value.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>400</code> | 
+
 <a name="Legend"></a>
 
 ### Legend ⇐ <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>
 **Kind**: global class  
-**Extends:** <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>  
+**Extends**: <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>  
 
 * [Legend](#Legend) ⇐ <code>[BaseClass](https://github.com/d3plus/d3plus-common#BaseClass)</code>
     * [new Legend()](#new_Legend_new)
@@ -284,4 +493,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Tue, 07 Feb 2017 23:04:46 GMT</sub>
+###### <sub>Documentation generated on Fri, 10 Mar 2017 20:10:42 GMT</sub>
