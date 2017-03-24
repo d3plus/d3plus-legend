@@ -105,20 +105,18 @@ export default class ColorScale extends BaseClass {
         colors = data.slice(0, data.length - 1).map((d, i) => ts(i));
       }
 
-      const jenks = ckmeans(data, colors.length + 1);
+      const jenks = ckmeans(data, colors.length);
 
       ticks = merge(jenks.map((c, i) => i === jenks.length - 1 ? [c[0], c[c.length - 1]] : [c[0]]));
       this._colorScale = scaleThreshold()
         .domain(ticks)
         .range(["black"].concat(colors).concat(colors[colors.length - 1]));
 
-      ticks = ticks.slice(0, ticks.length - 1);
-
     }
     else {
 
       const step = (domain[1] - domain[0]) / colors.length;
-      const buckets = range(domain[0], domain[1] + step, step);
+      const buckets = range(domain[0], domain[1] + step / 2, step);
 
       if (this._scale === "buckets") ticks = buckets;
 
