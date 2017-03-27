@@ -38,7 +38,6 @@ export default class ColorScale extends BaseClass {
     this._axisTest = new Axis();
     this._align = "middle";
     this._color = "#0C8040";
-    this._colorSize = 10;
     this._data = [];
     this._duration = 600;
     this._height = 200;
@@ -51,6 +50,7 @@ export default class ColorScale extends BaseClass {
       strokeWidth: 1
     };
     this._scale = "linear";
+    this._size = 10;
     this._value = accessor("value");
     this._width = 400;
 
@@ -145,14 +145,14 @@ export default class ColorScale extends BaseClass {
     const axisBounds = this._axisTest.outerBounds();
 
     this._outerBounds[width] = this[`_${width}`] - this._padding * 2;
-    this._outerBounds[height] = axisBounds[height] + this._colorSize;
+    this._outerBounds[height] = axisBounds[height] + this._size;
 
     this._outerBounds[x] = this._padding;
     this._outerBounds[y] = this._padding;
     if (this._align === "middle") this._outerBounds[y] = (this[`_${height}`] - this._outerBounds[height]) / 2;
     else if (this._align === "end") this._outerBounds[y] = this[`_${height}`] - this._padding - this._outerBounds[height];
 
-    const groupOffset = this._outerBounds[y] + (["bottom", "right"].includes(this._orient) ? this._colorSize : 0) - (axisConfig.padding || this._axisClass.padding());
+    const groupOffset = this._outerBounds[y] + (["bottom", "right"].includes(this._orient) ? this._size : 0) - (axisConfig.padding || this._axisClass.padding());
     this._axisClass
       .select(elem("g.d3plus-ColorScale-axis", {
         parent: this._group,
@@ -191,9 +191,9 @@ export default class ColorScale extends BaseClass {
       .config({
         fill: ticks ? d => this._colorScale(d) : `url(#gradient-${this._uuid})`,
         [x]: ticks ? (d, i) => axisScale(d) + bucketWidth(d, i) / 2 - (["left", "right"].includes(this._orient) ? bucketWidth(d, i) : 0) : scaleRange[0] + (scaleRange[1] - scaleRange[0]) / 2,
-        [y]: this._outerBounds[y] + (["top", "left"].includes(this._orient) ? axisBounds[height] : 0) + this._colorSize / 2,
+        [y]: this._outerBounds[y] + (["top", "left"].includes(this._orient) ? axisBounds[height] : 0) + this._size / 2,
         [width]: ticks ? bucketWidth : scaleRange[1] - scaleRange[0],
-        [height]: this._colorSize
+        [height]: this._size
       })
       .config(this._rectConfig)
       .render();
@@ -322,6 +322,16 @@ export default class ColorScale extends BaseClass {
   */
   select(_) {
     return arguments.length ? (this._select = select(_), this) : this._select;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc The height of horizontal color scales, and width when positioned vertical.
+      @param {Number} [*value* = 10]
+      @chainable
+  */
+  size(_) {
+    return arguments.length ? (this._size = _, this) : this._size;
   }
 
   /**
