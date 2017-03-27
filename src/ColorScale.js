@@ -296,6 +296,16 @@ export default class ColorScale extends BaseClass {
 
   /**
       @memberof ColorScale
+      @desc Provides access to the config method of the Rect class used to create the different rectangle color buckets.
+      @param {Object} [*value*]
+      @chainable
+  */
+  rectConfig(_) {
+    return arguments.length ? (this._rectConfig = Object.assign(this._rectConfig, _), this) : this._rectConfig;
+  }
+
+  /**
+      @memberof ColorScale
       @desc If *value* is specified, sets the scale of the ColorScale and returns the current class instance. If *value* is not specified, returns the current scale value.
       @param {String} [*value* = "linear"] Can either be "linear", "jenks", or "buckets".
       @chainable
