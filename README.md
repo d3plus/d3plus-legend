@@ -44,8 +44,10 @@ If you use NPM, `npm install d3plus-legend`. Otherwise, download the [latest rel
     * [.orient([*value*])](#ColorScale.orient) ↩︎
     * [.outerBounds()](#ColorScale.outerBounds)
     * [.padding([*value*])](#ColorScale.padding) ↩︎
+    * [.rectConfig([*value*])](#ColorScale.rectConfig) ↩︎
     * [.scale([*value*])](#ColorScale.scale) ↩︎
     * [.select([*selector*])](#ColorScale.select) ↩︎
+    * [.size([*value*])](#ColorScale.size) ↩︎
     * [.value([*value*])](#ColorScale.value) ↩︎
     * [.width([*value*])](#ColorScale.width) ↩︎
 
@@ -172,6 +174,18 @@ If *value* is specified, sets the padding between each key to the specified numb
 | --- | --- | --- |
 | [*value*] | <code>Number</code> | <code>10</code> | 
 
+<a name="ColorScale.rectConfig"></a>
+
+#### ColorScale.rectConfig([*value*]) ↩︎
+Provides access to the config method of the Rect class used to create the different rectangle color buckets.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type |
+| --- | --- |
+| [*value*] | <code>Object</code> | 
+
 <a name="ColorScale.scale"></a>
 
 #### ColorScale.scale([*value*]) ↩︎
@@ -195,6 +209,18 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 | Param | Type | Default |
 | --- | --- | --- |
 | [*selector*] | <code>String</code> &#124; <code>HTMLElement</code> | <code>d3.select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
+
+<a name="ColorScale.size"></a>
+
+#### ColorScale.size([*value*]) ↩︎
+The height of horizontal color scales, and width when positioned vertical.
+
+**Kind**: static method of <code>[ColorScale](#ColorScale)</code>  
+**Chainable**  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [*value*] | <code>Number</code> | <code>10</code> | 
 
 <a name="ColorScale.value"></a>
 
@@ -493,4 +519,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Fri, 24 Mar 2017 21:24:41 GMT</sub>
+###### <sub>Documentation generated on Mon, 27 Mar 2017 23:36:39 GMT</sub>
