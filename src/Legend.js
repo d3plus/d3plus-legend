@@ -40,10 +40,6 @@ export default class Legend extends BaseClass {
     this._shapeConfig = {
       duration: this._duration,
       fill: accessor("color"),
-      fontColor: constant("#444"),
-      fontFamily: new shapes.Rect().fontFamily(),
-      fontResize: false,
-      fontSize: constant(10),
       height: constant(10),
       hitArea: dd => {
         const d = this._lineData[this._data.indexOf(dd)],
@@ -54,6 +50,12 @@ export default class Legend extends BaseClass {
         const d = this._lineData[dd.i],
               w = s.r !== void 0 ? s.r : s.width / 2;
         return {width: d.width, height: d.height, x: w + this._padding, y: -d.height / 2};
+      },
+      labelConfig: {
+        fontColor: constant("#444"),
+        fontFamily: new TextBox().fontFamily(),
+        fontResize: false,
+        fontSize: constant(10)
       },
       opacity: 1,
       r: constant(5),
@@ -86,8 +88,8 @@ export default class Legend extends BaseClass {
   }
 
   _fetchConfig(key, d, i) {
-    return typeof this._shapeConfig[key] === "function"
-         ? this._shapeConfig[key](d, i) : this._shapeConfig[key];
+    const val = this._shapeConfig[key] || this._shapeConfig.labelConfig[key];
+    return typeof val === "function" ? val(d, i) : val;
   }
 
   _rowHeight(row) {
