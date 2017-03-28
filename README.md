@@ -102,7 +102,7 @@ Defines the color or colors to be used for the scale. If only a single color is 
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*value*] | <code>String</code> &#124; <code>Array</code> | <code>&quot;#0C8040&quot;</code> | 
+| [*value*] | <code>String</code> \| <code>Array</code> | <code>&quot;#0C8040&quot;</code> | 
 
 <a name="ColorScale.data"></a>
 
@@ -208,7 +208,7 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*selector*] | <code>String</code> &#124; <code>HTMLElement</code> | <code>d3.select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
+| [*selector*] | <code>String</code> \| <code>HTMLElement</code> | <code>d3.select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
 
 <a name="ColorScale.size"></a>
 
@@ -232,7 +232,7 @@ If *value* is specified, sets the value accessor to the specified function or st
 
 | Param | Type |
 | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>String</code> | 
+| [*value*] | <code>function</code> \| <code>String</code> | 
 
 **Example**  
 ```js
@@ -409,7 +409,7 @@ If *value* is specified, sets the label accessor to the specified function or st
 
 | Param | Type |
 | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>String</code> | 
+| [*value*] | <code>function</code> \| <code>String</code> | 
 
 <a name="Legend.outerBounds"></a>
 
@@ -443,7 +443,7 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*selector*] | <code>String</code> &#124; <code>HTMLElement</code> | <code>d3.select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
+| [*selector*] | <code>String</code> \| <code>HTMLElement</code> | <code>d3.select(&quot;body&quot;).append(&quot;svg&quot;)</code> | 
 
 <a name="Legend.shape"></a>
 
@@ -455,7 +455,7 @@ If *value* is specified, sets the shape accessor to the specified function or st
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [*value*] | <code>function</code> &#124; <code>String</code> | <code>&quot;Rect&quot;</code> | 
+| [*value*] | <code>function</code> \| <code>String</code> | <code>&quot;Rect&quot;</code> | 
 
 <a name="Legend.shapeConfig"></a>
 
@@ -519,4 +519,4 @@ If *value* is specified, sets the overall width of the legend and returns the cu
 
 
 
-###### <sub>Documentation generated on Mon, 27 Mar 2017 23:36:39 GMT</sub>
+###### <sub>Documentation generated on Tue, 28 Mar 2017 04:33:10 GMT</sub>
