@@ -1,14 +1,10 @@
-import {test} from "tape";
+import zora from "zora";
 import {default as Legend} from "../src/Legend.js";
 
-test("Legend", assert => {
+export default zora()
+  .test("Legend", function *(assert) {
 
-  new Legend()
-    .render(() => {
+    yield cb => new Legend().render(cb);
+    assert.ok(true, "function success");
 
-      assert.true(true, "function success");
-      assert.end();
-
-    });
-
-});
+  });
