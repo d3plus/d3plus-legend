@@ -6,7 +6,7 @@
 import {max, sum} from "d3-array";
 import {select} from "d3-selection";
 
-import {accessor, BaseClass, constant, elem} from "d3plus-common";
+import {accessor, assign, BaseClass, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {TextBox, textWidth, textWrap} from "d3plus-text";
 
@@ -340,7 +340,7 @@ export default class Legend extends BaseClass {
         .labelPadding(0)
         .select(this._group.node())
         .verticalAlign("top")
-        .config(Object.assign({}, baseConfig, config))
+        .config(assign({}, baseConfig, config))
         .render());
 
     });
@@ -494,7 +494,7 @@ function value(d) {
       @chainable
   */
   shapeConfig(_) {
-    return arguments.length ? (this._shapeConfig = Object.assign(this._shapeConfig, _), this) : this._shapeConfig;
+    return arguments.length ? (this._shapeConfig = assign(this._shapeConfig, _), this) : this._shapeConfig;
   }
 
   /**
@@ -514,7 +514,7 @@ function value(d) {
       @chainable
   */
   titleConfig(_) {
-    return arguments.length ? (this._titleConfig = Object.assign(this._titleConfig, _), this) : this._titleConfig;
+    return arguments.length ? (this._titleConfig = assign(this._titleConfig, _), this) : this._titleConfig;
   }
 
   /**
