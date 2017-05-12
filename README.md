@@ -359,4 +359,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 ---
 
-###### <sub>Documentation generated on Fri, 12 May 2017 20:28:27 GMT</sub>
+###### <sub>Documentation generated on Fri, 12 May 2017 20:38:39 GMT</sub>
