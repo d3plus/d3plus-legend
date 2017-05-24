@@ -6,7 +6,7 @@
 import {max, sum} from "d3-array";
 import {select} from "d3-selection";
 
-import {accessor, assign, BaseClass, constant, elem} from "d3plus-common";
+import {accessor, assign, BaseClass, configPrep, constant, elem} from "d3plus-common";
 import * as shapes from "d3plus-shape";
 import {TextBox, textWidth, textWrap} from "d3plus-text";
 
@@ -41,13 +41,13 @@ export default class Legend extends BaseClass {
       duration: this._duration,
       fill: accessor("color"),
       height: constant(10),
-      hitArea: dd => {
-        const d = this._lineData[this._data.indexOf(dd)],
+      hitArea: (dd, i) => {
+        const d = this._lineData[i],
               h = max([d.height, d.shapeHeight]);
         return {width: d.width + d.shapeWidth, height: h, x: -d.shapeWidth / 2, y: -h / 2};
       },
       labelBounds: (dd, i, s) => {
-        const d = this._lineData[dd.i],
+        const d = this._lineData[i],
               w = s.r !== void 0 ? s.r : s.width / 2;
         return {width: d.width, height: d.height, x: w + this._padding, y: -d.height / 2};
       },
@@ -288,7 +288,7 @@ export default class Legend extends BaseClass {
       .render();
 
     this._shapes = [];
-    const baseConfig = this._shapeConfig,
+    const baseConfig = configPrep.bind(this)(this._shapeConfig, "legend"),
           config = {
             id: d => d.id,
             label: d => d.label,
@@ -305,27 +305,6 @@ export default class Legend extends BaseClass {
         lH: this._lineHeight(d, i),
         shape: this._shape(d, i)
       };
-
-      for (const k in baseConfig) {
-        if (k !== "labelBounds" && {}.hasOwnProperty.call(baseConfig, k)) {
-          if (typeof baseConfig[k] === "function") {
-            obj[k] = baseConfig[k](d, i);
-            config[k] = d => d[k];
-          }
-          else if (k === "on") {
-            config[k] = {};
-            for (const t in baseConfig[k]) {
-              if ({}.hasOwnProperty.call(baseConfig[k], t)) {
-                const f = baseConfig[k][t];
-                config[k][t] = function(dd) {
-                  if (!f) return;
-                  f.bind(this)(dd.data, dd.i);
-                };
-              }
-            }
-          }
-        }
-      }
 
       return obj;
 
