@@ -108,6 +108,7 @@ export default class ColorScale extends BaseClass {
       const jenks = ckmeans(data, colors.length);
 
       ticks = merge(jenks.map((c, i) => i === jenks.length - 1 ? [c[0], c[c.length - 1]] : [c[0]]));
+
       this._colorScale = scaleThreshold()
         .domain(ticks)
         .range(["black"].concat(colors).concat(colors[colors.length - 1]));
@@ -181,7 +182,8 @@ export default class ColorScale extends BaseClass {
       .attr("stop-color", String);
 
     function bucketWidth(d, i) {
-      return Math.abs(axisScale(ticks[i + 1]) - axisScale(d));
+      const w = Math.abs(axisScale(ticks[i + 1]) - axisScale(d));
+      return w || 2;
     }
 
     this._rectClass
