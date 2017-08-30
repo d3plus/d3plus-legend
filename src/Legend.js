@@ -77,11 +77,8 @@ export default class Legend extends BaseClass {
                max(this._lineData.filter(l => ld.y === l.y).map(l => l.height).concat(this._data.map((l, x) => s(l, x)))) / 2;
       }
     };
-    this._titleConfig = {
-      fontFamily: "Verdana",
-      fontSize: 12,
-      lineHeight: 13
-    };
+    this._titleClass = new TextBox();
+    this._titleConfig = {};
     this._verticalAlign = "middle";
     this._width = 400;
 
@@ -120,9 +117,12 @@ export default class Legend extends BaseClass {
     let availableHeight = this._height;
     this._titleHeight = 0;
     if (this._title) {
-      const f = this._titleConfig.fontFamily,
-            lH = this._titleConfig.lineHeight,
-            s = this._titleConfig.fontSize;
+
+      const f = this._titleConfig.fontFamily || this._titleClass.fontFamily()(),
+            s = this._titleConfig.fontSize || this._titleClass.fontSize()();
+      let lH = lH = this._titleConfig.lineHeight || this._titleClass.lineHeight();
+      lH = lH ? lH() : s * 1.4;
+
       const res = textWrap()
         .fontFamily(f)
         .fontSize(s)
@@ -276,7 +276,7 @@ export default class Legend extends BaseClass {
     this._outerBounds.x = xOffset;
     this._outerBounds.y = yOffset;
 
-    new TextBox()
+    this._titleClass
       .data(this._title ? [{text: this._title}] : [])
       .duration(this._duration)
       .select(this._group.node())
