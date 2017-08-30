@@ -89,6 +89,7 @@ export default class Legend extends BaseClass {
 
   _fetchConfig(key, d, i) {
     const val = this._shapeConfig[key] || this._shapeConfig.labelConfig[key];
+    if (!val && key === "lineHeight") return this._fetchConfig("fontSize", d, i) * 1.4;
     return typeof val === "function" ? val(d, i) : val;
   }
 
@@ -112,7 +113,6 @@ export default class Legend extends BaseClass {
   render(callback) {
 
     if (this._select === void 0) this.select(select("body").append("svg").attr("width", `${this._width}px`).attr("height", `${this._height}px`).node());
-    if (this._lineHeight === void 0) this._lineHeight = (d, i) => this._fetchConfig("fontSize", d, i) * 1.1;
 
     // Shape <g> Group
     this._group = elem("g.d3plus-Legend", {parent: this._select});
@@ -137,7 +137,7 @@ export default class Legend extends BaseClass {
     // Calculate Text Sizes
     this._lineData = this._data.map((d, i) => {
       const f = this._fetchConfig("fontFamily", d, i),
-            lh = this._lineHeight(d, i),
+            lh = this._fetchConfig("lineHeight", d, i),
             s = this._fetchConfig("fontSize", d, i),
             shapeWidth = this._fetchConfig("width", d, i);
       const h = availableHeight - (this._data.length + 1) * this._padding,
@@ -302,7 +302,7 @@ export default class Legend extends BaseClass {
         data: d, i,
         id: this._id(d, i),
         label: this._lineData[i].width ? this._label(d, i) : false,
-        lH: this._lineHeight(d, i),
+        lH: this._fetchConfig("lineHeight", d, i),
         shape: this._shape(d, i)
       };
 
