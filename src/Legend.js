@@ -64,8 +64,8 @@ export default class Legend extends BaseClass {
         const s = this._shapeConfig.width;
         const y = this._lineData[i].y;
         const pad = this._align === "left" || this._align === "right" && this._direction === "column" ? 0 : this._align === "center"
-                  ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
-                  : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
+          ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
+          : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
         const prevWords = this._lineData.slice(0, i).filter(l => y === l.y);
         return this._rowWidth(prevWords) + this._padding * (prevWords.length ? 2 : 0) +
                this._outerBounds.x + s(d, i) / 2 + pad;
@@ -179,8 +179,8 @@ export default class Legend extends BaseClass {
         if (lines > maxLines) return;
 
         const wrappable = lines === 1 ? this._lineData.slice()
-                        : this._lineData.filter(d => d.width + d.shapeWidth + this._padding * (d.width ? 2 : 1) > availableWidth && d.words.length >= lines)
-                            .sort((a, b) => b.sentence.length - a.sentence.length);
+          : this._lineData.filter(d => d.width + d.shapeWidth + this._padding * (d.width ? 2 : 1) > availableWidth && d.words.length >= lines)
+              .sort((a, b) => b.sentence.length - a.sentence.length);
 
         if (wrappable.length && availableHeight > wrappable[0].height * lines) {
 
