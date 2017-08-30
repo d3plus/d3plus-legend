@@ -49,7 +49,7 @@ export default class Legend extends BaseClass {
       labelBounds: (dd, i, s) => {
         const d = this._lineData[i],
               w = s.r !== void 0 ? s.r : s.width / 2;
-        return {width: d.width, height: d.height, x: w + this._padding, y: -d.height / 2};
+        return {width: d.width, height: d.height, x: w + this._padding, y: -d.height / 2 + (d.lh - d.s) / 2 + 1};
       },
       labelConfig: {
         fontColor: constant("#444"),
