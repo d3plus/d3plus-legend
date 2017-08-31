@@ -61,13 +61,14 @@ export default class Legend extends BaseClass {
       r: constant(5),
       width: constant(10),
       x: (d, i) => {
-        const y = this._lineData[i].y;
+        const datum = this._lineData[i];
+        const y = datum.y;
         const pad = this._align === "left" || this._align === "right" && this._direction === "column" ? 0 : this._align === "center"
           ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
           : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
         const prevWords = this._lineData.slice(0, i).filter(l => y === l.y);
-        return this._rowWidth(prevWords) + this._padding * (prevWords.length ? 2 : 0) +
-               this._outerBounds.x + this._fetchConfig("width", d, i) / 2 + pad;
+        return this._rowWidth(prevWords) + this._padding * (prevWords.length ? datum.sentence ? 2 : 1 : 0) +
+               this._outerBounds.x + datum.shapeWidth / 2 + pad;
       },
       y: (d, i) => {
         const ld = this._lineData[i];
@@ -134,32 +135,50 @@ export default class Legend extends BaseClass {
 
     // Calculate Text Sizes
     this._lineData = this._data.map((d, i) => {
+
+      const label = this._label(d, i);
+
+      let res = {
+        data: d,
+        i,
+        id: this._id(d, i),
+        shapeWidth: this._fetchConfig("width", d, i),
+        shapeHeight: this._fetchConfig("height", d, i),
+        y: 0
+      };
+
+      if (!label) {
+        res.sentence = false;
+        res.words = [];
+        res.height = 0;
+        res.width = 0;
+        return res;
+      }
+
       const f = this._fetchConfig("fontFamily", d, i),
             lh = this._fetchConfig("lineHeight", d, i),
-            s = this._fetchConfig("fontSize", d, i),
-            shapeWidth = this._fetchConfig("width", d, i);
+            s = this._fetchConfig("fontSize", d, i);
+
       const h = availableHeight - (this._data.length + 1) * this._padding,
             w = this._width;
-      const res = textWrap()
+
+      res = Object.assign(res, textWrap()
         .fontFamily(f)
         .fontSize(s)
         .lineHeight(lh)
         .width(w)
         .height(h)
-        (this._label(d, i));
+        (label));
+
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s * 0.75;
       res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {height: res.height, width: res.width};
-      res.data = d;
       res.f = f;
       res.s = s;
       res.lh = lh;
-      res.y = 0;
-      res.id = this._id(d, i);
-      res.i = i;
-      res.shapeWidth = shapeWidth;
-      res.shapeHeight = this._fetchConfig("height", d, i);
+
       return res;
+
     });
 
     let spaceNeeded;
