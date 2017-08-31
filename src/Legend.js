@@ -61,20 +61,18 @@ export default class Legend extends BaseClass {
       r: constant(5),
       width: constant(10),
       x: (d, i) => {
-        const s = this._shapeConfig.width;
         const y = this._lineData[i].y;
         const pad = this._align === "left" || this._align === "right" && this._direction === "column" ? 0 : this._align === "center"
           ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
           : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
         const prevWords = this._lineData.slice(0, i).filter(l => y === l.y);
         return this._rowWidth(prevWords) + this._padding * (prevWords.length ? 2 : 0) +
-               this._outerBounds.x + s(d, i) / 2 + pad;
+               this._outerBounds.x + this._fetchConfig("width", d, i) / 2 + pad;
       },
       y: (d, i) => {
-        const s = this._shapeConfig.height;
         const ld = this._lineData[i];
         return ld.y + this._titleHeight + this._outerBounds.y +
-               max(this._lineData.filter(l => ld.y === l.y).map(l => l.height).concat(this._data.map((l, x) => s(l, x)))) / 2;
+               max(this._lineData.filter(l => ld.y === l.y).map(l => l.height).concat(this._data.map((l, x) => this._fetchConfig("height", l, x)))) / 2;
       }
     };
     this._titleClass = new TextBox();
