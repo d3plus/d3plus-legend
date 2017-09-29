@@ -116,7 +116,7 @@ export default class ColorScale extends BaseClass {
     }
     else {
 
-      const step = (domain[1] - domain[0]) / colors.length;
+      const step = (domain[1] - domain[0]) / (colors.length - 1);
       const buckets = range(domain[0], domain[1] + step / 2, step);
 
       if (this._scale === "buckets") ticks = buckets;
