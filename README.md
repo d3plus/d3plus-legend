@@ -14,8 +14,8 @@ If you use NPM, run `npm install d3plus-legend --save`. Otherwise, download the 
 
 ## Examples
 
- * [Removing Legend Labels](http://d3plus.org/examples/d3plus-legend/legend-remove-label/)<sup> ***New***</sup>
- * [Images in Legends](http://d3plus.org/examples/d3plus-legend/legend-image/)<sup> ***New***</sup>
+ * [Removing Legend Labels](http://d3plus.org/examples/d3plus-legend/legend-remove-label/)
+ * [Images in Legends](http://d3plus.org/examples/d3plus-legend/legend-image/)
 
 ## API Reference
 
@@ -406,4 +406,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Thu, 31 Aug 2017 21:35:36 GMT</sub>
+###### <sub>Documentation generated on Fri, 29 Sep 2017 21:04:48 GMT</sub>
