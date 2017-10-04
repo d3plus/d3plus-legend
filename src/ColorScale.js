@@ -163,8 +163,8 @@ export default class ColorScale extends BaseClass {
       .align("start")
       .render();
 
-    const axisScale = this._axisTest._d3Scale;
-    const scaleRange = axisScale.range();
+    const axisScale = this._axisTest._getPosition.bind(this._axisTest);
+    const scaleRange = this._axisTest._getRange();
 
     let defs = this._group.selectAll("defs").data([0]);
     const defsEnter = defs.enter().append("defs");
