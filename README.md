@@ -14,6 +14,8 @@ If you use NPM, run `npm install d3plus-legend --save`. Otherwise, download the 
 
 ## Examples
 
+ * [Changing Style of a Color Scale](http://d3plus.org/examples/d3plus-legend/colorScale-dark/)<sup> ***New***</sup>
+ * [Creating a Color Scale](http://d3plus.org/examples/d3plus-legend/colorScale/)<sup> ***New***</sup>
  * [Removing Legend Labels](http://d3plus.org/examples/d3plus-legend/legend-remove-label/)
  * [Images in Legends](http://d3plus.org/examples/d3plus-legend/legend-image/)
 
@@ -406,4 +408,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Wed, 04 Oct 2017 19:55:49 GMT</sub>
+###### <sub>Documentation generated on Tue, 19 Dec 2017 17:32:33 GMT</sub>
