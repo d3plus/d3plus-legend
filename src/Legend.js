@@ -37,6 +37,7 @@ export default class Legend extends BaseClass {
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
     this._shape = constant("Rect");
+    this._shapes = [];
     this._shapeConfig = {
       duration: this._duration,
       fill: accessor("color"),
