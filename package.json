@@ -3,7 +3,7 @@
   "version": "0.8.14",
   "description": "An easy to use javascript chart legend.",
   "main": "build/d3plus-legend.js",
-  "jsnext:main": "index",
+  "jsnext:main": "es/index",
   "license": "MIT",
   "homepage": "https://d3plus.org",
   "repository": {
@@ -44,5 +44,13 @@
   },
   "devDependencies": {
     "d3plus-dev": "^0.5.4"
-  }
+  },
+  "module": "es/index",
+  "files": [
+    "bin",
+    "build/d3plus-legend.js",
+    "build/d3plus-legend.js.map",
+    "build/d3plus-legend.min.js",
+    "es"
+  ]
 }
