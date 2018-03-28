@@ -335,7 +335,7 @@ export default class Legend extends BaseClass {
       this._shapes.push(new shapes[Shape]()
         .data(data.filter(d => d.shape === Shape))
         .duration(this._duration)
-        .labelPadding(0)
+        .labelConfig({padding: 0})
         .select(this._group.node())
         .verticalAlign("top")
         .config(assign({}, baseConfig, config))
