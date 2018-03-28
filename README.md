@@ -1,6 +1,6 @@
 # d3plus-legend
 
-[![NPM Release](http://img.shields.io/npm/v/d3plus-legend.svg?style=flat)](https://www.npmjs.org/package/d3plus-legend) [![Build Status](https://travis-ci.org/d3plus/d3plus-legend.svg?branch=master)](https://travis-ci.org/d3plus/d3plus-legend) [![Dependency Status](http://img.shields.io/david/d3plus/d3plus-legend.svg?style=flat)](https://david-dm.org/d3plus/d3plus-legend) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat)](https://gitter.im/d3plus/)
+[![NPM Release](http://img.shields.io/npm/v/d3plus-legend.svg?style=flat)](https://www.npmjs.org/package/d3plus-legend) [![Build Status](https://travis-ci.org/d3plus/d3plus-legend.svg?branch=master)](https://travis-ci.org/d3plus/d3plus-legend) [![Dependency Status](http://img.shields.io/david/d3plus/d3plus-legend.svg?style=flat)](https://david-dm.org/d3plus/d3plus-legend) [![Gitter](https://img.shields.io/badge/-chat_on_gitter-brightgreen.svg?style=flat&logo=gitter-white)](https://gitter.im/d3plus/) 
 
 An easy to use javascript chart legend.
 
@@ -14,8 +14,8 @@ If you use NPM, run `npm install d3plus-legend --save`. Otherwise, download the 
 
 ## Examples
 
- * [Changing Style of a Color Scale](http://d3plus.org/examples/d3plus-legend/colorScale-dark/)<sup> ***New***</sup>
- * [Creating a Color Scale](http://d3plus.org/examples/d3plus-legend/colorScale/)<sup> ***New***</sup>
+ * [Changing Style of a Color Scale](http://d3plus.org/examples/d3plus-legend/colorScale-dark/)
+ * [Creating a Color Scale](http://d3plus.org/examples/d3plus-legend/colorScale/)
  * [Removing Legend Labels](http://d3plus.org/examples/d3plus-legend/legend-remove-label/)
  * [Images in Legends](http://d3plus.org/examples/d3plus-legend/legend-image/)
 
@@ -408,4 +408,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Thu, 21 Dec 2017 21:50:47 GMT</sub>
+###### <sub>Documentation generated on Wed, 28 Mar 2018 16:03:54 GMT</sub>
