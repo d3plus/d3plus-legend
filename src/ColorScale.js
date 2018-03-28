@@ -77,7 +77,7 @@ export default class ColorScale extends BaseClass {
     this._group = elem("g.d3plus-ColorScale", {parent: this._select});
 
     const domain = extent(this._data, this._value);
-    let colors = this._color, ticks;
+    let colors = this._color, labels, ticks;
 
     if (!(colors instanceof Array)) {
       colors = [
@@ -109,6 +109,12 @@ export default class ColorScale extends BaseClass {
 
       ticks = merge(jenks.map((c, i) => i === jenks.length - 1 ? [c[0], c[c.length - 1]] : [c[0]]));
 
+      const tickSet = new Set(ticks);
+
+      if (ticks.length !== tickSet.size) {
+        labels = Array.from(tickSet);
+      }
+
       this._colorScale = scaleThreshold()
         .domain(ticks)
         .range(["black"].concat(colors).concat(colors[colors.length - 1]));
@@ -131,7 +137,7 @@ export default class ColorScale extends BaseClass {
       domain: horizontal ? domain : domain.reverse(),
       duration: this._duration,
       height: this._height,
-      labels: ticks,
+      labels: labels || ticks,
       orient: this._orient,
       padding: this._padding,
       ticks,
