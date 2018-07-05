@@ -146,7 +146,7 @@ function fillMatrixColumn(iMin, iMax, cluster, matrix, backtrackMatrix, sums, su
     @param {Array<Array<number>>} backtrackMatrix
 */
 function fillMatrices(data, matrix, backtrackMatrix) {
-  const nValues = matrix[0].length;
+  const nValues = matrix[0] ? matrix[0].length : 0;
 
   // Shift values by the median to improve numeric stability
   const shift = data[Math.floor(nValues / 2)];
@@ -156,7 +156,7 @@ function fillMatrices(data, matrix, backtrackMatrix) {
   const sumsOfSquares = [];
 
   // Initialize first column in matrix & backtrackMatrix
-  for (let i = 0, shiftedValue; i < nValues; ++i) {
+  for (let i = 0, shiftedValue = void 0; i < nValues; ++i) {
     shiftedValue = data[i] - shift;
     if (i === 0) {
       sums.push(shiftedValue);
@@ -216,7 +216,9 @@ export default function(data, nClusters) {
   const uniqueCount = uniqueCountSorted(sorted);
 
   // if all of the input values are identical, there's one cluster with all of the input in it.
-  if (uniqueCount === 1) return [sorted];
+  if (uniqueCount === 1) {
+    return [sorted];
+  }
 
   const backtrackMatrix = makeMatrix(nClusters, sorted.length),
         matrix = makeMatrix(nClusters, sorted.length);
@@ -225,7 +227,7 @@ export default function(data, nClusters) {
   fillMatrices(sorted, matrix, backtrackMatrix);
 
   // The real work of Ckmeans clustering happens in the matrix generation: the generated matrices encode all possible clustering combinations, and once they're generated we can solve for the best clustering groups very quickly.
-  let clusterRight = backtrackMatrix[0].length - 1;
+  let clusterRight = backtrackMatrix[0] ? backtrackMatrix[0].length - 1 : 0;
   const clusters = [];
 
   // Backtrack the clusters from the dynamic programming matrix. This starts at the bottom-right corner of the matrix (if the top-left is 0, 0), and moves the cluster target with the loop.
