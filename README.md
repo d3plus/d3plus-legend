@@ -408,4 +408,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Wed, 28 Mar 2018 21:14:12 GMT</sub>
+###### <sub>Documentation generated on Wed, 15 Aug 2018 14:08:45 GMT</sub>
