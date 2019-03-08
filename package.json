@@ -27,7 +27,7 @@
     "d3-interpolate": "^1.2.0",
     "d3-scale": "^2.0.0",
     "d3-selection": "^1.3.0",
-    "d3plus-axis": "^0.3.46",
+    "d3plus-axis": "^0.4.3",
     "d3plus-color": "^0.6.2",
     "d3plus-common": "^0.6.39",
     "d3plus-shape": "^0.16.0",
