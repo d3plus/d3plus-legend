@@ -187,6 +187,7 @@ export default class ColorScale extends BaseClass {
       .attr("offset", (d, i) => `${i / (colors.length - 1) * 100}%`)
       .attr("stop-color", String);
 
+    /** determines the width of buckets */
     function bucketWidth(d, i) {
       const w = Math.abs(axisScale(ticks[i + 1]) - axisScale(d));
       return w || 2;
