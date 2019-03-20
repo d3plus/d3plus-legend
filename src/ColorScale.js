@@ -4,6 +4,7 @@
 */
 
 import ckmeans from "./ckmeans";
+import Legend from "./Legend";
 
 import {extent, merge, range} from "d3-array";
 import {interpolateHsl} from "d3-interpolate";
@@ -12,7 +13,7 @@ import {select} from "d3-selection";
 
 import {Axis} from "d3plus-axis";
 import {colorLighter} from "d3plus-color";
-import {accessor, BaseClass, constant, elem} from "d3plus-common";
+import {accessor, assign, BaseClass, constant, elem} from "d3plus-common";
 import {Rect} from "d3plus-shape";
 
 /**
@@ -33,20 +34,36 @@ export default class ColorScale extends BaseClass {
 
     this._axisClass = new Axis();
     this._axisConfig = {
-      gridSize: 0
+      gridSize: 0,
+      shapeConfig: {
+        labelConfig: {
+          fontColor: "#222"
+        }
+      }
     };
     this._axisTest = new Axis();
     this._align = "middle";
+    this._bucketAxis = false;
     this._color = "#0C8040";
     this._data = [];
     this._duration = 600;
     this._height = 200;
+    this._legendClass = new Legend();
+    this._legendConfig = {
+      shapeConfig: {
+        labelConfig: {
+          fontColor: "#222"
+        },
+        stroke: "#444",
+        strokeWidth: 1
+      }
+    };
     this._orient = "bottom";
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
     this._rectClass = new Rect();
     this._rectConfig = {
-      stroke: "#000",
+      stroke: "#444",
       strokeWidth: 1
     };
     this._scale = "linear";
@@ -133,79 +150,119 @@ export default class ColorScale extends BaseClass {
 
     }
 
-    const axisConfig = Object.assign({
-      domain: horizontal ? domain : domain.reverse(),
-      duration: this._duration,
-      height: this._height,
-      labels: labels || ticks,
-      orient: this._orient,
-      padding: this._padding,
-      ticks,
-      width: this._width
-    }, this._axisConfig);
+    if (this._bucketAxis || !["buckets", "jenks"].includes(this._scale)) {
 
-    this._axisTest
-      .select(elem("g.d3plus-ColorScale-axisTest", {enter: {opacity: 0}, parent: this._group}).node())
-      .config(axisConfig)
-      .render();
+      const axisConfig = assign({
+        domain: horizontal ? domain : domain.reverse(),
+        duration: this._duration,
+        height: this._height,
+        labels: labels || ticks,
+        orient: this._orient,
+        padding: this._padding,
+        ticks,
+        width: this._width
+      }, this._axisConfig);
 
-    const axisBounds = this._axisTest.outerBounds();
+      this._axisTest
+        .select(elem("g.d3plus-ColorScale-axisTest", {enter: {opacity: 0}, parent: this._group}).node())
+        .config(axisConfig)
+        .render();
 
-    this._outerBounds[width] = this[`_${width}`] - this._padding * 2;
-    this._outerBounds[height] = axisBounds[height] + this._size;
+      const axisBounds = this._axisTest.outerBounds();
 
-    this._outerBounds[x] = this._padding;
-    this._outerBounds[y] = this._padding;
-    if (this._align === "middle") this._outerBounds[y] = (this[`_${height}`] - this._outerBounds[height]) / 2;
-    else if (this._align === "end") this._outerBounds[y] = this[`_${height}`] - this._padding - this._outerBounds[height];
+      this._outerBounds[width] = this[`_${width}`] - this._padding * 2;
+      this._outerBounds[height] = axisBounds[height] + this._size;
 
-    const groupOffset = this._outerBounds[y] + (["bottom", "right"].includes(this._orient) ? this._size : 0) - (axisConfig.padding || this._axisClass.padding());
-    this._axisClass
-      .select(elem("g.d3plus-ColorScale-axis", {
-        parent: this._group,
-        update: {transform: `translate(${horizontal ? 0 : groupOffset}, ${horizontal ? groupOffset : 0})`}
-      }).node())
-      .config(axisConfig)
-      .align("start")
-      .render();
+      this._outerBounds[x] = this._padding;
+      this._outerBounds[y] = this._padding;
+      if (this._align === "middle") this._outerBounds[y] = (this[`_${height}`] - this._outerBounds[height]) / 2;
+      else if (this._align === "end") this._outerBounds[y] = this[`_${height}`] - this._padding - this._outerBounds[height];
 
-    const axisScale = this._axisTest._getPosition.bind(this._axisTest);
-    const scaleRange = this._axisTest._getRange();
+      const groupOffset = this._outerBounds[y] + (["bottom", "right"].includes(this._orient) ? this._size : 0) - (axisConfig.padding || this._axisClass.padding());
+      this._axisClass
+        .select(elem("g.d3plus-ColorScale-axis", {
+          parent: this._group,
+          update: {transform: `translate(${horizontal ? 0 : groupOffset}, ${horizontal ? groupOffset : 0})`}
+        }).node())
+        .config(axisConfig)
+        .align("start")
+        .render();
 
-    let defs = this._group.selectAll("defs").data([0]);
-    const defsEnter = defs.enter().append("defs");
-    defsEnter.append("linearGradient").attr("id", `gradient-${this._uuid}`);
-    defs = defsEnter.merge(defs);
-    defs.select("linearGradient")
-      .attr(`${x}1`, horizontal ? "0%" : "100%")
-      .attr(`${x}2`, horizontal ? "100%" : "0%")
-      .attr(`${y}1`, "0%")
-      .attr(`${y}2`, "0%");
-    const stops = defs.select("linearGradient").selectAll("stop")
-      .data(colors);
-    stops.enter().append("stop").merge(stops)
-      .attr("offset", (d, i) => `${i / (colors.length - 1) * 100}%`)
-      .attr("stop-color", String);
+      const axisScale = this._axisTest._getPosition.bind(this._axisTest);
+      const scaleRange = this._axisTest._getRange();
 
-    /** determines the width of buckets */
-    function bucketWidth(d, i) {
-      const w = Math.abs(axisScale(ticks[i + 1]) - axisScale(d));
-      return w || 2;
+      let defs = this._group.selectAll("defs").data([0]);
+      const defsEnter = defs.enter().append("defs");
+      defsEnter.append("linearGradient").attr("id", `gradient-${this._uuid}`);
+      defs = defsEnter.merge(defs);
+      defs.select("linearGradient")
+        .attr(`${x}1`, horizontal ? "0%" : "100%")
+        .attr(`${x}2`, horizontal ? "100%" : "0%")
+        .attr(`${y}1`, "0%")
+        .attr(`${y}2`, "0%");
+      const stops = defs.select("linearGradient").selectAll("stop")
+        .data(colors);
+      stops.enter().append("stop").merge(stops)
+        .attr("offset", (d, i) => `${i / (colors.length - 1) * 100}%`)
+        .attr("stop-color", String);
+
+      /** determines the width of buckets */
+      const bucketWidth = (d, i) => {
+        const w = Math.abs(axisScale(ticks[i + 1]) - axisScale(d));
+        return w || 2;
+      };
+
+      this._rectClass
+        .data(ticks ? ticks.slice(0, ticks.length - 1) : [0])
+        .id((d, i) => i)
+        .select(elem("g.d3plus-ColorScale-Rect", {parent: this._group}).node())
+        .config({
+          fill: ticks ? d => this._colorScale(d) : `url(#gradient-${this._uuid})`,
+          [x]: ticks ? (d, i) => axisScale(d) + bucketWidth(d, i) / 2 - (["left", "right"].includes(this._orient) ? bucketWidth(d, i) : 0) : scaleRange[0] + (scaleRange[1] - scaleRange[0]) / 2,
+          [y]: this._outerBounds[y] + (["top", "left"].includes(this._orient) ? axisBounds[height] : 0) + this._size / 2,
+          [width]: ticks ? bucketWidth : scaleRange[1] - scaleRange[0],
+          [height]: this._size
+        })
+        .config(this._rectConfig)
+        .render();
     }
+    else {
 
-    this._rectClass
-      .data(ticks ? ticks.slice(0, ticks.length - 1) : [0])
-      .id((d, i) => i)
-      .select(elem("g.d3plus-ColorScale-Rect", {parent: this._group}).node())
-      .config({
-        fill: ticks ? d => this._colorScale(d) : `url(#gradient-${this._uuid})`,
-        [x]: ticks ? (d, i) => axisScale(d) + bucketWidth(d, i) / 2 - (["left", "right"].includes(this._orient) ? bucketWidth(d, i) : 0) : scaleRange[0] + (scaleRange[1] - scaleRange[0]) / 2,
-        [y]: this._outerBounds[y] + (["top", "left"].includes(this._orient) ? axisBounds[height] : 0) + this._size / 2,
-        [width]: ticks ? bucketWidth : scaleRange[1] - scaleRange[0],
-        [height]: this._size
-      })
-      .config(this._rectConfig)
-      .render();
+      const format = this._axisConfig.tickFormat
+        ? this._axisConfig.tickFormat : d => d;
+
+      const data = ticks.reduce((arr, tick, i) => {
+        if (i !== ticks.length - 1) {
+          const next = ticks[i + 1];
+          arr.push({
+            color: colors[i],
+            id: tick === next ? `${format(tick)}+` : `${format(tick)} - ${format(next)}`
+          });
+        }
+        return arr;
+      }, []);
+
+      const legendConfig = assign({
+        align: horizontal ? "center" : {start: "left", middle: "center", end: "right"}[this._align],
+        direction: horizontal ? "row" : "column",
+        duration: this._duration,
+        height: this._height,
+        padding: this._padding,
+        width: this._width,
+        verticalAlign: horizontal ? {start: "top", middle: "middle", end: "bottom"}[this._align] : "middle"
+      }, this._legendConfig);
+
+      this._legendClass
+        .data(data)
+        .select(elem("g.d3plus-ColorScale-legend", {
+          parent: this._group
+        }).node())
+        .config(legendConfig)
+        .render();
+
+      this._outerBounds = this._legendClass.outerBounds();
+
+    }
 
     if (callback) setTimeout(callback, this._duration + 100);
 
@@ -220,7 +277,7 @@ export default class ColorScale extends BaseClass {
       @chainable
   */
   axisConfig(_) {
-    return arguments.length ? (this._axisConfig = Object.assign(this._axisConfig, _), this) : this._axisConfig;
+    return arguments.length ? (this._axisConfig = assign(this._axisConfig, _), this) : this._axisConfig;
   }
 
   /**
@@ -231,6 +288,16 @@ export default class ColorScale extends BaseClass {
   */
   align(_) {
     return arguments.length ? (this._align = _, this) : this._align;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc Determines whether or not to use an Axis to display bucket scales (both "buckets" and "jenks"). When set to `false`, bucketed scales will use the `Legend` class to display squares for each range of data. When set to `true`, bucketed scales will be displayed on an `Axis`, similar to "linear" scales.
+      @param {Boolean} [*value* = false]
+      @chainable
+  */
+  bucketAxis(_) {
+    return arguments.length ? (this._bucketAxis = _, this) : this._bucketAxis;
   }
 
   /**
@@ -275,6 +342,16 @@ export default class ColorScale extends BaseClass {
 
   /**
       @memberof ColorScale
+      @desc The [ColorScale](http://d3plus.org/docs/#ColorScale) is constructed by combining an [Axis](http://d3plus.org/docs/#Axis) for the ticks/labels and a [Rect](http://d3plus.org/docs/#Rect) for the actual color box (or multiple boxes, as in a jenks scale). Because of this, there are separate configs for the [Axis](http://d3plus.org/docs/#Axis) class used to display the text ([axisConfig](http://d3plus.org/docs/#ColorScale.axisConfig)) and the [Rect](http://d3plus.org/docs/#Rect) class used to draw the color breaks ([rectConfig](http://d3plus.org/docs/#ColorScale.rectConfig)). This method acts as a pass-through to the config method of the [Axis](http://d3plus.org/docs/#Axis). An example usage of this method can be seen [here](http://d3plus.org/examples/d3plus-legend/colorScale-dark/).
+      @param {Object} [*value*]
+      @chainable
+  */
+  legendConfig(_) {
+    return arguments.length ? (this._legendConfig = assign(this._legendConfig, _), this) : this._legendConfig;
+  }
+
+  /**
+      @memberof ColorScale
       @desc Sets the flow of the items inside the ColorScale. If no value is passed, the current flow will be returned.
       @param {String} [*value* = "bottom"]
       @chainable
@@ -310,7 +387,7 @@ export default class ColorScale extends BaseClass {
       @chainable
   */
   rectConfig(_) {
-    return arguments.length ? (this._rectConfig = Object.assign(this._rectConfig, _), this) : this._rectConfig;
+    return arguments.length ? (this._rectConfig = assign(this._rectConfig, _), this) : this._rectConfig;
   }
 
   /**
