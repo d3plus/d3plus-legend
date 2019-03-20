@@ -7,7 +7,6 @@ import ckmeans from "./ckmeans";
 import Legend from "./Legend";
 
 import {extent, merge, range} from "d3-array";
-import {interpolateHsl} from "d3-interpolate";
 import {scaleLinear, scaleThreshold} from "d3-scale";
 import {select} from "d3-selection";
 
@@ -113,13 +112,7 @@ export default class ColorScale extends BaseClass {
         .filter(d => d !== null && typeof d === "number");
 
       if (data.length <= colors.length) {
-
-        const ts = scaleLinear()
-          .domain(range(0, data.length - 1))
-          .interpolate(interpolateHsl)
-          .range(colors);
-
-        colors = data.slice(0, data.length - 1).map((d, i) => ts(i));
+        colors = colors.slice(colors.length - data.length);
       }
 
       const jenks = ckmeans(data, colors.length);
