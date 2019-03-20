@@ -159,6 +159,7 @@ export default class ColorScale extends BaseClass {
       this._axisTest
         .select(elem("g.d3plus-ColorScale-axisTest", {enter: {opacity: 0}, parent: this._group}).node())
         .config(axisConfig)
+        .duration(0)
         .render();
 
       const axisBounds = this._axisTest.outerBounds();
@@ -210,6 +211,7 @@ export default class ColorScale extends BaseClass {
         .id((d, i) => i)
         .select(elem("g.d3plus-ColorScale-Rect", {parent: this._group}).node())
         .config({
+          duration: this._duration,
           fill: ticks ? d => this._colorScale(d) : `url(#gradient-${this._uuid})`,
           [x]: ticks ? (d, i) => axisScale(d) + bucketWidth(d, i) / 2 - (["left", "right"].includes(this._orient) ? bucketWidth(d, i) : 0) : scaleRange[0] + (scaleRange[1] - scaleRange[0]) / 2,
           [y]: this._outerBounds[y] + (["top", "left"].includes(this._orient) ? axisBounds[height] : 0) + this._size / 2,
@@ -241,6 +243,9 @@ export default class ColorScale extends BaseClass {
         duration: this._duration,
         height: this._height,
         padding: this._padding,
+        shapeConfig: {
+          duration: this._duration
+        },
         width: this._width,
         verticalAlign: horizontal ? {start: "top", middle: "middle", end: "bottom"}[this._align] : "middle"
       }, this._legendConfig);
