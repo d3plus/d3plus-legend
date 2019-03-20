@@ -64,7 +64,7 @@ Creates an SVG scale based on an array of data. If *data* is specified, immediat
 
 
 
-<a name="ColorScale.render" href="#ColorScale.render">#</a> ColorScale.**render**([*callback*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L81)
+<a name="ColorScale.render" href="#ColorScale.render">#</a> ColorScale.**render**([*callback*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L84)
 
 Renders the current ColorScale to the page. If a *callback* is specified, it will be called once the ColorScale is done drawing.
 
@@ -72,7 +72,7 @@ Renders the current ColorScale to the page. If a *callback* is specified, it wil
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.axisConfig" href="#ColorScale.axisConfig">#</a> ColorScale.**axisConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L277)
+<a name="ColorScale.axisConfig" href="#ColorScale.axisConfig">#</a> ColorScale.**axisConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L282)
 
 The [ColorScale](http://d3plus.org/docs/#ColorScale) is constructed by combining an [Axis](http://d3plus.org/docs/#Axis) for the ticks/labels and a [Rect](http://d3plus.org/docs/#Rect) for the actual color box (or multiple boxes, as in a jenks scale). Because of this, there are separate configs for the [Axis](http://d3plus.org/docs/#Axis) class used to display the text ([axisConfig](http://d3plus.org/docs/#ColorScale.axisConfig)) and the [Rect](http://d3plus.org/docs/#Rect) class used to draw the color breaks ([rectConfig](http://d3plus.org/docs/#ColorScale.rectConfig)). This method acts as a pass-through to the config method of the [Axis](http://d3plus.org/docs/#Axis). An example usage of this method can be seen [here](http://d3plus.org/examples/d3plus-legend/colorScale-dark/).
 
@@ -80,7 +80,7 @@ The [ColorScale](http://d3plus.org/docs/#ColorScale) is constructed by combining
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.align" href="#ColorScale.align">#</a> ColorScale.**align**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L287)
+<a name="ColorScale.align" href="#ColorScale.align">#</a> ColorScale.**align**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L292)
 
 If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
 
@@ -88,7 +88,7 @@ If *value* is specified, sets the horizontal alignment to the specified value an
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.bucketAxis" href="#ColorScale.bucketAxis">#</a> ColorScale.**bucketAxis**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L297)
+<a name="ColorScale.bucketAxis" href="#ColorScale.bucketAxis">#</a> ColorScale.**bucketAxis**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L302)
 
 Determines whether or not to use an Axis to display bucket scales (both "buckets" and "jenks"). When set to `false`, bucketed scales will use the `Legend` class to display squares for each range of data. When set to `true`, bucketed scales will be displayed on an `Axis`, similar to "linear" scales.
 
@@ -96,7 +96,7 @@ Determines whether or not to use an Axis to display bucket scales (both "buckets
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.color" href="#ColorScale.color">#</a> ColorScale.**color**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L307)
+<a name="ColorScale.color" href="#ColorScale.color">#</a> ColorScale.**color**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L312)
 
 Defines the color or colors to be used for the scale. If only a single color is given as a String, then the scale is interpolated by lightening that color. Otherwise, the function expects an Array of color values to be used in order for the scale.
 
@@ -104,7 +104,7 @@ Defines the color or colors to be used for the scale. If only a single color is 
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.data" href="#ColorScale.data">#</a> ColorScale.**data**([*data*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L317)
+<a name="ColorScale.data" href="#ColorScale.data">#</a> ColorScale.**data**([*data*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L322)
 
 If *data* is specified, sets the data array to the specified array and returns the current class instance. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
 
@@ -112,7 +112,7 @@ If *data* is specified, sets the data array to the specified array and returns t
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.duration" href="#ColorScale.duration">#</a> ColorScale.**duration**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L327)
+<a name="ColorScale.duration" href="#ColorScale.duration">#</a> ColorScale.**duration**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L332)
 
 If *value* is specified, sets the transition duration of the ColorScale and returns the current class instance. If *value* is not specified, returns the current duration.
 
@@ -120,7 +120,7 @@ If *value* is specified, sets the transition duration of the ColorScale and retu
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.height" href="#ColorScale.height">#</a> ColorScale.**height**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L337)
+<a name="ColorScale.height" href="#ColorScale.height">#</a> ColorScale.**height**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L342)
 
 If *value* is specified, sets the overall height of the ColorScale and returns the current class instance. If *value* is not specified, returns the current height value.
 
@@ -128,7 +128,7 @@ If *value* is specified, sets the overall height of the ColorScale and returns t
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.legendConfig" href="#ColorScale.legendConfig">#</a> ColorScale.**legendConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L347)
+<a name="ColorScale.legendConfig" href="#ColorScale.legendConfig">#</a> ColorScale.**legendConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L352)
 
 The [ColorScale](http://d3plus.org/docs/#ColorScale) is constructed by combining an [Axis](http://d3plus.org/docs/#Axis) for the ticks/labels and a [Rect](http://d3plus.org/docs/#Rect) for the actual color box (or multiple boxes, as in a jenks scale). Because of this, there are separate configs for the [Axis](http://d3plus.org/docs/#Axis) class used to display the text ([axisConfig](http://d3plus.org/docs/#ColorScale.axisConfig)) and the [Rect](http://d3plus.org/docs/#Rect) class used to draw the color breaks ([rectConfig](http://d3plus.org/docs/#ColorScale.rectConfig)). This method acts as a pass-through to the config method of the [Axis](http://d3plus.org/docs/#Axis). An example usage of this method can be seen [here](http://d3plus.org/examples/d3plus-legend/colorScale-dark/).
 
@@ -136,7 +136,7 @@ The [ColorScale](http://d3plus.org/docs/#ColorScale) is constructed by combining
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.orient" href="#ColorScale.orient">#</a> ColorScale.**orient**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L357)
+<a name="ColorScale.orient" href="#ColorScale.orient">#</a> ColorScale.**orient**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L362)
 
 Sets the flow of the items inside the ColorScale. If no value is passed, the current flow will be returned.
 
@@ -144,7 +144,7 @@ Sets the flow of the items inside the ColorScale. If no value is passed, the cur
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.outerBounds" href="#ColorScale.outerBounds">#</a> ColorScale.**outerBounds**() [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L367)
+<a name="ColorScale.outerBounds" href="#ColorScale.outerBounds">#</a> ColorScale.**outerBounds**() [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L372)
 
 If called after the elements have been drawn to DOM, will returns the outer bounds of the ColorScale content.
 
@@ -157,7 +157,7 @@ This is a static method of [<code>ColorScale</code>](#ColorScale).
 ```
 
 
-<a name="ColorScale.padding" href="#ColorScale.padding">#</a> ColorScale.**padding**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L377)
+<a name="ColorScale.padding" href="#ColorScale.padding">#</a> ColorScale.**padding**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L382)
 
 If *value* is specified, sets the padding between each key to the specified number and returns the current class instance. If *value* is not specified, returns the current padding value.
 
@@ -165,7 +165,7 @@ If *value* is specified, sets the padding between each key to the specified numb
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.rectConfig" href="#ColorScale.rectConfig">#</a> ColorScale.**rectConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L387)
+<a name="ColorScale.rectConfig" href="#ColorScale.rectConfig">#</a> ColorScale.**rectConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L392)
 
 The [ColorScale](http://d3plus.org/docs/#ColorScale) is constructed by combining an [Axis](http://d3plus.org/docs/#Axis) for the ticks/labels and a [Rect](http://d3plus.org/docs/#Rect) for the actual color box (or multiple boxes, as in a jenks scale). Because of this, there are separate configs for the [Axis](http://d3plus.org/docs/#Axis) class used to display the text ([axisConfig](http://d3plus.org/docs/#ColorScale.axisConfig)) and the [Rect](http://d3plus.org/docs/#Rect) class used to draw the color breaks ([rectConfig](http://d3plus.org/docs/#ColorScale.rectConfig)). This method acts as a pass-through to the config method of the [Rect](http://d3plus.org/docs/#Rect). An example usage of this method can be seen [here](http://d3plus.org/examples/d3plus-legend/colorScale-dark/).
 
@@ -173,7 +173,7 @@ The [ColorScale](http://d3plus.org/docs/#ColorScale) is constructed by combining
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.scale" href="#ColorScale.scale">#</a> ColorScale.**scale**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L397)
+<a name="ColorScale.scale" href="#ColorScale.scale">#</a> ColorScale.**scale**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L402)
 
 If *value* is specified, sets the scale of the ColorScale and returns the current class instance. If *value* is not specified, returns the current scale value.
 
@@ -181,7 +181,7 @@ If *value* is specified, sets the scale of the ColorScale and returns the curren
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.select" href="#ColorScale.select">#</a> ColorScale.**select**([*selector*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L407)
+<a name="ColorScale.select" href="#ColorScale.select">#</a> ColorScale.**select**([*selector*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L412)
 
 If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns the current class instance. If *selector* is not specified, returns the current SVG container element.
 
@@ -189,7 +189,7 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.size" href="#ColorScale.size">#</a> ColorScale.**size**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L417)
+<a name="ColorScale.size" href="#ColorScale.size">#</a> ColorScale.**size**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L422)
 
 The height of horizontal color scales, and width when positioned vertical.
 
@@ -197,7 +197,7 @@ The height of horizontal color scales, and width when positioned vertical.
 This is a static method of [<code>ColorScale</code>](#ColorScale), and is chainable with other methods of this Class.
 
 
-<a name="ColorScale.value" href="#ColorScale.value">#</a> ColorScale.**value**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L431)
+<a name="ColorScale.value" href="#ColorScale.value">#</a> ColorScale.**value**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L436)
 
 If *value* is specified, sets the value accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current value accessor.
 
@@ -212,7 +212,7 @@ function value(d) {
 ```
 
 
-<a name="ColorScale.width" href="#ColorScale.width">#</a> ColorScale.**width**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L441)
+<a name="ColorScale.width" href="#ColorScale.width">#</a> ColorScale.**width**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/ColorScale.js#L446)
 
 If *value* is specified, sets the overall width of the ColorScale and returns the current class instance. If *value* is not specified, returns the current width value.
 
@@ -267,7 +267,7 @@ Renders the current Legend to the page. If a *callback* is specified, it will be
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.active" href="#Legend.active">#</a> Legend.**active**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L358)
+<a name="Legend.active" href="#Legend.active">#</a> Legend.**active**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L360)
 
 If *value* is specified, sets the active method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current active method.
 
@@ -275,7 +275,7 @@ If *value* is specified, sets the active method for all shapes to the specified 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.align" href="#Legend.align">#</a> Legend.**align**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L369)
+<a name="Legend.align" href="#Legend.align">#</a> Legend.**align**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L371)
 
 If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
 
@@ -283,7 +283,7 @@ If *value* is specified, sets the horizontal alignment to the specified value an
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.data" href="#Legend.data">#</a> Legend.**data**([*data*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L379)
+<a name="Legend.data" href="#Legend.data">#</a> Legend.**data**([*data*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L381)
 
 If *data* is specified, sets the data array to the specified array and returns the current class instance. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
 
@@ -291,7 +291,7 @@ If *data* is specified, sets the data array to the specified array and returns t
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.direction" href="#Legend.direction">#</a> Legend.**direction**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L389)
+<a name="Legend.direction" href="#Legend.direction">#</a> Legend.**direction**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L391)
 
 Sets the flow of the items inside the legend. If no value is passed, the current flow will be returned.
 
@@ -299,7 +299,7 @@ Sets the flow of the items inside the legend. If no value is passed, the current
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.duration" href="#Legend.duration">#</a> Legend.**duration**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L399)
+<a name="Legend.duration" href="#Legend.duration">#</a> Legend.**duration**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L401)
 
 If *value* is specified, sets the transition duration of the legend and returns the current class instance. If *value* is not specified, returns the current duration.
 
@@ -307,7 +307,7 @@ If *value* is specified, sets the transition duration of the legend and returns 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.height" href="#Legend.height">#</a> Legend.**height**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L409)
+<a name="Legend.height" href="#Legend.height">#</a> Legend.**height**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L411)
 
 If *value* is specified, sets the overall height of the legend and returns the current class instance. If *value* is not specified, returns the current height value.
 
@@ -315,7 +315,7 @@ If *value* is specified, sets the overall height of the legend and returns the c
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.hover" href="#Legend.hover">#</a> Legend.**hover**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L419)
+<a name="Legend.hover" href="#Legend.hover">#</a> Legend.**hover**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L421)
 
 If *value* is specified, sets the hover method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current hover method.
 
@@ -323,7 +323,7 @@ If *value* is specified, sets the hover method for all shapes to the specified f
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.id" href="#Legend.id">#</a> Legend.**id**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L434)
+<a name="Legend.id" href="#Legend.id">#</a> Legend.**id**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L436)
 
 If *value* is specified, sets the id accessor to the specified function and returns the current class instance. If *value* is not specified, returns the current id accessor.
 
@@ -338,7 +338,7 @@ function value(d) {
 ```
 
 
-<a name="Legend.label" href="#Legend.label">#</a> Legend.**label**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L444)
+<a name="Legend.label" href="#Legend.label">#</a> Legend.**label**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L446)
 
 If *value* is specified, sets the label accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current label accessor, which is the [id](#shape.id) accessor by default.
 
@@ -346,7 +346,7 @@ If *value* is specified, sets the label accessor to the specified function or st
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.outerBounds" href="#Legend.outerBounds">#</a> Legend.**outerBounds**() [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L454)
+<a name="Legend.outerBounds" href="#Legend.outerBounds">#</a> Legend.**outerBounds**() [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L456)
 
 If called after the elements have been drawn to DOM, will returns the outer bounds of the legend content.
 
@@ -359,7 +359,7 @@ This is a static method of [<code>Legend</code>](#Legend).
 ```
 
 
-<a name="Legend.padding" href="#Legend.padding">#</a> Legend.**padding**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L464)
+<a name="Legend.padding" href="#Legend.padding">#</a> Legend.**padding**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L466)
 
 If *value* is specified, sets the padding between each key to the specified number and returns the current class instance. If *value* is not specified, returns the current padding value.
 
@@ -367,7 +367,7 @@ If *value* is specified, sets the padding between each key to the specified numb
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.select" href="#Legend.select">#</a> Legend.**select**([*selector*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L474)
+<a name="Legend.select" href="#Legend.select">#</a> Legend.**select**([*selector*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L476)
 
 If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns the current class instance. If *selector* is not specified, returns the current SVG container element.
 
@@ -375,7 +375,7 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.shape" href="#Legend.shape">#</a> Legend.**shape**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L484)
+<a name="Legend.shape" href="#Legend.shape">#</a> Legend.**shape**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L486)
 
 If *value* is specified, sets the shape accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current shape accessor.
 
@@ -383,7 +383,7 @@ If *value* is specified, sets the shape accessor to the specified function or st
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.shapeConfig" href="#Legend.shapeConfig">#</a> Legend.**shapeConfig**([*config*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L494)
+<a name="Legend.shapeConfig" href="#Legend.shapeConfig">#</a> Legend.**shapeConfig**([*config*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L496)
 
 If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns the current class instance. If *config* is not specified, returns the current shape configuration.
 
@@ -391,7 +391,7 @@ If *config* is specified, sets the methods that correspond to the key/value pair
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.title" href="#Legend.title">#</a> Legend.**title**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L504)
+<a name="Legend.title" href="#Legend.title">#</a> Legend.**title**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L506)
 
 If *value* is specified, sets the title of the legend and returns the current class instance. If *value* is not specified, returns the current title.
 
@@ -399,7 +399,7 @@ If *value* is specified, sets the title of the legend and returns the current cl
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.titleConfig" href="#Legend.titleConfig">#</a> Legend.**titleConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L514)
+<a name="Legend.titleConfig" href="#Legend.titleConfig">#</a> Legend.**titleConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L516)
 
 If *value* is specified, sets the title configuration of the legend and returns the current class instance. If *value* is not specified, returns the current title configuration.
 
@@ -407,7 +407,7 @@ If *value* is specified, sets the title configuration of the legend and returns 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.verticalAlign" href="#Legend.verticalAlign">#</a> Legend.**verticalAlign**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L524)
+<a name="Legend.verticalAlign" href="#Legend.verticalAlign">#</a> Legend.**verticalAlign**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L526)
 
 If *value* is specified, sets the vertical alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current vertical alignment.
 
@@ -415,7 +415,7 @@ If *value* is specified, sets the vertical alignment to the specified value and 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.width" href="#Legend.width">#</a> Legend.**width**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L534)
+<a name="Legend.width" href="#Legend.width">#</a> Legend.**width**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L536)
 
 If *value* is specified, sets the overall width of the legend and returns the current class instance. If *value* is not specified, returns the current width value.
 
@@ -426,4 +426,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Wed, 20 Mar 2019 15:44:56 GMT</sub>
+###### <sub>Documentation generated on Wed, 20 Mar 2019 16:02:38 GMT</sub>
