@@ -38,6 +38,9 @@ export default class ColorScale extends BaseClass {
         labelConfig: {
           fontColor: "#222"
         }
+      },
+      titleConfig: {
+        fontSize: 12
       }
     };
     this._axisTest = new Axis();
@@ -243,9 +246,11 @@ export default class ColorScale extends BaseClass {
         duration: this._duration,
         height: this._height,
         padding: this._padding,
-        shapeConfig: {
+        shapeConfig: assign({
           duration: this._duration
-        },
+        }, this._axisConfig.shapeConfig || {}),
+        title: this._axisConfig.title,
+        titleConfig: this._axisConfig.titleConfig || {},
         width: this._width,
         verticalAlign: horizontal ? {start: "top", middle: "middle", end: "bottom"}[this._align] : "middle"
       }, this._legendConfig);
