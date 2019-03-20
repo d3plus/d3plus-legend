@@ -116,6 +116,7 @@ export default class Legend extends BaseClass {
 
     let availableHeight = this._height;
     this._titleHeight = 0;
+    this._titleWidth = 0;
     if (this._title) {
 
       const f = this._titleConfig.fontFamily || this._titleClass.fontFamily()(),
@@ -131,6 +132,7 @@ export default class Legend extends BaseClass {
         .height(this._height)
         (this._title);
       this._titleHeight = lH + res.lines.length + this._padding;
+      this._titleWidth = max(res.widths);
       availableHeight -= this._titleHeight;
     }
 
@@ -280,7 +282,7 @@ export default class Legend extends BaseClass {
     }
 
     const innerHeight = max(this._lineData, (d, i) => max([d.height, this._fetchConfig("height", d.data, i)]) + d.y) + this._titleHeight,
-          innerWidth = spaceNeeded;
+          innerWidth = max([spaceNeeded, this._titleWidth]);
 
     this._outerBounds.width = innerWidth;
     this._outerBounds.height = innerHeight;
