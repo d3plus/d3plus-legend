@@ -7,9 +7,9 @@ The text labels in a legend can be removed/disabled by setting the [.label( )](h
 
 ```js
 var data = [
-  {id: "Apple", color: "orange", image: "https://datausa.io/static/img/attrs/thing_apple.png"},
-  {id: "Fish", color: "blue", image: "https://datausa.io/static/img/attrs/thing_fish.png"},
-  {id: "Tomato", color: "red", image: "https://datausa.io/static/img/attrs/thing_tomato.png"}
+  {id: "Apple", color: "orange", image: "https://datausa.io/images/attrs/thing_apple.png"},
+  {id: "Fish", color: "blue", image: "https://datausa.io/images/attrs/thing_fish.png"},
+  {id: "Tomato", color: "red", image: "https://datausa.io/images/attrs/thing_tomato.png"}
 ];
 
 var legend = new d3plus.Legend()
