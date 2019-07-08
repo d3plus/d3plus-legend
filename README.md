@@ -426,4 +426,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Wed, 20 Mar 2019 16:02:38 GMT</sub>
+###### <sub>Documentation generated on Mon, 08 Jul 2019 21:36:59 GMT</sub>
