@@ -50,7 +50,14 @@ export default class Legend extends BaseClass {
       labelBounds: (dd, i, s) => {
         const d = this._lineData[i],
               w = s.r !== void 0 ? s.r : s.width / 2;
-        return {width: d.width, height: d.height, x: w + this._padding, y: -d.height / 2 + (d.lh - d.s) / 2 + 1};
+        const shape = this._shape(d.d, d.i);
+        let x = w + this._padding;
+        let y = -d.height / 2 + (d.lh - d.s) / 2 + 1;
+        if (shape === "Circle") {
+          x -= d.shapeR;
+          y -= d.shapeR / 2;
+        }
+        return {width: d.width, height: d.height, x, y};
       },
       labelConfig: {
         fontColor: constant("#444"),
@@ -145,6 +152,7 @@ export default class Legend extends BaseClass {
         data: d,
         i,
         id: this._id(d, i),
+        shapeR: this._fetchConfig("r", d, i),
         shapeWidth: this._fetchConfig("width", d, i),
         shapeHeight: this._fetchConfig("height", d, i),
         y: 0
