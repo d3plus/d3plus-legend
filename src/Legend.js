@@ -47,23 +47,19 @@ export default class Legend extends BaseClass {
               h = max([d.height, d.shapeHeight]);
         return {width: d.width + d.shapeWidth, height: h, x: -d.shapeWidth / 2, y: -h / 2};
       },
-      labelBounds: (dd, i, s) => {
-        const d = this._lineData[i],
-              w = s.r !== void 0 ? s.r : s.width / 2;
-        const shape = this._shape(d.d, d.i);
-        let x = w + this._padding;
-        let y = -d.height / 2 + (d.lh - d.s) / 2 + 1;
-        if (shape === "Circle") {
-          x -= d.shapeR;
-          y -= d.shapeR / 2;
-        }
-        return {width: d.width, height: d.height, x, y};
+      labelBounds: (dd, i) => {
+        const d = this._lineData[i];
+        let x = d.shapeWidth;
+        if (d.shape === "Circle") x -= d.shapeR;
+        const height = max([d.shapeHeight, d.height]);
+        return {width: d.width, height, x, y: -height / 2};
       },
       labelConfig: {
         fontColor: constant("#444"),
         fontFamily: new TextBox().fontFamily(),
         fontResize: false,
-        fontSize: constant(10)
+        fontSize: constant(10),
+        verticalAlign: "middle"
       },
       opacity: 1,
       r: constant(5),
@@ -81,7 +77,10 @@ export default class Legend extends BaseClass {
       y: (d, i) => {
         const ld = this._lineData[i];
         return ld.y + this._titleHeight + this._outerBounds.y +
-               max(this._lineData.filter(l => ld.y === l.y).map(l => l.height).concat(this._data.map((l, x) => this._fetchConfig("height", l, x)))) / 2;
+               max(
+                 this._lineData.filter(l => ld.y === l.y).map(l => l.height)
+                 .concat(this._data.map((l, x) => this._fetchConfig("height", l, x)))
+               ) / 2;
       }
     };
     this._titleClass = new TextBox();
@@ -147,14 +146,17 @@ export default class Legend extends BaseClass {
     this._lineData = this._data.map((d, i) => {
 
       const label = this._label(d, i);
+      const shape = this._shape(d, i);
+      const r = this._fetchConfig("r", d, i);
 
       let res = {
         data: d,
         i,
         id: this._id(d, i),
-        shapeR: this._fetchConfig("r", d, i),
-        shapeWidth: this._fetchConfig("width", d, i),
-        shapeHeight: this._fetchConfig("height", d, i),
+        shape,
+        shapeR: r,
+        shapeWidth: shape === "Circle" ? r * 2 : this._fetchConfig("width", d, i),
+        shapeHeight: shape === "Circle" ? r * 2 : this._fetchConfig("height", d, i),
         y: 0
       };
 
