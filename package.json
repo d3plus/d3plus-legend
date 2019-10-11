@@ -26,10 +26,10 @@
     "d3-array": "^1.2.1",
     "d3-scale": "^2.0.0",
     "d3-selection": "^1.3.0",
-    "d3plus-axis": "^0.4.16",
+    "d3plus-axis": "^0.4.17",
     "d3plus-color": "^0.6.7",
     "d3plus-common": "^0.6.57",
-    "d3plus-shape": "^0.16.12",
+    "d3plus-shape": "^0.16.13",
     "d3plus-text": "^0.9.50"
   },
   "scripts": {
