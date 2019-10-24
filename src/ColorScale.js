@@ -6,7 +6,7 @@
 import ckmeans from "./ckmeans";
 import Legend from "./Legend";
 
-import {extent, merge, range} from "d3-array";
+import {extent, merge, min, range} from "d3-array";
 import {scaleLinear, scaleThreshold} from "d3-scale";
 import {select} from "d3-selection";
 
@@ -45,8 +45,11 @@ export default class ColorScale extends BaseClass {
     };
     this._axisTest = new Axis();
     this._align = "middle";
+    this._buckets = 5;
     this._bucketAxis = false;
-    this._color = "#0C8040";
+    this._colorMax = "#0C8040";
+    this._colorMid = "#f7f7f7";
+    this._colorMin = "#b22200";
     this._data = [];
     this._duration = 600;
     this._height = 200;
@@ -60,6 +63,7 @@ export default class ColorScale extends BaseClass {
         strokeWidth: 1
       }
     };
+    this._midpoint = 0;
     this._orient = "bottom";
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
@@ -96,16 +100,16 @@ export default class ColorScale extends BaseClass {
     this._group = elem("g.d3plus-ColorScale", {parent: this._select});
 
     const domain = extent(this._data, this._value);
+    const negative = domain[0] < this._midpoint;
+    const positive = domain[1] > this._midpoint;
+    const diverging = negative && positive;
+
     let colors = this._color, labels, ticks;
 
-    if (!(colors instanceof Array)) {
-      colors = [
-        colorLighter(colors, 0.9),
-        colorLighter(colors, 0.75),
-        colorLighter(colors, 0.5),
-        colorLighter(colors, 0.25),
-        colors
-      ];
+    if (colors && !(colors instanceof Array)) {
+      colors = range(0, this._buckets, 1)
+        .map(i => colorLighter(colors, (i + 1) / this._buckets))
+        .reverse();
     }
 
     if (this._scale === "jenks") {
@@ -114,11 +118,9 @@ export default class ColorScale extends BaseClass {
         .map(this._value)
         .filter(d => d !== null && typeof d === "number");
 
-      if (data.length <= colors.length) {
-        colors = colors.slice(colors.length - data.length);
-      }
+      const buckets = min([colors ? colors.length : this._buckets, data.length]);
 
-      const jenks = ckmeans(data, colors.length);
+      const jenks = ckmeans(data, buckets);
 
       ticks = merge(jenks.map((c, i) => i === jenks.length - 1 ? [c[0], c[c.length - 1]] : [c[0]]));
 
@@ -128,6 +130,34 @@ export default class ColorScale extends BaseClass {
         labels = Array.from(tickSet);
       }
 
+      if (!colors) {
+        if (diverging) {
+          colors = [this._colorMin, this._colorMid, this._colorMax];
+          const negatives = ticks
+            .slice(0, buckets)
+            .filter((d, i) => d < this._midpoint && ticks[i + 1] <= this._midpoint);
+          const spanning = ticks
+            .slice(0, buckets)
+            .filter((d, i) => d <= this._midpoint && ticks[i + 1] > this._midpoint);
+          const positives = ticks
+            .slice(0, buckets)
+            .filter((d, i) => d > this._midpoint && ticks[i + 1] > this._midpoint);
+          const negativeColors = negatives.map((d, i) => !i ? colors[0] : colorLighter(colors[0], i / negatives.length));
+          const spanningColors = spanning.map(() => colors[1]);
+          const positiveColors = positives.map((d, i) => i === positives.length - 1 ? colors[2] : colorLighter(colors[2], 1 - (i + 1) / positives.length));
+          colors = negativeColors.concat(spanningColors).concat(positiveColors);
+        }
+        else {
+          colors = range(0, this._buckets, 1)
+            .map(i => colorLighter(this._colorMax, i / this._buckets))
+            .reverse();
+        }
+      }
+
+      if (data.length <= buckets) {
+        colors = colors.slice(buckets - data.length);
+      }
+
       this._colorScale = scaleThreshold()
         .domain(ticks)
         .range(["black"].concat(colors).concat(colors[colors.length - 1]));
@@ -135,10 +165,38 @@ export default class ColorScale extends BaseClass {
     }
     else {
 
-      const step = (domain[1] - domain[0]) / (colors.length - 1);
-      const buckets = range(domain[0], domain[1] + step / 2, step);
+      let buckets;
+      if (diverging && !colors) {
+        const half = Math.floor(this._buckets / 2);
+        const negativeColors = range(0, half, 1).map(i => !i ? this._colorMin : colorLighter(this._colorMin, i / half));
+        const spanningColors = (this._buckets % 2 ? [0] : []).map(() => this._colorMid);
+        const positiveColors = range(0, half, 1).map(i => !i ? this._colorMax : colorLighter(this._colorMax, i / half)).reverse();
+        colors = negativeColors.concat(spanningColors).concat(positiveColors);
+        const step = (colors.length - 1) / 2;
+        buckets = [domain[0], this._midpoint, domain[1]];
+        buckets = range(domain[0], this._midpoint, -(domain[0] - this._midpoint) / step)
+          .concat(range(this._midpoint, domain[1], (domain[1] - this._midpoint) / step))
+          .concat([domain[1]]);
+      }
+      else {
+        if (!colors) {
+          if (this._scale === "buckets") {
+            colors = range(0, this._buckets, 1)
+              .map(i => colorLighter(negative ? this._colorMin : this._colorMax, i / this._buckets));
+            if (positive) colors = colors.reverse();
+          }
+          else {
+            colors = negative ? [this._colorMin, colorLighter(this._colorMin, 0.8)]
+              : [colorLighter(this._colorMax, 0.8), this._colorMax];
+          }
+        }
+        const step = (domain[1] - domain[0]) / (colors.length - 1);
+        buckets = range(domain[0], domain[1] + step / 2, step);
+      }
 
-      if (this._scale === "buckets") ticks = buckets;
+      if (this._scale === "buckets") {
+        ticks = buckets.concat([buckets[buckets.length - 1]]);
+      }
 
       this._colorScale = scaleLinear()
         .domain(buckets)
@@ -199,8 +257,14 @@ export default class ColorScale extends BaseClass {
         .attr(`${y}2`, "0%");
       const stops = defs.select("linearGradient").selectAll("stop")
         .data(colors);
+
+      const scaleDomain = this._colorScale.domain();
+      const offsetScale = scaleLinear()
+        .domain([scaleDomain[0], scaleDomain[scaleDomain.length - 1]])
+        .range([0, 100]);
+
       stops.enter().append("stop").merge(stops)
-        .attr("offset", (d, i) => `${i / (colors.length - 1) * 100}%`)
+        .attr("offset", (d, i) => `${offsetScale(scaleDomain[i])}%`)
         .attr("stop-color", String);
 
       /** determines the width of buckets */
@@ -295,6 +359,16 @@ export default class ColorScale extends BaseClass {
 
   /**
       @memberof ColorScale
+      @desc The number of discrete buckets to create in a bucketed color scale. Will be overridden by any custom Array of colors passed to the `color` method.
+      @param {Number} [*value* = 5]
+      @chainable
+  */
+  buckets(_) {
+    return arguments.length ? (this._buckets = _, this) : this._buckets;
+  }
+
+  /**
+      @memberof ColorScale
       @desc Determines whether or not to use an Axis to display bucket scales (both "buckets" and "jenks"). When set to `false`, bucketed scales will use the `Legend` class to display squares for each range of data. When set to `true`, bucketed scales will be displayed on an `Axis`, similar to "linear" scales.
       @param {Boolean} [*value* = false]
       @chainable
@@ -305,12 +379,42 @@ export default class ColorScale extends BaseClass {
 
   /**
       @memberof ColorScale
-      @desc Defines the color or colors to be used for the scale. If only a single color is given as a String, then the scale is interpolated by lightening that color. Otherwise, the function expects an Array of color values to be used in order for the scale.
-      @param {String|Array} [*value* = "#0C8040"]
+      @desc Overrides the default internal logic of `colorMin`, `colorMid`, and `colorMax` to only use just this specified color. If a single color is given as a String, then the scale is interpolated by lightening that color. Otherwise, the function expects an Array of color values to be used in order for the scale.
+      @param {String|Array} [*value*]
       @chainable
   */
   color(_) {
     return arguments.length ? (this._color = _, this) : this._color;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc Defines the color to be used for numbers greater than the value of the `midpoint` on the scale (defaults to `0`). Colors in between this value and the value of `colorMid` will be interpolated, unless a custom Array of colors has been specified using the `color` method.
+      @param {String} [*value* = "#0C8040"]
+      @chainable
+  */
+  colorMax(_) {
+    return arguments.length ? (this._colorMax = _, this) : this._colorMax;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc Defines the color to be used for the midpoint of a diverging scale, based on the current value of the `midpoint` method (defaults to `0`). Colors in between this value and the values of `colorMin` and `colorMax` will be interpolated, unless a custom Array of colors has been specified using the `color` method.
+      @param {String} [*value* = "#f7f7f7"]
+      @chainable
+  */
+  colorMid(_) {
+    return arguments.length ? (this._colorMid = _, this) : this._colorMid;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc Defines the color to be used for numbers less than the value of the `midpoint` on the scale (defaults to `0`). Colors in between this value and the value of `colorMid` will be interpolated, unless a custom Array of colors has been specified using the `color` method.
+      @param {String} [*value* = "#b22200"]
+      @chainable
+  */
+  colorMin(_) {
+    return arguments.length ? (this._colorMin = _, this) : this._colorMin;
   }
 
   /**
@@ -351,6 +455,16 @@ export default class ColorScale extends BaseClass {
   */
   legendConfig(_) {
     return arguments.length ? (this._legendConfig = assign(this._legendConfig, _), this) : this._legendConfig;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc The number value to be used as the anchor for `colorMid`, and defines the center point of the diverging color scale.
+      @param {Number} [*value* = 0]
+      @chainable
+  */
+  midpoint(_) {
+    return arguments.length ? (this._midpoint = _, this) : this._midpoint;
   }
 
   /**
