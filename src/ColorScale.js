@@ -198,6 +198,26 @@ export default class ColorScale extends BaseClass {
         ticks = buckets.concat([buckets[buckets.length - 1]]);
       }
 
+      if (this._scale === "log") {
+        const negativeBuckets = buckets.filter(d => d < 0);
+        if (negativeBuckets.length) {
+          const minVal = negativeBuckets[0];
+          const newNegativeBuckets = negativeBuckets.map(d => -Math.pow(Math.abs(minVal), d / minVal));
+          negativeBuckets.forEach((bucket, i) => {
+            buckets[buckets.indexOf(bucket)] = newNegativeBuckets[i];
+          });
+        }
+        const positiveBuckets = buckets.filter(d => d > 0);
+        if (positiveBuckets.length) {
+          const maxVal = positiveBuckets[positiveBuckets.length - 1];
+          const newPositiveBuckets = positiveBuckets.map(d => Math.pow(maxVal, d / maxVal));
+          positiveBuckets.forEach((bucket, i) => {
+            buckets[buckets.indexOf(bucket)] = newPositiveBuckets[i];
+          });
+        }
+        if (buckets.includes(0)) buckets[buckets.indexOf(0)] = 1;
+      }
+
       this._colorScale = scaleLinear()
         .domain(buckets)
         .range(colors);
@@ -213,6 +233,7 @@ export default class ColorScale extends BaseClass {
         labels: labels || ticks,
         orient: this._orient,
         padding: this._padding,
+        scale: this._scale === "log" ? "log" : "linear",
         ticks,
         width: this._width
       }, this._axisConfig);
@@ -260,11 +281,11 @@ export default class ColorScale extends BaseClass {
 
       const scaleDomain = this._colorScale.domain();
       const offsetScale = scaleLinear()
-        .domain([scaleDomain[0], scaleDomain[scaleDomain.length - 1]])
+        .domain(scaleRange)
         .range([0, 100]);
 
       stops.enter().append("stop").merge(stops)
-        .attr("offset", (d, i) => `${offsetScale(scaleDomain[i])}%`)
+        .attr("offset", (d, i) => `${offsetScale(axisScale(scaleDomain[i]))}%`)
         .attr("stop-color", String);
 
       /** determines the width of buckets */
