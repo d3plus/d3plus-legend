@@ -13,6 +13,7 @@ import {select} from "d3-selection";
 import {Axis} from "d3plus-axis";
 import {colorLighter} from "d3plus-color";
 import {accessor, assign, BaseClass, constant, elem} from "d3plus-common";
+import {formatAbbreviate} from "d3plus-format";
 import {Rect} from "d3plus-shape";
 
 /**
@@ -312,7 +313,7 @@ export default class ColorScale extends BaseClass {
     else {
 
       const format = this._axisConfig.tickFormat
-        ? this._axisConfig.tickFormat : d => d;
+        ? this._axisConfig.tickFormat : formatAbbreviate;
 
       const data = ticks.reduce((arr, tick, i) => {
         if (i !== ticks.length - 1) {
