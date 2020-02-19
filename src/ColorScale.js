@@ -331,12 +331,12 @@ export default class ColorScale extends BaseClass {
         .attr(`${y}1`, "0%")
         .attr(`${y}2`, "0%");
       const stops = defs.select("linearGradient").selectAll("stop")
-        .data(colors);
+        .data(horizontal ? colors : colors);
 
       const scaleDomain = this._colorScale.domain();
       const offsetScale = scaleLinear()
         .domain(scaleRange)
-        .range([0, 100]);
+        .range(horizontal ? [0, 100] : [100, 0]);
 
       stops.enter().append("stop").merge(stops)
         .attr("offset", (d, i) => `${offsetScale(axisScale(scaleDomain[i]))}%`)
