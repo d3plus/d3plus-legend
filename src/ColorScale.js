@@ -15,6 +15,7 @@ import {colorLighter} from "d3plus-color";
 import {accessor, assign, BaseClass, constant, elem} from "d3plus-common";
 import {formatAbbreviate} from "d3plus-format";
 import {Rect} from "d3plus-shape";
+import {TextBox, textWidth} from "d3plus-text";
 
 /**
     @class ColorScale
@@ -54,6 +55,7 @@ export default class ColorScale extends BaseClass {
     this._data = [];
     this._duration = 600;
     this._height = 200;
+    this._labelClass = new TextBox();
     this._legendClass = new Legend();
     this._legendConfig = {
       shapeConfig: {
@@ -227,6 +229,8 @@ export default class ColorScale extends BaseClass {
 
     if (this._bucketAxis || !["buckets", "jenks"].includes(this._scale)) {
 
+      const offsets = {x: 0, y: 0};
+
       const axisConfig = assign({
         domain: horizontal ? domain : domain.reverse(),
         duration: this._duration,
@@ -238,6 +242,54 @@ export default class ColorScale extends BaseClass {
         ticks,
         width: this._width
       }, this._axisConfig);
+
+      const labelConfig = assign({
+        height: this[`_${height}`] / 2,
+        width: this[`_${width}`] / 2
+      }, this._labelConfig || this._axisConfig.titleConfig);
+
+      this._labelClass.config(labelConfig);
+
+      const labelData = [];
+
+      if (horizontal && this._labelMin) {
+
+        const labelCSS = {
+          "font-family": this._labelClass.fontFamily()(this._labelMin),
+          "font-size": this._labelClass.fontSize()(this._labelMin),
+          "font-weight": this._labelClass.fontWeight()(this._labelMin)
+        };
+
+        if (labelCSS["font-family"] instanceof Array) labelCSS["font-family"] = labelCSS["font-family"][0];
+        let labelMinWidth = textWidth(this._labelMin, labelCSS);
+
+        if (labelMinWidth && labelMinWidth < this[`_${width}`] / 2) {
+          labelData.push(this._labelMin);
+          labelMinWidth += this._padding;
+          if (horizontal) offsets.x += labelMinWidth;
+          axisConfig[width] -= labelMinWidth;
+        }
+
+      }
+      if (horizontal && this._labelMax) {
+
+        const labelCSS = {
+          "font-family": this._labelClass.fontFamily()(this._labelMax),
+          "font-size": this._labelClass.fontSize()(this._labelMax),
+          "font-weight": this._labelClass.fontWeight()(this._labelMax)
+        };
+
+        if (labelCSS["font-family"] instanceof Array) labelCSS["font-family"] = labelCSS["font-family"][0];
+        let labelMaxWidth = textWidth(this._labelMax, labelCSS);
+
+        if (labelMaxWidth && labelMaxWidth < this[`_${width}`] / 2) {
+          labelData.push(this._labelMax);
+          labelMaxWidth += this._padding;
+          if (!horizontal) offsets.y += labelMaxWidth;
+          axisConfig[width] -= labelMaxWidth;
+        }
+
+      }
 
       this._axisTest
         .select(elem("g.d3plus-ColorScale-axisTest", {enter: {opacity: 0}, parent: this._group}).node())
@@ -255,11 +307,12 @@ export default class ColorScale extends BaseClass {
       if (this._align === "middle") this._outerBounds[y] = (this[`_${height}`] - this._outerBounds[height]) / 2;
       else if (this._align === "end") this._outerBounds[y] = this[`_${height}`] - this._padding - this._outerBounds[height];
 
-      const groupOffset = this._outerBounds[y] + (["bottom", "right"].includes(this._orient) ? this._size : 0) - (axisConfig.padding || this._axisClass.padding());
+      const axisGroupOffset = this._outerBounds[y] + (["bottom", "right"].includes(this._orient) ? this._size : 0) - (axisConfig.padding || this._axisClass.padding());
+
       this._axisClass
         .select(elem("g.d3plus-ColorScale-axis", {
           parent: this._group,
-          update: {transform: `translate(${horizontal ? 0 : groupOffset}, ${horizontal ? groupOffset : 0})`}
+          update: {transform: `translate(${offsets.x + (horizontal ? 0 : axisGroupOffset)}, ${offsets.y + (horizontal ? axisGroupOffset : 0)})`}
         }).node())
         .config(axisConfig)
         .align("start")
@@ -295,19 +348,34 @@ export default class ColorScale extends BaseClass {
         return w || 2;
       };
 
+      const rectConfig = assign({
+        duration: this._duration,
+        fill: ticks ? d => this._colorScale(d) : `url(#gradient-${this._uuid})`,
+        [x]: ticks ? (d, i) => axisScale(d) + bucketWidth(d, i) / 2 - (["left", "right"].includes(this._orient) ? bucketWidth(d, i) : 0) : scaleRange[0] + (scaleRange[1] - scaleRange[0]) / 2 + offsets[x],
+        [y]: this._outerBounds[y] + (["top", "left"].includes(this._orient) ? axisBounds[height] : 0) + this._size / 2 + offsets[y],
+        [width]: ticks ? bucketWidth : scaleRange[1] - scaleRange[0],
+        [height]: this._size
+      }, this._rectConfig);
+
       this._rectClass
         .data(ticks ? ticks.slice(0, ticks.length - 1) : [0])
         .id((d, i) => i)
         .select(elem("g.d3plus-ColorScale-Rect", {parent: this._group}).node())
-        .config({
-          duration: this._duration,
-          fill: ticks ? d => this._colorScale(d) : `url(#gradient-${this._uuid})`,
-          [x]: ticks ? (d, i) => axisScale(d) + bucketWidth(d, i) / 2 - (["left", "right"].includes(this._orient) ? bucketWidth(d, i) : 0) : scaleRange[0] + (scaleRange[1] - scaleRange[0]) / 2,
-          [y]: this._outerBounds[y] + (["top", "left"].includes(this._orient) ? axisBounds[height] : 0) + this._size / 2,
-          [width]: ticks ? bucketWidth : scaleRange[1] - scaleRange[0],
-          [height]: this._size
-        })
-        .config(this._rectConfig)
+        .config(rectConfig)
+        .render();
+
+      labelConfig.height = this._outerBounds[height];
+      labelConfig.width = this._outerBounds[width];
+      this._labelClass
+        .config(labelConfig)
+        .data(labelData)
+        .select(elem("g.d3plus-ColorScale-labels", {parent: this._group}).node())
+        .x(d => d === this._labelMax
+          ? rectConfig.x + rectConfig.width / 2 + this._padding
+          : this._outerBounds.x)
+        .y(d => rectConfig.y - this._labelClass.fontSize()(d) / 2)
+        .text(d => d)
+        .rotate(horizontal ? 0 : this._orient === "right" ? 90 : -90)
         .render();
     }
     else {
@@ -467,6 +535,36 @@ export default class ColorScale extends BaseClass {
   */
   height(_) {
     return arguments.length ? (this._height = _, this) : this._height;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc A pass-through for the [TextBox](http://d3plus.org/docs/#TextBox) class used to style the labelMin and labelMax text.
+      @param {Object} [*value*]
+      @chainable
+  */
+  labelConfig(_) {
+    return arguments.length ? (this._labelConfig = _, this) : this._labelConfig;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc Defines a text label to be displayed off of the end of the minimum point in the scale (currently only available in horizontal orientation).
+      @param {String} [*value*]
+      @chainable
+  */
+  labelMin(_) {
+    return arguments.length ? (this._labelMin = _, this) : this._labelMin;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc Defines a text label to be displayed off of the end of the maximum point in the scale (currently only available in horizontal orientation).
+      @param {String} [*value*]
+      @chainable
+  */
+  labelMax(_) {
+    return arguments.length ? (this._labelMax = _, this) : this._labelMax;
   }
 
   /**
