@@ -9,6 +9,7 @@ import Legend from "./Legend";
 import {extent, merge, min, range} from "d3-array";
 import {scaleLinear, scaleThreshold} from "d3-scale";
 import {select} from "d3-selection";
+import {transition} from "d3-transition";
 
 import {Axis} from "d3plus-axis";
 import {colorLighter} from "d3plus-color";
@@ -227,7 +228,14 @@ export default class ColorScale extends BaseClass {
 
     }
 
-    if (this._bucketAxis || !["buckets", "jenks"].includes(this._scale)) {
+    const gradient = this._bucketAxis || !["buckets", "jenks"].includes(this._scale);
+    const t = transition().duration(this._duration);
+    const groupParams = {enter: {opacity: 0}, exit: {opacity: 0}, parent: this._group, transition: t, update: {opacity: 1}};
+    const labelGroup = elem("g.d3plus-ColorScale-labels", Object.assign({condition: gradient}, groupParams));
+    const rectGroup = elem("g.d3plus-ColorScale-Rect", Object.assign({condition: gradient}, groupParams));
+    const legendGroup = elem("g.d3plus-ColorScale-legend", Object.assign({condition: !gradient}, groupParams));
+
+    if (gradient) {
 
       const offsets = {x: 0, y: 0};
 
@@ -249,7 +257,6 @@ export default class ColorScale extends BaseClass {
       }, this._labelConfig || this._axisConfig.titleConfig);
 
       this._labelClass.config(labelConfig);
-
       const labelData = [];
 
       if (horizontal && this._labelMin) {
@@ -308,12 +315,13 @@ export default class ColorScale extends BaseClass {
       else if (this._align === "end") this._outerBounds[y] = this[`_${height}`] - this._padding - this._outerBounds[height];
 
       const axisGroupOffset = this._outerBounds[y] + (["bottom", "right"].includes(this._orient) ? this._size : 0) - (axisConfig.padding || this._axisClass.padding());
-
+      const transform = `translate(${offsets.x + (horizontal ? 0 : axisGroupOffset)}, ${offsets.y + (horizontal ? axisGroupOffset : 0)})`;
       this._axisClass
-        .select(elem("g.d3plus-ColorScale-axis", {
-          parent: this._group,
-          update: {transform: `translate(${offsets.x + (horizontal ? 0 : axisGroupOffset)}, ${offsets.y + (horizontal ? axisGroupOffset : 0)})`}
-        }).node())
+        .select(elem("g.d3plus-ColorScale-axis", assign(groupParams, {
+          condition: true,
+          enter: {transform},
+          update: {transform}
+        })).node())
         .config(axisConfig)
         .align("start")
         .render();
@@ -360,7 +368,7 @@ export default class ColorScale extends BaseClass {
       this._rectClass
         .data(ticks ? ticks.slice(0, ticks.length - 1) : [0])
         .id((d, i) => i)
-        .select(elem("g.d3plus-ColorScale-Rect", {parent: this._group}).node())
+        .select(rectGroup.node())
         .config(rectConfig)
         .render();
 
@@ -369,7 +377,7 @@ export default class ColorScale extends BaseClass {
       this._labelClass
         .config(labelConfig)
         .data(labelData)
-        .select(elem("g.d3plus-ColorScale-labels", {parent: this._group}).node())
+        .select(labelGroup.node())
         .x(d => d === this._labelMax
           ? rectConfig.x + rectConfig.width / 2 + this._padding
           : this._outerBounds.x)
@@ -377,13 +385,16 @@ export default class ColorScale extends BaseClass {
         .text(d => d)
         .rotate(horizontal ? 0 : this._orient === "right" ? 90 : -90)
         .render();
+
     }
     else {
+
+      elem("g.d3plus-ColorScale-axis", Object.assign({condition: gradient}, groupParams));
 
       const format = this._axisConfig.tickFormat
         ? this._axisConfig.tickFormat : formatAbbreviate;
 
-      const data = ticks.reduce((arr, tick, i) => {
+      const legendData = ticks.reduce((arr, tick, i) => {
         if (i !== ticks.length - 1) {
           const next = ticks[i + 1];
           arr.push({
@@ -410,10 +421,8 @@ export default class ColorScale extends BaseClass {
       }, this._legendConfig);
 
       this._legendClass
-        .data(data)
-        .select(elem("g.d3plus-ColorScale-legend", {
-          parent: this._group
-        }).node())
+        .data(legendData)
+        .select(legendGroup.node())
         .config(legendConfig)
         .render();
 
