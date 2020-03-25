@@ -6,7 +6,7 @@
 import ckmeans from "./ckmeans";
 import Legend from "./Legend";
 
-import {extent, merge, min, range} from "d3-array";
+import {extent, merge, min, quantile, range} from "d3-array";
 import {scaleLinear, scaleThreshold} from "d3-scale";
 import {select} from "d3-selection";
 import {transition} from "d3-transition";
@@ -103,7 +103,8 @@ export default class ColorScale extends BaseClass {
     // Shape <g> Group
     this._group = elem("g.d3plus-ColorScale", {parent: this._select});
 
-    const domain = extent(this._data, this._value);
+    const allValues = this._data.map(this._value).sort((a, b) => a - b);
+    const domain = extent(allValues);
     const negative = domain[0] < this._midpoint;
     const positive = domain[1] > this._midpoint;
     const diverging = negative && positive;
@@ -184,7 +185,7 @@ export default class ColorScale extends BaseClass {
       }
       else {
         if (!colors) {
-          if (this._scale === "buckets") {
+          if (this._scale === "buckets" || this._scale === "quantile") {
             colors = range(0, this._buckets, 1)
               .map(i => colorLighter(negative ? this._colorMin : this._colorMax, i / this._buckets));
             if (positive) colors = colors.reverse();
@@ -194,15 +195,21 @@ export default class ColorScale extends BaseClass {
               : [colorLighter(this._colorMax, 0.8), this._colorMax];
           }
         }
-        const step = (domain[1] - domain[0]) / (colors.length - 1);
-        buckets = range(domain[0], domain[1] + step / 2, step);
+        if (this._scale === "quantile") {
+          const step = 1 / (colors.length - 1);
+          buckets = range(0, 1 + step / 2, step)
+            .map(d => quantile(allValues, d));
+        }
+        else {
+          const step = (domain[1] - domain[0]) / (colors.length - 1);
+          buckets = range(domain[0], domain[1] + step / 2, step);
+        }
       }
 
-      if (this._scale === "buckets") {
+      if (this._scale === "buckets" || this._scale === "quantile") {
         ticks = buckets.concat([buckets[buckets.length - 1]]);
       }
-
-      if (this._scale === "log") {
+      else if (this._scale === "log") {
         const negativeBuckets = buckets.filter(d => d < 0);
         if (negativeBuckets.length) {
           const minVal = negativeBuckets[0];
@@ -228,7 +235,7 @@ export default class ColorScale extends BaseClass {
 
     }
 
-    const gradient = this._bucketAxis || !["buckets", "jenks"].includes(this._scale);
+    const gradient = this._bucketAxis || !["buckets", "jenks", "quantile"].includes(this._scale);
     const t = transition().duration(this._duration);
     const groupParams = {enter: {opacity: 0}, exit: {opacity: 0}, parent: this._group, transition: t, update: {opacity: 1}};
     const labelGroup = elem("g.d3plus-ColorScale-labels", Object.assign({condition: gradient}, groupParams));
