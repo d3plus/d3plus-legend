@@ -39,7 +39,6 @@ export default class Legend extends BaseClass {
     this._shape = constant("Rect");
     this._shapes = [];
     this._shapeConfig = {
-      duration: this._duration,
       fill: accessor("color"),
       height: constant(10),
       hitArea: (dd, i) => {
