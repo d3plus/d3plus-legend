@@ -91,7 +91,7 @@ export default class Legend extends BaseClass {
   }
 
   _fetchConfig(key, d, i) {
-    const val = this._shapeConfig[key] || this._shapeConfig.labelConfig[key];
+    const val = this._shapeConfig[key] !== undefined ? this._shapeConfig[key] : this._shapeConfig.labelConfig[key];
     if (!val && key === "lineHeight") return this._fetchConfig("fontSize", d, i) * 1.4;
     return typeof val === "function" ? val(d, i) : val;
   }
@@ -117,8 +117,10 @@ export default class Legend extends BaseClass {
 
     if (this._select === void 0) this.select(select("body").append("svg").attr("width", `${this._width}px`).attr("height", `${this._height}px`).node());
 
-    // Shape <g> Group
+    // Legend Container <g> Groups
     this._group = elem("g.d3plus-Legend", {parent: this._select});
+    this._titleGroup = elem("g.d3plus-Legend-title", {parent: this._group});
+    this._shapeGroup = elem("g.d3plus-Legend-shape", {parent: this._group});
 
     let availableHeight = this._height;
     this._titleHeight = 0;
@@ -309,7 +311,7 @@ export default class Legend extends BaseClass {
     this._titleClass
       .data(this._title ? [{text: this._title}] : [])
       .duration(this._duration)
-      .select(this._group.node())
+      .select(this._titleGroup.node())
       .textAnchor({left: "start", center: "middle", right: "end"}[this._align])
       .width(this._width - this._padding * 2)
       .x(this._padding)
@@ -344,14 +346,16 @@ export default class Legend extends BaseClass {
     this._shapes = [];
     ["Circle", "Rect"].forEach(Shape => {
 
-      this._shapes.push(new shapes[Shape]()
-        .data(data.filter(d => d.shape === Shape))
-        .duration(this._duration)
-        .labelConfig({padding: 0})
-        .select(this._group.node())
-        .verticalAlign("top")
-        .config(assign({}, baseConfig, config))
-        .render());
+      this._shapes.push(
+        new shapes[Shape]()
+          .data(data.filter(d => d.shape === Shape))
+          .duration(this._duration)
+          .labelConfig({padding: 0})
+          .select(this._shapeGroup.node())
+          .verticalAlign("top")
+          .config(assign({}, baseConfig, config))
+          .render()
+      );
 
     });
 
