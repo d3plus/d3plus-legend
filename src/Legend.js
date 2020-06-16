@@ -31,6 +31,7 @@ export default class Legend extends BaseClass {
     this._direction = "row";
     this._duration = 600;
     this._height = 200;
+    this._groupBy = accessor("id");
     this._id = accessor("id");
     this._label = accessor("id");
     this._lineData = [];
@@ -434,6 +435,16 @@ export default class Legend extends BaseClass {
   hover(_) {
     this._shapes.forEach(s => s.hover(_));
     return this;
+  }
+
+  /**
+      @memberof Legend
+      @desc If *value* is specified, sets the groupBy accessor to the specified function and returns the current class instance. If *value* is not specified, returns the current groupBy accessor, which is the [id](#shape.id) accessor by default.
+      @param {Function} [*value*]
+      @chainable
+  */
+  _groupBy(_) {
+    return arguments.length ? (this._groupBy = _, this) : this._groupBy;
   }
 
   /**
