@@ -72,7 +72,7 @@ export default class ColorScale extends BaseClass {
     this._orient = "bottom";
     this._outerBounds = {width: 0, height: 0, x: 0, y: 0};
     this._padding = 5;
-    this._rectClass = new Rect();
+    this._rectClass = new Rect().parent(this);
     this._rectConfig = {
       stroke: "#444",
       strokeWidth: 1
@@ -129,7 +129,7 @@ export default class ColorScale extends BaseClass {
       let jenks = [];
 
       if (diverging && this._centered) {
-        
+
         const half = Math.floor(buckets / 2);
         const residual = buckets % 2;
 
@@ -141,12 +141,12 @@ export default class ColorScale extends BaseClass {
 
         const isNegativeMax = negativesDeviation > positivesDeviation ? 1 : 0;
         const isPositiveMax = positivesDeviation > negativesDeviation ? 1 : 0;
-        
+
         const negativeJenks = ckmeans(negatives, half + residual * isNegativeMax);
         const positiveJenks = ckmeans(positives, half + residual * isPositiveMax);
-        
+
         jenks = negativeJenks.concat(positiveJenks);
-      } 
+      }
       else {
         jenks = ckmeans(data, buckets);
       }
@@ -231,7 +231,7 @@ export default class ColorScale extends BaseClass {
           const positiveBuckets = range(this._midpoint, domain[1] + positiveStep / 2, positiveStep);
 
           buckets = negativeBuckets.concat(positiveBuckets);
-        } 
+        }
         else {
           const step = (domain[1] - domain[0]) / (colors.length - 1);
           buckets = range(domain[0], domain[1] + step / 2, step);

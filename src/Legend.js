@@ -347,6 +347,7 @@ export default class Legend extends BaseClass {
 
       this._shapes.push(
         new shapes[Shape]()
+          .parent(this)
           .data(data.filter(d => d.shape === Shape))
           .duration(this._duration)
           .labelConfig({padding: 0})
