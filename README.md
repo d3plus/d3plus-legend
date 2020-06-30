@@ -348,7 +348,7 @@ Renders the current Legend to the page. If a *callback* is specified, it will be
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.active" href="#Legend.active">#</a> Legend.**active**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L373)
+<a name="Legend.active" href="#Legend.active">#</a> Legend.**active**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L374)
 
 If *value* is specified, sets the active method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current active method.
 
@@ -356,7 +356,7 @@ If *value* is specified, sets the active method for all shapes to the specified 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.align" href="#Legend.align">#</a> Legend.**align**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L384)
+<a name="Legend.align" href="#Legend.align">#</a> Legend.**align**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L385)
 
 If *value* is specified, sets the horizontal alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current horizontal alignment.
 
@@ -364,7 +364,7 @@ If *value* is specified, sets the horizontal alignment to the specified value an
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.data" href="#Legend.data">#</a> Legend.**data**([*data*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L394)
+<a name="Legend.data" href="#Legend.data">#</a> Legend.**data**([*data*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L395)
 
 If *data* is specified, sets the data array to the specified array and returns the current class instance. If *data* is not specified, returns the current data array. A shape key will be drawn for each object in the array.
 
@@ -372,7 +372,7 @@ If *data* is specified, sets the data array to the specified array and returns t
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.direction" href="#Legend.direction">#</a> Legend.**direction**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L404)
+<a name="Legend.direction" href="#Legend.direction">#</a> Legend.**direction**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L405)
 
 Sets the flow of the items inside the legend. If no value is passed, the current flow will be returned.
 
@@ -380,7 +380,7 @@ Sets the flow of the items inside the legend. If no value is passed, the current
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.duration" href="#Legend.duration">#</a> Legend.**duration**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L414)
+<a name="Legend.duration" href="#Legend.duration">#</a> Legend.**duration**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L415)
 
 If *value* is specified, sets the transition duration of the legend and returns the current class instance. If *value* is not specified, returns the current duration.
 
@@ -388,7 +388,7 @@ If *value* is specified, sets the transition duration of the legend and returns 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.height" href="#Legend.height">#</a> Legend.**height**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L424)
+<a name="Legend.height" href="#Legend.height">#</a> Legend.**height**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L425)
 
 If *value* is specified, sets the overall height of the legend and returns the current class instance. If *value* is not specified, returns the current height value.
 
@@ -396,7 +396,7 @@ If *value* is specified, sets the overall height of the legend and returns the c
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.hover" href="#Legend.hover">#</a> Legend.**hover**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L434)
+<a name="Legend.hover" href="#Legend.hover">#</a> Legend.**hover**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L435)
 
 If *value* is specified, sets the hover method for all shapes to the specified function and returns the current class instance. If *value* is not specified, returns the current hover method.
 
@@ -404,7 +404,7 @@ If *value* is specified, sets the hover method for all shapes to the specified f
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.id" href="#Legend.id">#</a> Legend.**id**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L449)
+<a name="Legend.id" href="#Legend.id">#</a> Legend.**id**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L450)
 
 If *value* is specified, sets the id accessor to the specified function and returns the current class instance. If *value* is not specified, returns the current id accessor.
 
@@ -419,7 +419,7 @@ function value(d) {
 ```
 
 
-<a name="Legend.label" href="#Legend.label">#</a> Legend.**label**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L459)
+<a name="Legend.label" href="#Legend.label">#</a> Legend.**label**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L460)
 
 If *value* is specified, sets the label accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current label accessor, which is the [id](#shape.id) accessor by default.
 
@@ -427,7 +427,7 @@ If *value* is specified, sets the label accessor to the specified function or st
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.outerBounds" href="#Legend.outerBounds">#</a> Legend.**outerBounds**() [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L469)
+<a name="Legend.outerBounds" href="#Legend.outerBounds">#</a> Legend.**outerBounds**() [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L470)
 
 If called after the elements have been drawn to DOM, will returns the outer bounds of the legend content.
 
@@ -440,7 +440,7 @@ This is a static method of [<code>Legend</code>](#Legend).
 ```
 
 
-<a name="Legend.padding" href="#Legend.padding">#</a> Legend.**padding**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L479)
+<a name="Legend.padding" href="#Legend.padding">#</a> Legend.**padding**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L480)
 
 If *value* is specified, sets the padding between each key to the specified number and returns the current class instance. If *value* is not specified, returns the current padding value.
 
@@ -448,7 +448,7 @@ If *value* is specified, sets the padding between each key to the specified numb
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.select" href="#Legend.select">#</a> Legend.**select**([*selector*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L489)
+<a name="Legend.select" href="#Legend.select">#</a> Legend.**select**([*selector*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L490)
 
 If *selector* is specified, sets the SVG container element to the specified d3 selector or DOM element and returns the current class instance. If *selector* is not specified, returns the current SVG container element.
 
@@ -456,7 +456,7 @@ If *selector* is specified, sets the SVG container element to the specified d3 s
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.shape" href="#Legend.shape">#</a> Legend.**shape**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L499)
+<a name="Legend.shape" href="#Legend.shape">#</a> Legend.**shape**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L500)
 
 If *value* is specified, sets the shape accessor to the specified function or string and returns the current class instance. If *value* is not specified, returns the current shape accessor.
 
@@ -464,7 +464,7 @@ If *value* is specified, sets the shape accessor to the specified function or st
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.shapeConfig" href="#Legend.shapeConfig">#</a> Legend.**shapeConfig**([*config*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L509)
+<a name="Legend.shapeConfig" href="#Legend.shapeConfig">#</a> Legend.**shapeConfig**([*config*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L510)
 
 If *config* is specified, sets the methods that correspond to the key/value pairs for each shape and returns the current class instance. If *config* is not specified, returns the current shape configuration.
 
@@ -472,7 +472,7 @@ If *config* is specified, sets the methods that correspond to the key/value pair
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.title" href="#Legend.title">#</a> Legend.**title**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L519)
+<a name="Legend.title" href="#Legend.title">#</a> Legend.**title**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L520)
 
 If *value* is specified, sets the title of the legend and returns the current class instance. If *value* is not specified, returns the current title.
 
@@ -480,7 +480,7 @@ If *value* is specified, sets the title of the legend and returns the current cl
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.titleConfig" href="#Legend.titleConfig">#</a> Legend.**titleConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L529)
+<a name="Legend.titleConfig" href="#Legend.titleConfig">#</a> Legend.**titleConfig**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L530)
 
 If *value* is specified, sets the title configuration of the legend and returns the current class instance. If *value* is not specified, returns the current title configuration.
 
@@ -488,7 +488,7 @@ If *value* is specified, sets the title configuration of the legend and returns 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.verticalAlign" href="#Legend.verticalAlign">#</a> Legend.**verticalAlign**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L539)
+<a name="Legend.verticalAlign" href="#Legend.verticalAlign">#</a> Legend.**verticalAlign**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L540)
 
 If *value* is specified, sets the vertical alignment to the specified value and returns the current class instance. If *value* is not specified, returns the current vertical alignment.
 
@@ -496,7 +496,7 @@ If *value* is specified, sets the vertical alignment to the specified value and 
 This is a static method of [<code>Legend</code>](#Legend), and is chainable with other methods of this Class.
 
 
-<a name="Legend.width" href="#Legend.width">#</a> Legend.**width**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L549)
+<a name="Legend.width" href="#Legend.width">#</a> Legend.**width**([*value*]) [<>](https://github.com/d3plus/d3plus-legend/blob/master/src/Legend.js#L550)
 
 If *value* is specified, sets the overall width of the legend and returns the current class instance. If *value* is not specified, returns the current width value.
 
@@ -507,4 +507,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Tue, 30 Jun 2020 16:10:15 GMT</sub>
+###### <sub>Documentation generated on Tue, 30 Jun 2020 16:35:23 GMT</sub>
