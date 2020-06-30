@@ -6,7 +6,7 @@
 import ckmeans from "./ckmeans";
 import Legend from "./Legend";
 
-import {extent, merge, min, quantile, range} from "d3-array";
+import {extent, merge, min, quantile, range, deviation} from "d3-array";
 import {scaleLinear, scaleThreshold} from "d3-scale";
 import {select} from "d3-selection";
 import {transition} from "d3-transition";
@@ -50,6 +50,7 @@ export default class ColorScale extends BaseClass {
     this._align = "middle";
     this._buckets = 5;
     this._bucketAxis = false;
+    this._centered = false;
     this._colorMax = "#0C8040";
     this._colorMid = "#f7f7f7";
     this._colorMin = "#b22200";
@@ -125,7 +126,28 @@ export default class ColorScale extends BaseClass {
 
       const buckets = min([colors ? colors.length : this._buckets, data.length]);
 
-      const jenks = ckmeans(data, buckets);
+      var jenks = [];
+
+      if (diverging && this._centered) {
+        var half = Math.floor(buckets / 2);
+        var residual = buckets % 2;
+
+        var negatives = data.filter(d => d < this._midpoint);
+        var negativesDeviation = deviation(negatives);
+
+        var positives = data.concat(this._midpoint).filter(d => d >= this._midpoint);
+        var positivesDeviation = deviation(positives);
+
+        var isNegativeMax = negativesDeviation > positivesDeviation ? 1 : 0;
+        var isPositiveMax = positivesDeviation > negativesDeviation ? 1 : 0;
+        
+        var negativeJenks = ckmeans(negatives, half + residual * isNegativeMax);
+        var positiveJenks = ckmeans(positives, half + residual * isPositiveMax);
+        
+        jenks = negativeJenks.concat(positiveJenks);
+      } else {
+        jenks = ckmeans(data, buckets);
+      }
 
       ticks = merge(jenks.map((c, i) => i === jenks.length - 1 ? [c[0], c[c.length - 1]] : [c[0]]));
 
@@ -201,8 +223,17 @@ export default class ColorScale extends BaseClass {
             .map(d => quantile(allValues, d));
         }
         else {
-          const step = (domain[1] - domain[0]) / (colors.length - 1);
-          buckets = range(domain[0], domain[1] + step / 2, step);
+          if ((this._scale === "linear" || this._scale === "log") && diverging && this._color && this._centered) {
+            const negativeStep = ((this._midpoint - domain[0]) / Math.floor(colors.length / 2));
+            const positiveStep = ((domain[1] - this._midpoint) / Math.floor(colors.length / 2));
+            const negativeBuckets = range(domain[0], this._midpoint, negativeStep);
+            const positiveBuckets = range(this._midpoint, domain[1] + positiveStep / 2, positiveStep);
+
+            buckets = negativeBuckets.concat(positiveBuckets);
+          } else {
+            const step = (domain[1] - domain[0]) / (colors.length - 1);
+            buckets = range(domain[0], domain[1] + step / 2, step);
+          }
         }
       }
 
@@ -481,6 +512,16 @@ export default class ColorScale extends BaseClass {
   */
   bucketAxis(_) {
     return arguments.length ? (this._bucketAxis = _, this) : this._bucketAxis;
+  }
+      /**
+      @memberof ColorScale
+      @desc Determines whether or not to display a midpoint centered Axis. Works on linear, log and jenks scales.
+      @param {Boolean} [*value* = false]
+      @chainable
+      */
+
+  centered(_) {
+    return arguments.length ? (this._centered = _, this) : this._centered;
   }
 
   /**
