@@ -9,7 +9,7 @@ An easy to use javascript chart legend.
 If you use NPM, run `npm install d3plus-legend --save`. Otherwise, download the [latest release](https://github.com/d3plus/d3plus-legend/releases/latest). The released bundle supports AMD, CommonJS, and vanilla environments. You can also load directly from [d3plus.org](https://d3plus.org):
 
 ```html
-<script src="https://d3plus.org/js/d3plus-legend.v0.8.full.min.js"></script>
+<script src="https://d3plus.org/js/d3plus-legend.v0.9.full.min.js"></script>
 ```
 
 ## Examples
@@ -507,4 +507,4 @@ This is a static method of [<code>Legend</code>](#Legend), and is chainable with
 
 
 
-###### <sub>Documentation generated on Tue, 30 Jun 2020 16:35:23 GMT</sub>
+###### <sub>Documentation generated on Tue, 14 Jul 2020 21:05:17 GMT</sub>
