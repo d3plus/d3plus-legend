@@ -435,10 +435,14 @@ export default class ColorScale extends BaseClass {
 
       const legendData = ticks.reduce((arr, tick, i) => {
         if (i !== ticks.length - 1) {
+
           const next = ticks[i + 1];
+          const mod = Math.round(next / 100);
+          const ten = Math.pow(10, mod.toString().length - 1);
+
           arr.push({
             color: colors[i],
-            id: tick === next ? `${format(tick)}+` : `${format(tick)} - ${format(next)}`
+            id: tick === next ? `${format(tick)}+` : `${format(tick)} - ${format(next - ten)}`
           });
         }
         return arr;
