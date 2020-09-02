@@ -65,7 +65,7 @@ export default class ColorScale extends BaseClass {
       else {
         const mod = next ? next / 100 : tick / 100;
 
-        const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : (mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length) * -1;
+        const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length * -1;
         const ten = Math.pow(10, pow);
 
         return prev === tick && i === 1
@@ -323,7 +323,7 @@ export default class ColorScale extends BaseClass {
         const prev = axisDomain[axisDomain.length - 2];
         const mod = last ? last / 10 : prev / 10;
 
-        const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : (mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length) * -1;
+        const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length * -1;
         const ten = Math.pow(10, pow);
         axisDomain[axisDomain.length - 1] = last + ten;
       }
