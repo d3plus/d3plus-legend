@@ -6,7 +6,7 @@
 import ckmeans from "./ckmeans";
 import Legend from "./Legend";
 
-import {extent, merge, min, quantile, range, deviation} from "d3-array";
+import {extent, max, min, quantile, range, deviation} from "d3-array";
 import {scaleLinear, scaleThreshold} from "d3-scale";
 import {select} from "d3-selection";
 import {transition} from "d3-transition";
@@ -110,11 +110,13 @@ export default class ColorScale extends BaseClass {
     const positive = domain[1] > this._midpoint;
     const diverging = negative && positive;
 
+    const numBuckets = this._buckets instanceof Array ? this._buckets.length : this._buckets;
+
     let colors = this._color, labels, ticks;
 
     if (colors && !(colors instanceof Array)) {
-      colors = range(0, this._buckets, 1)
-        .map(i => colorLighter(colors, (i + 1) / this._buckets))
+      colors = range(0, numBuckets, 1)
+        .map(i => colorLighter(colors, (i + 1) / numBuckets))
         .reverse();
     }
 
@@ -124,34 +126,41 @@ export default class ColorScale extends BaseClass {
         .map(this._value)
         .filter(d => d !== null && typeof d === "number");
 
-      const buckets = min([colors ? colors.length : this._buckets, data.length]);
+      const buckets = min([colors ? colors.length : numBuckets, data.length]);
 
       let jenks = [];
 
-      if (diverging && this._centered) {
-
-        const half = Math.floor(buckets / 2);
-        const residual = buckets % 2;
-
-        const negatives = data.filter(d => d < this._midpoint);
-        const negativesDeviation = deviation(negatives);
-
-        const positives = data.concat(this._midpoint).filter(d => d >= this._midpoint);
-        const positivesDeviation = deviation(positives);
-
-        const isNegativeMax = negativesDeviation > positivesDeviation ? 1 : 0;
-        const isPositiveMax = positivesDeviation > negativesDeviation ? 1 : 0;
-
-        const negativeJenks = ckmeans(negatives, half + residual * isNegativeMax);
-        const positiveJenks = ckmeans(positives, half + residual * isPositiveMax);
-
-        jenks = negativeJenks.concat(positiveJenks);
+      if (this._buckets instanceof Array) {
+        ticks = this._buckets;
       }
       else {
-        jenks = ckmeans(data, buckets);
-      }
 
-      ticks = merge(jenks.map((c, i) => i === jenks.length - 1 ? [c[0], c[c.length - 1]] : [c[0]]));
+        if (diverging && this._centered) {
+
+          const half = Math.floor(buckets / 2);
+          const residual = buckets % 2;
+
+          const negatives = data.filter(d => d < this._midpoint);
+          const negativesDeviation = deviation(negatives);
+
+          const positives = data.concat(this._midpoint).filter(d => d >= this._midpoint);
+          const positivesDeviation = deviation(positives);
+
+          const isNegativeMax = negativesDeviation > positivesDeviation ? 1 : 0;
+          const isPositiveMax = positivesDeviation > negativesDeviation ? 1 : 0;
+
+          const negativeJenks = ckmeans(negatives, half + residual * isNegativeMax);
+          const positiveJenks = ckmeans(positives, half + residual * isPositiveMax);
+
+          jenks = negativeJenks.concat(positiveJenks);
+        }
+        else {
+          jenks = ckmeans(data, buckets);
+        }
+
+        ticks = jenks.map(c => c[0]);
+
+      }
 
       const tickSet = new Set(ticks);
 
@@ -177,8 +186,8 @@ export default class ColorScale extends BaseClass {
           colors = negativeColors.concat(spanningColors).concat(positiveColors);
         }
         else {
-          colors = range(0, this._buckets, 1)
-            .map(i => colorLighter(this._colorMax, i / this._buckets))
+          colors = range(0, numBuckets, 1)
+            .map(i => colorLighter(this._colorMax, i / numBuckets))
             .reverse();
         }
       }
@@ -187,31 +196,35 @@ export default class ColorScale extends BaseClass {
         colors = colors.slice(buckets - data.length);
       }
 
+      colors = [colors[0]].concat(colors);
+
       this._colorScale = scaleThreshold()
         .domain(ticks)
-        .range(["black"].concat(colors).concat(colors[colors.length - 1]));
+        .range(colors);
 
     }
     else {
 
-      let buckets;
+      let buckets = this._buckets instanceof Array ? this._buckets : undefined;
       if (diverging && !colors) {
-        const half = Math.floor(this._buckets / 2);
+        const half = Math.floor(numBuckets / 2);
         const negativeColors = range(0, half, 1).map(i => !i ? this._colorMin : colorLighter(this._colorMin, i / half));
-        const spanningColors = (this._buckets % 2 ? [0] : []).map(() => this._colorMid);
+        const spanningColors = (numBuckets % 2 ? [0] : []).map(() => this._colorMid);
         const positiveColors = range(0, half, 1).map(i => !i ? this._colorMax : colorLighter(this._colorMax, i / half)).reverse();
         colors = negativeColors.concat(spanningColors).concat(positiveColors);
-        const step = (colors.length - 1) / 2;
-        buckets = [domain[0], this._midpoint, domain[1]];
-        buckets = range(domain[0], this._midpoint, -(domain[0] - this._midpoint) / step)
-          .concat(range(this._midpoint, domain[1], (domain[1] - this._midpoint) / step))
-          .concat([domain[1]]);
+        if (!buckets) {
+          const step = (colors.length - 1) / 2;
+          buckets = [domain[0], this._midpoint, domain[1]];
+          buckets = range(domain[0], this._midpoint, -(domain[0] - this._midpoint) / step)
+            .concat(range(this._midpoint, domain[1], (domain[1] - this._midpoint) / step))
+            .concat([domain[1]]);
+        }
       }
       else {
         if (!colors) {
           if (this._scale === "buckets" || this._scale === "quantile") {
-            colors = range(0, this._buckets, 1)
-              .map(i => colorLighter(negative ? this._colorMin : this._colorMax, i / this._buckets));
+            colors = range(0, numBuckets, 1)
+              .map(i => colorLighter(negative ? this._colorMin : this._colorMax, i / numBuckets));
             if (positive) colors = colors.reverse();
           }
           else {
@@ -219,27 +232,30 @@ export default class ColorScale extends BaseClass {
               : [colorLighter(this._colorMax, 0.8), this._colorMax];
           }
         }
-        if (this._scale === "quantile") {
-          const step = 1 / (colors.length - 1);
-          buckets = range(0, 1 + step / 2, step)
-            .map(d => quantile(allValues, d));
-        }
-        else if (diverging && this._color && this._centered) {
-          const negativeStep = (this._midpoint - domain[0]) / Math.floor(colors.length / 2);
-          const positiveStep = (domain[1] - this._midpoint) / Math.floor(colors.length / 2);
-          const negativeBuckets = range(domain[0], this._midpoint, negativeStep);
-          const positiveBuckets = range(this._midpoint, domain[1] + positiveStep / 2, positiveStep);
+        if (!buckets) {
+          if (this._scale === "quantile") {
+            const step = 1 / (colors.length - 1);
+            buckets = range(0, 1 + step / 2, step)
+              .map(d => quantile(allValues, d));
+          }
+          else if (diverging && this._color && this._centered) {
+            const negativeStep = (this._midpoint - domain[0]) / Math.floor(colors.length / 2);
+            const positiveStep = (domain[1] - this._midpoint) / Math.floor(colors.length / 2);
+            const negativeBuckets = range(domain[0], this._midpoint, negativeStep);
+            const positiveBuckets = range(this._midpoint, domain[1] + positiveStep / 2, positiveStep);
 
-          buckets = negativeBuckets.concat(positiveBuckets);
-        }
-        else {
-          const step = (domain[1] - domain[0]) / (colors.length - 1);
-          buckets = range(domain[0], domain[1] + step / 2, step);
+            buckets = negativeBuckets.concat(positiveBuckets);
+          }
+          else {
+            const step = (domain[1] - domain[0]) / (colors.length - 1);
+            buckets = range(domain[0], domain[1] + step / 2, step);
+          }
         }
       }
 
       if (this._scale === "buckets" || this._scale === "quantile") {
-        ticks = buckets.concat([buckets[buckets.length - 1]]);
+        ticks = buckets;
+        colors = [colors[0]].concat(colors);
       }
       else if (this._scale === "log") {
         const negativeBuckets = buckets.filter(d => d < 0);
@@ -261,7 +277,7 @@ export default class ColorScale extends BaseClass {
         if (buckets.includes(0)) buckets[buckets.indexOf(0)] = 1;
       }
 
-      this._colorScale = scaleLinear()
+      this._colorScale = (this._scale === "buckets" || this._scale === "quantile" ? scaleThreshold : scaleLinear)()
         .domain(buckets)
         .range(colors);
 
@@ -278,8 +294,19 @@ export default class ColorScale extends BaseClass {
 
       const offsets = {x: 0, y: 0};
 
+      const axisDomain = domain.slice();
+      if (this._bucketAxis) {
+        const last = axisDomain[axisDomain.length - 1];
+        const prev = axisDomain[axisDomain.length - 2];
+        const mod = last ? last / 10 : prev / 10;
+
+        const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : (mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length) * -1;
+        const ten = Math.pow(10, pow);
+        axisDomain[axisDomain.length - 1] = last + ten;
+      }
+
       const axisConfig = assign({
-        domain: horizontal ? domain : domain.reverse(),
+        domain: axisDomain,
         duration: this._duration,
         height: this._height,
         labels: labels || ticks,
@@ -378,21 +405,20 @@ export default class ColorScale extends BaseClass {
         .attr(`${y}1`, "0%")
         .attr(`${y}2`, "0%");
       const stops = defs.select("linearGradient").selectAll("stop")
-        .data(horizontal ? colors : colors);
-
+        .data(colors);
       const scaleDomain = this._colorScale.domain();
       const offsetScale = scaleLinear()
         .domain(scaleRange)
         .range(horizontal ? [0, 100] : [100, 0]);
 
       stops.enter().append("stop").merge(stops)
-        .attr("offset", (d, i) => `${offsetScale(axisScale(scaleDomain[i]))}%`)
+        .attr("offset", (d, i) => `${i <= scaleDomain.length - 1 ? offsetScale(axisScale(scaleDomain[i])) : 100}%`)
         .attr("stop-color", String);
 
       /** determines the width of buckets */
       const bucketWidth = (d, i) => {
-        const w = Math.abs(axisScale(ticks[i + 1]) - axisScale(d));
-        return w || 2;
+        const next = ticks[i + 1] || axisDomain[axisDomain.length - 1];
+        return Math.abs(axisScale(next) - axisScale(d));
       };
 
       const rectConfig = assign({
@@ -405,7 +431,7 @@ export default class ColorScale extends BaseClass {
       }, this._rectConfig);
 
       this._rectClass
-        .data(ticks ? ticks.slice(0, ticks.length - 1) : [0])
+        .data(ticks || [0])
         .id((d, i) => i)
         .select(rectGroup.node())
         .config(rectConfig)
@@ -434,17 +460,28 @@ export default class ColorScale extends BaseClass {
         ? this._axisConfig.tickFormat : formatAbbreviate;
 
       const legendData = ticks.reduce((arr, tick, i) => {
-        if (i !== ticks.length - 1) {
+        const next = ticks[i + 1];
+        const prev = i ? ticks[i - 1] : false;
+        const last = i === ticks.length - 1;
 
-          const next = ticks[i + 1];
-          const mod = Math.round(next / 100);
-          const ten = Math.pow(10, mod.toString().length - 1);
-
-          arr.push({
-            color: colors[i],
-            id: tick === next ? `${format(tick)}+` : `${format(tick)} - ${format(next - ten)}`
-          });
+        let id;
+        if (tick === next || last) {
+          const suffix = last && tick < max(allValues) ? "+" : "";
+          id = `${format(tick)}${suffix}`;
         }
+        else {
+          const mod = next ? next / 100 : tick / 100;
+
+          const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : (mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length) * -1;
+          const ten = Math.pow(10, pow);
+
+          id = prev === tick && i === 1
+            ? `${format(min([tick + ten, allValues.find(d => d > tick && d < next)]))} - ${format(next)}`
+            : `${format(tick)} - ${format(max([next - ten, allValues.reverse().find(d => d > tick && d < next)]))}`;
+        }
+
+        arr.push({color: colors[i + 1], id});
+
         return arr;
       }, []);
 
@@ -501,8 +538,8 @@ export default class ColorScale extends BaseClass {
 
   /**
       @memberof ColorScale
-      @desc The number of discrete buckets to create in a bucketed color scale. Will be overridden by any custom Array of colors passed to the `color` method.
-      @param {Number} [*value* = 5]
+      @desc The number of discrete buckets to create in a bucketed color scale. Will be overridden by any custom Array of colors passed to the `color` method. Optionally, users can supply an Array of values used to separate buckets, such as `[0, 10, 25, 50, 90]` for a percentage scale. This value would create 4 buckets, with each value representing the break point between each bucket (so 5 values makes 4 buckets).
+      @param {Number|Array} [*value* = 5]
       @chainable
   */
   buckets(_) {
