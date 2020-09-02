@@ -25,12 +25,12 @@
   "dependencies": {
     "d3-array": "^1.2.1",
     "d3-scale": "^2.0.0",
-    "d3-selection": "^1.3.0",
-    "d3plus-axis": "^0.6.0",
+    "d3-selection": "^1.4.2",
+    "d3plus-axis": "^0.6.2",
     "d3plus-color": "^0.7.0",
     "d3plus-common": "^0.7.0",
     "d3plus-shape": "^0.17.0",
-    "d3plus-text": "^0.10.0"
+    "d3plus-text": "^0.10.1"
   },
   "scripts": {
     "build": "d3plus-build",
@@ -42,7 +42,7 @@
     "test": "d3plus-test"
   },
   "devDependencies": {
-    "d3plus-dev": "^0.7.6"
+    "d3plus-dev": "^0.7.9"
   },
   "module": "es/index",
   "sideEffects": false,
