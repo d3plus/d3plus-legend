@@ -50,6 +50,29 @@ export default class ColorScale extends BaseClass {
     this._align = "middle";
     this._buckets = 5;
     this._bucketAxis = false;
+    this._bucketFormat = (tick, i, ticks, allValues) => {
+
+      const format = this._axisConfig.tickFormat
+        ? this._axisConfig.tickFormat : formatAbbreviate;
+
+      const next = ticks[i + 1];
+      const prev = i ? ticks[i - 1] : false;
+      const last = i === ticks.length - 1;
+      if (tick === next || last) {
+        const suffix = last && tick < max(allValues) ? "+" : "";
+        return `${format(tick)}${suffix}`;
+      }
+      else {
+        const mod = next ? next / 100 : tick / 100;
+
+        const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : (mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length) * -1;
+        const ten = Math.pow(10, pow);
+
+        return prev === tick && i === 1
+          ? `${format(min([tick + ten, allValues.find(d => d > tick && d < next)]))} - ${format(next)}`
+          : `${format(tick)} - ${format(max([next - ten, allValues.reverse().find(d => d > tick && d < next)]))}`;
+      }
+    };
     this._centered = true;
     this._colorMax = "#0C8040";
     this._colorMid = "#f7f7f7";
@@ -456,31 +479,10 @@ export default class ColorScale extends BaseClass {
 
       elem("g.d3plus-ColorScale-axis", Object.assign({condition: gradient}, groupParams));
 
-      const format = this._axisConfig.tickFormat
-        ? this._axisConfig.tickFormat : formatAbbreviate;
-
       const legendData = ticks.reduce((arr, tick, i) => {
-        const next = ticks[i + 1];
-        const prev = i ? ticks[i - 1] : false;
-        const last = i === ticks.length - 1;
 
-        let id;
-        if (tick === next || last) {
-          const suffix = last && tick < max(allValues) ? "+" : "";
-          id = `${format(tick)}${suffix}`;
-        }
-        else {
-          const mod = next ? next / 100 : tick / 100;
-
-          const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : (mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length) * -1;
-          const ten = Math.pow(10, pow);
-
-          id = prev === tick && i === 1
-            ? `${format(min([tick + ten, allValues.find(d => d > tick && d < next)]))} - ${format(next)}`
-            : `${format(tick)} - ${format(max([next - ten, allValues.reverse().find(d => d > tick && d < next)]))}`;
-        }
-
-        arr.push({color: colors[i + 1], id});
+        const label = this._bucketFormat.bind(this)(tick, i, ticks, allValues);
+        arr.push({color: colors[i + 1], id: label});
 
         return arr;
       }, []);
@@ -554,6 +556,16 @@ export default class ColorScale extends BaseClass {
   */
   bucketAxis(_) {
     return arguments.length ? (this._bucketAxis = _, this) : this._bucketAxis;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc A function for formatting the labels associated to each bucket in a bucket-type scale ("jenks", "quantile", etc). The function is passed four arguments: the start value of the current bucket, it's index in the full Array of buckets, the full Array of buckets, and an Array of every value present in the data used to construct the buckets. Keep in mind that the end value for the bucket is not actually the next bucket in the list, but includes every value up until that next bucket value (less than, but not equal to). By default, d3plus will make the end value slightly less than it's current value, so that it does not overlap with the start label for the next bucket.
+      @param {Function} [*value*]
+      @chainable
+  */
+  bucketFormat(_) {
+    return arguments.length ? (this._bucketFormat = _, this) : this._bucketFormat;
   }
 
   /**
