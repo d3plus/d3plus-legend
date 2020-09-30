@@ -306,6 +306,8 @@ export default class ColorScale extends BaseClass {
 
     }
 
+    if (this._colorScale.clamp) this._colorScale.clamp(true);
+
     const gradient = this._bucketAxis || !["buckets", "jenks", "quantile"].includes(this._scale);
     const t = transition().duration(this._duration);
     const groupParams = {enter: {opacity: 0}, exit: {opacity: 0}, parent: this._group, transition: t, update: {opacity: 1}};
