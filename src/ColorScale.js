@@ -128,7 +128,7 @@ export default class ColorScale extends BaseClass {
     this._group = elem("g.d3plus-ColorScale", {parent: this._select});
 
     const allValues = this._data.map(this._value).sort((a, b) => a - b);
-    const domain = extent(allValues);
+    const domain = this._domain || extent(allValues);
     const negative = domain[0] < this._midpoint;
     const positive = domain[1] > this._midpoint;
     const diverging = negative && positive;
@@ -629,6 +629,16 @@ export default class ColorScale extends BaseClass {
   */
   data(_) {
     return arguments.length ? (this._data = _, this) : this._data;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc In a linear scale, this Array of 2 values defines the min and max values used in the color scale. Any values outside of this range will be mapped to the nearest color value.
+      @param {Array} [*value*]
+      @chainable
+  */
+  domain(_) {
+    return arguments.length ? (this._domain = _, this) : this._domain;
   }
 
   /**
