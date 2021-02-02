@@ -12,7 +12,7 @@ import {select} from "d3-selection";
 import {transition} from "d3-transition";
 
 import {Axis} from "d3plus-axis";
-import {colorLighter} from "d3plus-color";
+import {colorDefaults, colorLighter} from "d3plus-color";
 import {accessor, assign, BaseClass, constant, elem} from "d3plus-common";
 import {formatAbbreviate} from "d3plus-format";
 import {Rect} from "d3plus-shape";
@@ -36,15 +36,7 @@ export default class ColorScale extends BaseClass {
 
     this._axisClass = new Axis();
     this._axisConfig = {
-      gridSize: 0,
-      shapeConfig: {
-        labelConfig: {
-          fontColor: "#222"
-        }
-      },
-      titleConfig: {
-        fontSize: 12
-      }
+      gridSize: 0
     };
     this._axisTest = new Axis();
     this._align = "middle";
@@ -74,20 +66,22 @@ export default class ColorScale extends BaseClass {
       }
     };
     this._centered = true;
-    this._colorMax = "#0C8040";
-    this._colorMid = "#f7f7f7";
-    this._colorMin = "#b22200";
+    this._color = ["#54478C", "#2C699A", "#0DB39E", "#83E377", "#EFEA5A"];
+    this._colorMax = colorDefaults.on;
+    this._colorMid = colorDefaults.light;
+    this._colorMin = colorDefaults.off;
     this._data = [];
     this._duration = 600;
     this._height = 200;
     this._labelClass = new TextBox();
+    this._labelConfig = {
+      fontColor: colorDefaults.dark,
+      fontSize: 12
+    };
     this._legendClass = new Legend();
     this._legendConfig = {
       shapeConfig: {
-        labelConfig: {
-          fontColor: "#222"
-        },
-        stroke: "#444",
+        stroke: colorDefaults.dark,
         strokeWidth: 1
       }
     };
@@ -97,7 +91,7 @@ export default class ColorScale extends BaseClass {
     this._padding = 5;
     this._rectClass = new Rect().parent(this);
     this._rectConfig = {
-      stroke: "#444",
+      stroke: "#999",
       strokeWidth: 1
     };
     this._scale = "linear";
@@ -345,7 +339,7 @@ export default class ColorScale extends BaseClass {
       const labelConfig = assign({
         height: this[`_${height}`] / 2,
         width: this[`_${width}`] / 2
-      }, this._labelConfig || this._axisConfig.titleConfig);
+      }, this._labelConfig);
 
       this._labelClass.config(labelConfig);
       const labelData = [];
@@ -668,7 +662,7 @@ export default class ColorScale extends BaseClass {
       @chainable
   */
   labelConfig(_) {
-    return arguments.length ? (this._labelConfig = _, this) : this._labelConfig;
+    return arguments.length ? (this._labelConfig = assign(this._labelConfig, _), this) : this._labelConfig;
   }
 
   /**
