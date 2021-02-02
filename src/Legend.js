@@ -7,6 +7,7 @@ import {max, sum} from "d3-array";
 import {select} from "d3-selection";
 
 import {accessor, assign, BaseClass, configPrep, constant, elem} from "d3plus-common";
+import {colorDefaults} from "d3plus-color";
 import * as shapes from "d3plus-shape";
 import {TextBox, textWidth, textWrap} from "d3plus-text";
 
@@ -40,7 +41,7 @@ export default class Legend extends BaseClass {
     this._shapes = [];
     this._shapeConfig = {
       fill: accessor("color"),
-      height: constant(10),
+      height: constant(12),
       hitArea: (dd, i) => {
         const d = this._lineData[i],
               h = max([d.height, d.shapeHeight]);
@@ -54,15 +55,14 @@ export default class Legend extends BaseClass {
         return {width: d.width, height, x, y: -height / 2};
       },
       labelConfig: {
-        fontColor: constant("#444"),
-        fontFamily: new TextBox().fontFamily(),
+        fontColor: constant(colorDefaults.dark),
         fontResize: false,
         fontSize: constant(10),
         verticalAlign: "middle"
       },
       opacity: 1,
-      r: constant(5),
-      width: constant(10),
+      r: constant(6),
+      width: constant(12),
       x: (d, i) => {
         const datum = this._lineData[i];
         const y = datum.y;
@@ -83,7 +83,9 @@ export default class Legend extends BaseClass {
       }
     };
     this._titleClass = new TextBox();
-    this._titleConfig = {};
+    this._titleConfig = {
+      fontSize: 12
+    };
     this._verticalAlign = "middle";
     this._width = 400;
 
