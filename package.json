@@ -28,8 +28,8 @@
     "d3-selection": "^2.0.0",
     "d3plus-axis": "^1.0.0",
     "d3plus-color": "^1.0.0",
-    "d3plus-common": "^1.0.0",
-    "d3plus-shape": "^1.0.0",
+    "d3plus-common": "^1.0.2",
+    "d3plus-shape": "^1.0.3",
     "d3plus-text": "^1.0.1"
   },
   "scripts": {
