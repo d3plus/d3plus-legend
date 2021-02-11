@@ -11,6 +11,8 @@ import {colorDefaults} from "d3plus-color";
 import * as shapes from "d3plus-shape";
 import {TextBox, textWidth, textWrap} from "d3plus-text";
 
+const padding = 5;
+
 /**
     @class Legend
     @extends external:BaseClass
@@ -26,6 +28,8 @@ export default class Legend extends BaseClass {
   constructor() {
 
     super();
+
+    this._titleClass = new TextBox();
 
     this._align = "center";
     this._data = [];
@@ -49,13 +53,14 @@ export default class Legend extends BaseClass {
       },
       labelBounds: (dd, i) => {
         const d = this._lineData[i];
-        let x = d.shapeWidth;
-        if (d.shape === "Circle") x -= d.shapeR;
+        let x = d.shapeWidth / 2;
+        if (d.shape === "Circle") x -= d.shapeR / 2;
         const height = max([d.shapeHeight, d.height]);
-        return {width: d.width, height, x, y: -height / 2};
+        return {width: d.width, height, x: x + padding, y: -height / 2};
       },
       labelConfig: {
         fontColor: constant(colorDefaults.dark),
+        fontFamily: this._titleClass.fontFamily(),
         fontResize: false,
         fontSize: constant(10),
         verticalAlign: "middle"
@@ -82,7 +87,6 @@ export default class Legend extends BaseClass {
                ) / 2;
       }
     };
-    this._titleClass = new TextBox();
     this._titleConfig = {
       fontSize: 12
     };
@@ -186,7 +190,7 @@ export default class Legend extends BaseClass {
         .height(h)
         (label));
 
-      res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + s * 0.75;
+      res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + padding * 2;
       res.height = Math.ceil(res.lines.length * (lh + 1));
       res.og = {height: res.height, width: res.width};
       res.f = f;
