@@ -325,7 +325,7 @@ export default class ColorScale extends BaseClass {
       }
 
       const axisConfig = assign({
-        domain: axisDomain,
+        domain: horizontal ? axisDomain : axisDomain.slice().reverse(),
         duration: this._duration,
         height: this._height,
         labels: labels || ticks,
@@ -475,13 +475,14 @@ export default class ColorScale extends BaseClass {
 
       elem("g.d3plus-ColorScale-axis", Object.assign({condition: gradient}, groupParams));
 
-      const legendData = ticks.reduce((arr, tick, i) => {
+      let legendData = ticks.reduce((arr, tick, i) => {
 
         const label = this._bucketFormat.bind(this)(tick, i, ticks, allValues);
         arr.push({color: colors[i + 1], id: label});
 
         return arr;
       }, []);
+      if (!horizontal) legendData = legendData.reverse();
 
       const legendConfig = assign({
         align: horizontal ? "center" : {start: "left", middle: "center", end: "right"}[this._align],
