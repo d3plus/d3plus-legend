@@ -13,7 +13,7 @@ import {transition} from "d3-transition";
 
 import {Axis} from "d3plus-axis";
 import {colorDefaults, colorLighter} from "d3plus-color";
-import {accessor, assign, BaseClass, constant, elem} from "d3plus-common";
+import {accessor, assign, BaseClass, constant, elem, unique} from "d3plus-common";
 import {formatAbbreviate} from "d3plus-format";
 import {Rect} from "d3plus-shape";
 import {TextBox, textWidth} from "d3plus-text";
@@ -59,7 +59,6 @@ export default class ColorScale extends BaseClass {
 
         const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length * -1;
         const ten = Math.pow(10, pow);
-
         return prev === tick && i === 1
           ? `${format(min([tick + ten, allValues.find(d => d > tick && d < next)]))} - ${format(next)}`
           : `${format(tick)} - ${format(max([next - ten, allValues.reverse().find(d => d > tick && d < next)]))}`;
@@ -121,13 +120,20 @@ export default class ColorScale extends BaseClass {
     // Shape <g> Group
     this._group = elem("g.d3plus-ColorScale", {parent: this._select});
 
-    const allValues = this._data.map(this._value).sort((a, b) => a - b);
+    const allValues = this._data
+      .map(this._value)
+      .filter(d => d !== null && typeof d === "number")
+      .sort((a, b) => a - b);
+
     const domain = this._domain || extent(allValues);
     const negative = domain[0] < this._midpoint;
     const positive = domain[1] > this._midpoint;
     const diverging = negative && positive;
 
-    const numBuckets = this._buckets instanceof Array ? this._buckets.length : this._buckets;
+    const numBuckets = min([
+      this._buckets instanceof Array ? this._buckets.length : this._buckets,
+      unique(allValues).length
+    ]);
 
     let colors = this._color, labels, ticks;
 
@@ -139,11 +145,7 @@ export default class ColorScale extends BaseClass {
 
     if (this._scale === "jenks") {
 
-      const data = this._data
-        .map(this._value)
-        .filter(d => d !== null && typeof d === "number");
-
-      const buckets = min([colors ? colors.length : numBuckets, data.length]);
+      const buckets = min([colors ? colors.length : numBuckets, numBuckets, allValues.length]);
 
       let jenks = [];
 
@@ -157,10 +159,10 @@ export default class ColorScale extends BaseClass {
           const half = Math.floor(buckets / 2);
           const residual = buckets % 2;
 
-          const negatives = data.filter(d => d < this._midpoint);
+          const negatives = allValues.filter(d => d < this._midpoint);
           const negativesDeviation = deviation(negatives);
 
-          const positives = data.concat(this._midpoint).filter(d => d >= this._midpoint);
+          const positives = allValues.concat(this._midpoint).filter(d => d >= this._midpoint);
           const positivesDeviation = deviation(positives);
 
           const isNegativeMax = negativesDeviation > positivesDeviation ? 1 : 0;
@@ -172,7 +174,7 @@ export default class ColorScale extends BaseClass {
           jenks = negativeJenks.concat(positiveJenks);
         }
         else {
-          jenks = ckmeans(data, buckets);
+          jenks = ckmeans(allValues, buckets);
         }
 
         ticks = jenks.map(c => c[0]);
@@ -209,8 +211,8 @@ export default class ColorScale extends BaseClass {
         }
       }
 
-      if (data.length <= buckets) {
-        colors = colors.slice(buckets - data.length);
+      if (allValues.length <= buckets) {
+        colors = colors.slice(buckets - allValues.length);
       }
 
       colors = [colors[0]].concat(colors);
