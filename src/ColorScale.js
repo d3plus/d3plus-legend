@@ -68,10 +68,11 @@ export default class ColorScale extends BaseClass {
           ? format(next)
           : format(max([next - ten, allValues.reverse().find(d => d > tick && d < next)]));
 
-        return prevValue !== nextValue ? `${prevValue} - ${nextValue}` : `${prevValue}`;
+        return this._bucketJoiner(prevValue, nextValue);
 
       }
     };
+    this._bucketJoiner = (a, b) => a !== b ? `${a} - ${b}` : `${a}`;
     this._centered = true;
     this._color = ["#54478C", "#2C699A", "#0DB39E", "#83E377", "#EFEA5A"];
     this._colorMax = colorDefaults.on;
@@ -573,6 +574,16 @@ export default class ColorScale extends BaseClass {
   */
   bucketFormat(_) {
     return arguments.length ? (this._bucketFormat = _, this) : this._bucketFormat;
+  }
+
+  /**
+      @memberof ColorScale
+      @desc A function that receives the minimum and maximum values of a bucket, and is expected to return the full label.
+      @param {Function} [*value*]
+      @chainable
+  */
+  bucketJoiner(_) {
+    return arguments.length ? (this._bucketJoiner = _, this) : this._bucketJoiner;
   }
 
   /**
