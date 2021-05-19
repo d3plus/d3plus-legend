@@ -59,9 +59,17 @@ export default class ColorScale extends BaseClass {
 
         const pow = mod >= 1 || mod <= -1 ? Math.round(mod).toString().length - 1 : mod.toString().split(".")[1].replace(/([1-9])[1-9].*$/, "$1").length * -1;
         const ten = Math.pow(10, pow);
-        return prev === tick && i === 1
-          ? `${format(min([tick + ten, allValues.find(d => d > tick && d < next)]))} - ${format(next)}`
-          : `${format(tick)} - ${format(max([next - ten, allValues.reverse().find(d => d > tick && d < next)]))}`;
+
+        const prevValue = prev === tick && i === 1
+          ? format(min([tick + ten, allValues.find(d => d > tick && d < next)]))
+          : format(tick);
+
+        const nextValue = tick && i === 1
+          ? format(next)
+          : format(max([next - ten, allValues.reverse().find(d => d > tick && d < next)]));
+
+        return prevValue !== nextValue ? `${prevValue} - ${nextValue}` : `${prevValue}`;
+
       }
     };
     this._centered = true;
