@@ -177,8 +177,8 @@ export default class ColorScale extends BaseClass {
           const isNegativeMax = negativesDeviation > positivesDeviation ? 1 : 0;
           const isPositiveMax = positivesDeviation > negativesDeviation ? 1 : 0;
 
-          const negativeJenks = ckmeans(negatives, half + residual * isNegativeMax);
-          const positiveJenks = ckmeans(positives, half + residual * isPositiveMax);
+          const negativeJenks = ckmeans(negatives, min([half + residual * isNegativeMax, negatives.length]));
+          const positiveJenks = ckmeans(positives, min([half + residual * isPositiveMax, positives.length]));
 
           jenks = negativeJenks.concat(positiveJenks);
         }
