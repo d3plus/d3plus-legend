@@ -192,9 +192,7 @@ export default class ColorScale extends BaseClass {
 
       const tickSet = new Set(ticks);
 
-      if (ticks.length !== tickSet.size) {
-        labels = Array.from(tickSet);
-      }
+      if (ticks.length !== tickSet.size) labels = Array.from(tickSet);
 
       if (!colors) {
         if (diverging) {
@@ -220,10 +218,7 @@ export default class ColorScale extends BaseClass {
         }
       }
 
-      if (allValues.length <= buckets) {
-        colors = colors.slice(buckets - allValues.length);
-      }
-
+      if (ticks.length <= buckets) colors = colors.slice(-ticks.length);
       colors = [colors[0]].concat(colors);
 
       this._colorScale = scaleThreshold()
