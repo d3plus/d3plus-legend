@@ -220,6 +220,12 @@ export default class ColorScale extends BaseClass {
 
       if (ticks.length <= buckets) colors = colors.slice(-ticks.length);
 
+      colors = [colors[0]].concat(colors);
+
+      this._colorScale = scaleThreshold()
+        .domain(ticks)
+        .range(colors);
+
     }
     else {
 
@@ -273,6 +279,7 @@ export default class ColorScale extends BaseClass {
 
       if (this._scale === "buckets" || this._scale === "quantile") {
         ticks = buckets;
+        colors = [colors[0]].concat(colors);
       }
       else if (this._scale === "log") {
         const negativeBuckets = buckets.filter(d => d < 0);
@@ -298,9 +305,9 @@ export default class ColorScale extends BaseClass {
         .domain(buckets)
         .range(colors);
 
-      if (this._colorScale.clamp) this._colorScale.clamp(true);
-
     }
+
+    if (this._colorScale.clamp) this._colorScale.clamp(true);
 
     const gradient = this._bucketAxis || !["buckets", "jenks", "quantile"].includes(this._scale);
     const t = transition().duration(this._duration);
@@ -478,7 +485,7 @@ export default class ColorScale extends BaseClass {
       let legendData = ticks.reduce((arr, tick, i) => {
 
         const label = this._bucketFormat.bind(this)(tick, i, ticks, allValues);
-        arr.push({color: colors[i], id: label});
+        arr.push({color: colors[i + 1], id: label});
 
         return arr;
       }, []);
