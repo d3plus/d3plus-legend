@@ -141,10 +141,10 @@ export default class ColorScale extends BaseClass {
 
     const numBuckets = min([
       this._buckets instanceof Array ? this._buckets.length : this._buckets,
-      unique(allValues).length
+      diverging && this._scale !== "jenks" ? 2 * Math.floor(unique(allValues).length / 2) - 1 : unique(allValues).length
     ]);
 
-    let colors = this._color, labels, ticks;
+    let colors = diverging ? undefined : this._color, labels, ticks;
 
     if (colors && !(colors instanceof Array)) {
       colors = range(0, numBuckets, 1)
@@ -205,7 +205,7 @@ export default class ColorScale extends BaseClass {
             .filter((d, i) => d <= this._midpoint && ticks[i + 1] > this._midpoint);
           const positives = ticks
             .slice(0, buckets)
-            .filter((d, i) => d > this._midpoint && ticks[i + 1] > this._midpoint);
+            .filter(d => d > this._midpoint);
           const negativeColors = negatives.map((d, i) => !i ? colors[0] : colorLighter(colors[0], i / negatives.length));
           const spanningColors = spanning.map(() => colors[1]);
           const positiveColors = positives.map((d, i) => i === positives.length - 1 ? colors[2] : colorLighter(colors[2], 1 - (i + 1) / positives.length));
@@ -219,11 +219,6 @@ export default class ColorScale extends BaseClass {
       }
 
       if (ticks.length <= buckets) colors = colors.slice(-ticks.length);
-      colors = [colors[0]].concat(colors);
-
-      this._colorScale = scaleThreshold()
-        .domain(ticks)
-        .range(colors);
 
     }
     else {
@@ -278,7 +273,6 @@ export default class ColorScale extends BaseClass {
 
       if (this._scale === "buckets" || this._scale === "quantile") {
         ticks = buckets;
-        colors = [colors[0]].concat(colors);
       }
       else if (this._scale === "log") {
         const negativeBuckets = buckets.filter(d => d < 0);
@@ -304,9 +298,9 @@ export default class ColorScale extends BaseClass {
         .domain(buckets)
         .range(colors);
 
-    }
+      if (this._colorScale.clamp) this._colorScale.clamp(true);
 
-    if (this._colorScale.clamp) this._colorScale.clamp(true);
+    }
 
     const gradient = this._bucketAxis || !["buckets", "jenks", "quantile"].includes(this._scale);
     const t = transition().duration(this._duration);
@@ -484,7 +478,7 @@ export default class ColorScale extends BaseClass {
       let legendData = ticks.reduce((arr, tick, i) => {
 
         const label = this._bucketFormat.bind(this)(tick, i, ticks, allValues);
-        arr.push({color: colors[i + 1], id: label});
+        arr.push({color: colors[i], id: label});
 
         return arr;
       }, []);
