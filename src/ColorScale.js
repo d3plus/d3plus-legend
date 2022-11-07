@@ -7,6 +7,7 @@ import ckmeans from "./ckmeans";
 import Legend from "./Legend";
 
 import {extent, max, min, quantile, range, deviation} from "d3-array";
+import {interpolateRgb} from "d3-interpolate";
 import {scaleLinear, scaleThreshold} from "d3-scale";
 import {select} from "d3-selection";
 import {transition} from "d3-transition";
@@ -232,9 +233,11 @@ export default class ColorScale extends BaseClass {
       let buckets = this._buckets instanceof Array ? this._buckets : undefined;
       if (diverging && !colors) {
         const half = Math.floor(numBuckets / 2);
-        const negativeColors = range(0, half, 1).map(i => !i ? this._colorMin : colorLighter(this._colorMin, i / half));
+        const negativeColorScale = interpolateRgb.gamma(2.2)(this._colorMin, this._colorMid);
+        const negativeColors = range(0, half, 1).map(i => negativeColorScale(i / half));
         const spanningColors = (numBuckets % 2 ? [0] : []).map(() => this._colorMid);
-        const positiveColors = range(0, half, 1).map(i => !i ? this._colorMax : colorLighter(this._colorMax, i / half)).reverse();
+        const positiveColorScale = interpolateRgb.gamma(2.2)(this._colorMax, this._colorMid);
+        const positiveColors = range(0, half, 1).map(i => positiveColorScale(i / half)).reverse();
         colors = negativeColors.concat(spanningColors).concat(positiveColors);
         if (!buckets) {
           const step = (colors.length - 1) / 2;
