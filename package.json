@@ -2,7 +2,7 @@
   "name": "d3plus-legend",
   "version": "1.1.2",
   "description": "An easy to use javascript chart legend.",
-  "main": "build/d3plus-legend.full.js",
+  "main": "es/index.js",
   "jsnext:main": "es/index",
   "license": "MIT",
   "homepage": "https://d3plus.org",
@@ -23,29 +23,28 @@
     "url": "http://www.dave-landry.com"
   },
   "dependencies": {
-    "d3-array": "^2.11.0",
+    "d3-array": "^3.2.2",
     "d3-interpolate": "^3.0.1",
-    "d3-scale": "^3.2.3",
-    "d3-selection": "^2.0.0",
-    "d3plus-axis": "^1.1.1",
-    "d3plus-color": "^1.0.0",
-    "d3plus-common": "^1.1.0",
-    "d3plus-shape": "^1.0.6",
-    "d3plus-text": "^1.0.2"
+    "d3-scale": "^4.0.2",
+    "d3-selection": "^3.0.0",
+    "d3plus-axis": "^1.2.1",
+    "d3plus-color": "^1.1.2",
+    "d3plus-common": "^1.2.4",
+    "d3plus-shape": "^1.1.0",
+    "d3plus-text": "^1.2.1"
   },
   "scripts": {
     "build": "d3plus-build",
     "dev": "d3plus-dev",
     "docs": "d3plus-docs",
     "env": "d3plus-env",
-    "examples": "d3plus-examples",
     "release": "d3plus-release",
-    "test": "d3plus-test"
+    "test": "eslint src test && mocha 'test/**/*-test.js'"
   },
   "devDependencies": {
-    "d3plus-dev": "^1.1.0"
+    "d3plus-dev": "^1.2.8"
   },
-  "module": "es/index",
+  "module": "es/index.js",
   "sideEffects": false,
   "files": [
     "bin",
@@ -53,5 +52,8 @@
     "build/d3plus-legend.js.map",
     "build/d3plus-legend.min.js",
     "es"
-  ]
+  ],
+  "jsdelivr": "build/d3plus-legend.full.min.js",
+  "unpkg": "build/d3plus-legend.full.min.js",
+  "type": "module"
 }

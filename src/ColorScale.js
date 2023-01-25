@@ -3,9 +3,6 @@
     @see https://github.com/d3plus/d3plus-common#BaseClass
 */
 
-import ckmeans from "./ckmeans";
-import Legend from "./Legend";
-
 import {extent, max, min, quantile, range, deviation} from "d3-array";
 import {interpolateRgb} from "d3-interpolate";
 import {scaleLinear, scaleThreshold} from "d3-scale";
@@ -18,6 +15,9 @@ import {accessor, assign, BaseClass, constant, elem, unique} from "d3plus-common
 import {formatAbbreviate} from "d3plus-format";
 import {Rect} from "d3plus-shape";
 import {TextBox, textWidth} from "d3plus-text";
+
+import ckmeans from "./ckmeans.js";
+import Legend from "./Legend.js";
 
 /**
     @class ColorScale

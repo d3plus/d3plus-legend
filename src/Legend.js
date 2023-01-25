@@ -142,8 +142,7 @@ export default class Legend extends BaseClass {
         .fontSize(s)
         .lineHeight(lH)
         .width(this._width)
-        .height(this._height)
-        (this._title);
+        .height(this._height)(this._title);
       this._titleHeight = lH + res.lines.length + this._padding;
       this._titleWidth = max(res.widths);
       availableHeight -= this._titleHeight;
@@ -182,13 +181,14 @@ export default class Legend extends BaseClass {
       const h = availableHeight - (this._data.length + 1) * this._padding,
             w = this._width;
 
-      res = Object.assign(res, textWrap()
+      const newRes = textWrap()
         .fontFamily(f)
         .fontSize(s)
         .lineHeight(lh)
         .width(w)
-        .height(h)
-        (label));
+        .height(h)(label);
+
+      res = Object.assign(res, newRes);
 
       res.width = Math.ceil(max(res.lines.map(t => textWidth(t, {"font-family": f, "font-size": s})))) + padding * 2;
       res.height = Math.ceil(res.lines.length * (lh + 1));
