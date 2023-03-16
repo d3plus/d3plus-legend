@@ -9,7 +9,7 @@ import {select} from "d3-selection";
 import {accessor, assign, BaseClass, configPrep, constant, elem} from "d3plus-common";
 import {colorDefaults} from "d3plus-color";
 import * as shapes from "d3plus-shape";
-import {TextBox, textWidth, textWrap} from "d3plus-text";
+import {rtl as detectRTL, TextBox, textWidth, textWrap} from "d3plus-text";
 
 const padding = 5;
 
@@ -56,7 +56,8 @@ export default class Legend extends BaseClass {
         let x = d.shapeWidth / 2;
         if (d.shape === "Circle") x -= d.shapeR / 2;
         const height = max([d.shapeHeight, d.height]);
-        return {width: d.width, height, x: x + padding, y: -height / 2};
+        const rtlMod = this._rtl ? d.shapeWidth + d.width + this._padding * 2 : 0;
+        return {width: d.width, height, x: x + padding - rtlMod, y: -height / 2};
       },
       labelConfig: {
         fontColor: constant(colorDefaults.dark),
@@ -75,8 +76,9 @@ export default class Legend extends BaseClass {
           ? (this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y))) / 2
           : this._outerBounds.width - this._rowWidth(this._lineData.filter(l => y === l.y));
         const prevWords = this._lineData.slice(0, i).filter(l => y === l.y);
+        const rtlMod = this._rtl ? datum.width + this._padding : 0;
         return this._rowWidth(prevWords) + this._padding * (prevWords.length ? datum.sentence ? 2 : 1 : 0) +
-               this._outerBounds.x + datum.shapeWidth / 2 + pad;
+               this._outerBounds.x + datum.shapeWidth / 2 + pad + rtlMod;
       },
       y: (d, i) => {
         const ld = this._lineData[i];
@@ -494,7 +496,12 @@ function value(d) {
       @chainable
   */
   select(_) {
-    return arguments.length ? (this._select = select(_), this) : this._select;
+    if (arguments.length) {
+      this._select = select(_);
+      this._rtl = detectRTL(this._select.node());
+      return this;
+    }
+    return this._select;
   }
 
   /**
