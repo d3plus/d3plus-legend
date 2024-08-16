@@ -145,7 +145,12 @@ export default class ColorScale extends BaseClass {
       diverging && this._scale !== "jenks" ? 2 * Math.floor(unique(allValues).length / 2) - 1 : unique(allValues).length
     ]);
 
-    let colors = diverging ? undefined : this._color, labels, ticks;
+    let colors = diverging 
+          && (!this._color || (this._color instanceof Array && !this._color.includes(this._colorMid))) 
+            ? undefined 
+          : this._color, 
+        labels, 
+        ticks;
 
     if (colors && !(colors instanceof Array)) {
       colors = range(0, numBuckets, 1)
@@ -266,8 +271,9 @@ export default class ColorScale extends BaseClass {
               .map(d => quantile(allValues, d));
           }
           else if (diverging && this._color && this._centered) {
-            const negativeStep = (this._midpoint - domain[0]) / Math.floor(colors.length / 2);
-            const positiveStep = (domain[1] - this._midpoint) / Math.floor(colors.length / 2);
+            const midIndex = colors.indexOf(this._colorMid);
+            const negativeStep = (this._midpoint - domain[0]) / midIndex;
+            const positiveStep = (domain[1] - this._midpoint) / (colors.length - midIndex);
             const negativeBuckets = range(domain[0], this._midpoint, negativeStep);
             const positiveBuckets = range(this._midpoint, domain[1] + positiveStep / 2, positiveStep);
 
