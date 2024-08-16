@@ -23,15 +23,15 @@
     "url": "http://www.dave-landry.com"
   },
   "dependencies": {
-    "d3-array": "^3.2.2",
+    "d3-array": "^3.2.4",
     "d3-interpolate": "^3.0.1",
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
-    "d3plus-axis": "^1.2.5",
+    "d3plus-axis": "^1.2.19",
     "d3plus-color": "^1.1.2",
-    "d3plus-common": "^1.2.4",
-    "d3plus-shape": "^1.1.0",
-    "d3plus-text": "^1.2.3"
+    "d3plus-common": "^1.2.7",
+    "d3plus-shape": "^1.1.4",
+    "d3plus-text": "^1.2.5"
   },
   "scripts": {
     "build": "d3plus-build",
